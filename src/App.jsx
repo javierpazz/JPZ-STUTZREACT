@@ -151,7 +151,7 @@ function App() {
                       Sign In
                     </Link>
                   )}
-                  {userInfo && userInfo.isAdmin && (
+                  {userInfo && userInfo.role=="admin" && (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
                       <LinkContainer to="/admin/dashboard">
                         <NavDropdown.Item>Dashboard</NavDropdown.Item>
@@ -499,7 +499,7 @@ function App() {
           </Container>
         </main>
         <footer>
-        {userInfo && !userInfo.isAdmin && <ChatBox userInfo={userInfo} />}
+        {userInfo && !userInfo.role=="admin" && <ChatBox userInfo={userInfo} />}
           <div className="text-center">All rights reserved</div>
         </footer>
       </div>

@@ -100,7 +100,6 @@ export default function ProductListScreen() {
       try {
         dispatch({ type: 'CREATE_REQUEST' });
         const { data } = await axios.post(
-          '/api/products',
           `${API}/api/products`,
           {},
           {
@@ -176,11 +175,11 @@ export default function ProductListScreen() {
               {products.map((product) => (
                 <tr key={product._id}>
                   <td>{product._id}</td>
-                  <td>{product.name}</td>
+                  <td>{product.title}</td>
                   <td>{product.price}</td>
                   <td>{product.category}</td>
                   <td>{product.brand}</td>
-                  <td>{product.countInStock}</td>
+                  <td>{product.inStock}</td>
                   <td>
                     <Button
                       type="button"

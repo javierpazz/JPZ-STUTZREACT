@@ -89,7 +89,7 @@ export default function InvoiceListApliRec({
 
   const selectHandle = (invoice) => {
     setInvId(invoice._id);
-    setTotal(invoice.totalPrice);
+    setTotal(invoice.total);
     setName(invoice.user.name);
     setRemNum(invoice.remNum);
     setOrdNum(invoice.ordNum);
@@ -251,7 +251,7 @@ export default function InvoiceListApliRec({
                     {invoice.isPaid ? invoice.paidAt.substring(0, 10) : 'No'}
                   </td>
                   <td>{invoice.desVal}</td>
-                  <td>{invoice.totalPrice.toFixed(2)}</td>
+                  <td>{invoice.total.toFixed(2)}</td>
 
                   <td>
                     <Col md={2}>

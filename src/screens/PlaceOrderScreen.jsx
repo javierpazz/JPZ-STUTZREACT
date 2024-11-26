@@ -37,12 +37,12 @@ export default function PlaceOrderScreen() {
   const { cart, userInfo } = state;
 
   const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
-  cart.itemsPrice = round2(
+  cart.subTotal = round2(
     cart.cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
   );
-  cart.shippingPrice = cart.itemsPrice > 100 ? round2(0) : round2(10);
-  cart.taxPrice = round2(0.15 * cart.itemsPrice);
-  cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice;
+  cart.shippingPrice = cart.subTotal > 100 ? round2(0) : round2(10);
+  cart.tax = round2(0.15 * cart.subTotal);
+  cart.total = cart.subTotal + cart.shippingPrice + cart.tax;
 
   const placeOrderHandler = async () => {
     cart.cartItems.map((item) => stockHandler({ item }));
@@ -73,17 +73,18 @@ export default function PlaceOrderScreen() {
 
   const orderHandler = async () => {
     try {
+      console.log(cart.cartItems);
       dispatch({ type: 'CREATE_REQUEST' });
       const { data } = await Axios.post(
         `${API}/api/orders`,
         {
-          invoiceItems: cart.cartItems,
+          orderItems: cart.cartItems,
           shippingAddress: cart.shippingAddress,
           paymentMethod: cart.paymentMethod,
-          itemsPrice: cart.itemsPrice,
+          subTotal: cart.subTotal,
           shippingPrice: cart.shippingPrice,
-          taxPrice: cart.taxPrice,
-          totalPrice: cart.totalPrice,
+          tax: cart.tax,
+          total: cart.total,
           ordYes: 'Y',
           staOrd: 'NUEVA',
         },
@@ -151,10 +152,10 @@ export default function PlaceOrderScreen() {
                       <Col md={6}>
                         <img
                           src={item.image}
-                          alt={item.name}
+                          alt={item.title}
                           className="img-fluid rounded img-thumbnail"
                         ></img>{' '}
-                        <Link to={`/product/${item.slug}`}>{item.name}</Link>
+                        <Link to={`/product/${item.slug}`}>{item.title}</Link>
                       </Col>
                       <Col md={3}>
                         <span>{item.quantity}</span>
@@ -176,7 +177,7 @@ export default function PlaceOrderScreen() {
                 <ListGroup.Item>
                   <Row>
                     <Col>Items</Col>
-                    <Col>${cart.itemsPrice.toFixed(2)}</Col>
+                    <Col>${cart.subTotal.toFixed(2)}</Col>
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
@@ -188,7 +189,7 @@ export default function PlaceOrderScreen() {
                 <ListGroup.Item>
                   <Row>
                     <Col>Tax</Col>
-                    <Col>${cart.taxPrice.toFixed(2)}</Col>
+                    <Col>${cart.tax.toFixed(2)}</Col>
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
@@ -197,7 +198,7 @@ export default function PlaceOrderScreen() {
                       <strong> Order Total</strong>
                     </Col>
                     <Col>
-                      <strong>${cart.totalPrice.toFixed(2)}</strong>
+                      <strong>${cart.total.toFixed(2)}</strong>
                     </Col>
                   </Row>
                 </ListGroup.Item>

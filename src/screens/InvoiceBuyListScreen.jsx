@@ -138,7 +138,7 @@ export default function InvoiceBuyListScreen() {
 
 //do
 const controlStockHandler = async (invoice) => {
-  invoice.invoiceItems.map((item) => stockHandler({ item }));
+  invoice.orderItems.map((item) => stockHandler({ item }));
 };
 
 const stockHandler = async (item) => {

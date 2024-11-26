@@ -96,7 +96,7 @@ export default function OrderListScreen() {
 
 //do
 const controlStockHandler = async (order) => {
-  order.invoiceItems.map((item) => stockHandler({ item }));
+  order.orderItems.map((item) => stockHandler({ item }));
 };
 
 const stockHandler = async (item) => {
@@ -185,7 +185,7 @@ try {
                   <td>{order._id}</td>
                   <td>{order.user ? order.user.name : 'DELETED CLIENT'}</td>
                   <td>{order.createdAt.substring(0, 10)}</td>
-                  <td>{order.totalPrice.toFixed(2)}</td>
+                  <td>{order.total.toFixed(2)}</td>
                   <td>{order.invNum}</td>
                   <td>{order.staOrd}</td>
 

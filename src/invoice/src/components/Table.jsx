@@ -1,11 +1,11 @@
 import React from 'react';
 
-export default function Table({ invoiceItems, total }) {
-  total = invoiceItems.reduce((a, c) => a + c.price * c.quantity, 0);
+export default function Table({ orderItems, total }) {
+  total = orderItems.reduce((a, c) => a + c.price * c.quantity, 0);
 
   return (
     <>
-      {console.log(invoiceItems)}
+      {console.log(orderItems)}
 
       <table width="100%" className="mb-10">
         <thead>
@@ -17,12 +17,12 @@ export default function Table({ invoiceItems, total }) {
             <td className="font-bold">Amount</td>
           </tr>
         </thead>
-        {invoiceItems?.map((itemInv) => (
+        {orderItems?.map((itemInv) => (
           <React.Fragment key={itemInv._id}>
             <tbody>
               <tr className="h-10">
                 <td>{itemInv._id}</td>
-                <td>{itemInv.name}</td>
+                <td>{itemInv.title}</td>
                 <td>{itemInv.quantity}</td>
                 <td>{itemInv.price}</td>
                 <td>{itemInv.amount}</td>

@@ -154,7 +154,7 @@ function AppOrd() {
 
   useEffect(() => {
     const calculateAmountval = (amountval) => {
-      setAmountval(invoice.totalPrice);
+      setAmountval(invoice.total);
     };
     if (numval === '') {
       setNumval(null);
@@ -251,18 +251,18 @@ const RecControl = (e) => {
       unloadpayment();
     } else {
       if (invNum && invDat && codUse) {
-        // AQUI NO TOCO STOCK        invoice.invoiceItems.map((item) => stockHandler({ item }));
+        // AQUI NO TOCO STOCK        invoice.orderItems.map((item) => stockHandler({ item }));
         const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
-        invoice.itemsPrice = round2(
-          invoice.invoiceItems.reduce((a, c) => a + c.quantity * c.price, 0)
+        invoice.subTotal = round2(
+          invoice.orderItems.reduce((a, c) => a + c.quantity * c.price, 0)
         );
         // invoice.shippingPrice = 0;
-        invoice.shippingPrice = invoice.itemsPrice > 100 ? round2(0) : round2(10);
+        invoice.shippingPrice = invoice.subTotal > 100 ? round2(0) : round2(10);
         //        invoice.shippingPrice =
-        //        invoice.itemsPrice > 100 ? round2(0) : round2(10);
-        invoice.taxPrice = round2(0.15 * invoice.itemsPrice);
-        invoice.totalPrice =
-          invoice.itemsPrice + invoice.shippingPrice + invoice.taxPrice;
+        //        invoice.subTotal > 100 ? round2(0) : round2(10);
+        invoice.tax = round2(0.15 * invoice.subTotal);
+        invoice.total =
+          invoice.subTotal + invoice.shippingPrice + invoice.tax;
         invoice.codUse = codUse;
 
         invoice.codSup = '0';
@@ -275,7 +275,7 @@ const RecControl = (e) => {
         invoice.notes = notes;
 
         if (recNum && recDat && desVal) {
-          receipt.totalPrice = invoice.totalPrice;
+          receipt.total = invoice.total;
           receipt.codUse = invoice.codUse;
           receipt.codSup = '0';
           receipt.recNum = invoice.recNum;
@@ -317,10 +317,10 @@ const RecControl = (e) => {
           receiptItems: receipt.receiptItems,
           shippingAddress: receipt.shippingAddress,
           paymentMethod: receipt.paymentMethod,
-          itemsPrice: receipt.itemsPrice,
+          subTotal: receipt.subTotal,
           shippingPrice: receipt.shippingPrice,
-          taxPrice: receipt.taxPrice,
-          totalPrice: receipt.totalPrice,
+          tax: receipt.tax,
+          total: receipt.total,
 
           codUse: receipt.codUse,
 
@@ -376,7 +376,7 @@ const RecControl = (e) => {
       );
       ctxDispatch({ type: 'INVOICE_CLEAR' });
       dispatch({ type: 'CREATE_SUCCESS' });
-      localStorage.removeItem('invoiceItems');
+      localStorage.removeItem('orderItems');
       navigate(`/admin/orders`);
     } catch (err) {
       dispatch({ type: 'CREATE_FAIL' });
@@ -650,7 +650,7 @@ const RecControl = (e) => {
                       <Card.Body>
                         <Card.Title>
                           <ListGroup.Item>
-                            <h3>Total: ${invoice.totalPrice}</h3>
+                            <h3>Total: ${invoice.total}</h3>
                           </ListGroup.Item>
                         </Card.Title>
                       </Card.Body>
@@ -679,7 +679,7 @@ const RecControl = (e) => {
                     desval={desval}
                     numval={numval}
                     isPaying={isPaying}
-                    invoiceItems={invoice.invoiceItems}
+                    orderItems={invoice.orderItems}
                     //                    totInvwithTax={totInvwithTax}
                     //                    setTotInvwithTax={setTotInvwithTax}
                   />
@@ -716,7 +716,7 @@ const RecControl = (e) => {
                   quantity={quantity}
                   price={price}
                   amount={amount}
-                  invoiceItems={invoice.invoiceItems}
+                  orderItems={invoice.orderItems}
                   setList={setList}
                   total={total}
                   setTotal={setTotal}

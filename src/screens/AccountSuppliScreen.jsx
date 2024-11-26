@@ -120,7 +120,7 @@ export default function AccountUserScreen() {
   const calculatotal = async () => {
     let sum = 0;
     invoices.forEach((invoice) => {
-      invoice.invoiceItems
+      invoice.orderItems
         ? (sum = sum - invoice.totalBuy)
         : (sum = sum + invoice.totalBuy);
     });
@@ -257,8 +257,8 @@ export default function AccountUserScreen() {
               {invoices?.map((invoice) => (
                 <tr key={invoice._id}>
                   <td>{invoice.docDat.substring(0, 10)}</td>
-                  {invoice.invoiceItems ? <td>Invoice</td> : <td>Receipt</td>}
-                  {invoice.invoiceItems ? (
+                  {invoice.orderItems ? <td>Invoice</td> : <td>Receipt</td>}
+                  {invoice.orderItems ? (
                     <td>{invoice.invNum}</td>
                   ) : (
                     <td>{invoice.recNum}</td>
@@ -270,7 +270,7 @@ export default function AccountUserScreen() {
                   <td>{invoice.totalBuy.toFixed(2)}</td>
 
                   <td>
-                    {invoice.invoiceItems ? (
+                    {invoice.orderItems ? (
                       <Button
                         type="button"
                         title="Print Invoice"
@@ -292,7 +292,7 @@ export default function AccountUserScreen() {
                       </Button>
                     )}
                     &nbsp;
-                    {invoice.invoiceItems ? (
+                    {invoice.orderItems ? (
                       <Button
                         type="button"
                         title="Send Email Invoice"
@@ -314,7 +314,7 @@ export default function AccountUserScreen() {
                       </Button>
                     )}
                     &nbsp;
-                    {invoice.invoiceItems ? (
+                    {invoice.orderItems ? (
                       <Button
                         type="button"
                         title="Consult Invoice"
@@ -332,7 +332,7 @@ export default function AccountUserScreen() {
                       </Button>
                     )}
                     &nbsp;
-                    {invoice.invoiceItems ? (
+                    {invoice.orderItems ? (
                       <Button
                         type="button"
                         title="Pay Invoice"
@@ -350,7 +350,7 @@ export default function AccountUserScreen() {
                       </Button>
                     )}
                     &nbsp;
-                    {invoice.invoiceItems ? (
+                    {invoice.orderItems ? (
                       <Button
                         type="button"
                         title="Delete Invoice"

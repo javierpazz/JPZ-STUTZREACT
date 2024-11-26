@@ -61,7 +61,7 @@ export default function ProductEditScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`/api/stateOrds/${stateOrdId}`);
+        const { data } = await axios.get(`${API}/api/stateOrds/${stateOrdId}`);
         setCodSup(data.codSup);
         setName(data.name);
         setNote(data.note);
@@ -81,7 +81,7 @@ export default function ProductEditScreen() {
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(
-        `/api/stateOrds/${stateOrdId}`,
+        `${API}/api/stateOrds/${stateOrdId}`,
         {
           _id: stateOrdId,
           name,

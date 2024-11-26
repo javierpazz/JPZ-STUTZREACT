@@ -50,7 +50,7 @@ export default function TableFormBuy({
 }) {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const {
-    invoice: { invoiceItems },
+    invoice: { orderItems },
     userInfo,
   } = state;
 
@@ -122,7 +122,7 @@ export default function TableFormBuy({
     const productRow = productss.find((row) => row._id === codPro);
     setProductR(productRow);
     setCodPro(productRow._id);
-    setDesPro(productRow.name);
+    setDesPro(productRow.title);
     setQuantity(1);
     setPrice(productRow.price);
     setAmount(productRow.price);
@@ -179,7 +179,7 @@ export default function TableFormBuy({
                       >
                         {productss.map((elementoP) => (
                           <option key={elementoP.id} value={elementoP._id}>
-                            {elementoP.name}
+                            {elementoP.title}
                           </option>
                         ))}
                       </Form.Select>
@@ -267,12 +267,12 @@ export default function TableFormBuy({
             <td className="font-bold">Options</td>
           </tr>
         </thead>
-        {invoiceItems.map((itemInv) => (
+        {orderItems.map((itemInv) => (
           <React.Fragment key={itemInv._id}>
             <tbody>
               <tr className="h-10">
                 <td>{itemInv._id}</td>
-                <td>{itemInv.name}</td>
+                <td>{itemInv.title}</td>
                 <td>{itemInv.quantity}</td>
                 <td>{itemInv.price}</td>
                 <td className="amount">{itemInv.quantity * itemInv.price}</td>

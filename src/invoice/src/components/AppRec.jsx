@@ -230,12 +230,12 @@ if (oldRecipt.length > 0) {
 
     if (recNum && recDat && codUse) {
       const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
-      receipt.itemsPrice = round2(
+      receipt.subTotal = round2(
         receipt.receiptItems.reduce((a, c) => a + c.amountval * 1, 0)
       );
-      receipt.shippingPrice = receipt.itemsPrice > 100 ? round2(0) : round2(10);
-      receipt.taxPrice = round2(0.15 * 0);
-      receipt.totalPrice = receipt.itemsPrice;
+      receipt.shippingPrice = receipt.subTotal > 100 ? round2(0) : round2(10);
+      receipt.tax = round2(0.15 * 0);
+      receipt.total = receipt.subTotal;
       receipt.totalBuy = 0;
       receipt.codUse = codUse;
       receipt.codSup = 0;
@@ -266,10 +266,10 @@ if (oldRecipt.length > 0) {
           receiptItems: receipt.receiptItems,
           shippingAddress: receipt.shippingAddress,
           paymentMethod: receipt.paymentMethod,
-          itemsPrice: receipt.itemsPrice,
+          subTotal: receipt.subTotal,
           shippingPrice: receipt.shippingPrice,
-          taxPrice: receipt.taxPrice,
-          totalPrice: receipt.totalPrice,
+          tax: receipt.tax,
+          total: receipt.total,
           totalBuy: receipt.totalBuy,
 
           codUse: receipt.codUse,

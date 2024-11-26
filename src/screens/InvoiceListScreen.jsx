@@ -154,7 +154,7 @@ export default function InvoiceListScreen() {
 
 //do
 const controlStockHandler = async (invoice) => {
-  invoice.invoiceItems.map((item) => stockHandler({ item }));
+  invoice.orderItems.map((item) => stockHandler({ item }));
 };
 
 const stockHandler = async (item) => {
@@ -266,7 +266,7 @@ try {
         </Col>
         <Col>
           <h3>
-            Total: ${invoicesT?.reduce((a, c) => a + c.totalPrice * 1, 0)}
+            Total: ${invoicesT?.reduce((a, c) => a + c.total * 1, 0)}
           </h3>
         </Col>
         <Col>
@@ -315,7 +315,7 @@ try {
                   <td>{invoice.user ? invoice.user.name : 'DELETED USER'}</td>
                   <td>{invoice.recNum ? invoice.recDat : 'No'}</td>
                   <td>{invoice.desVal}</td>
-                  <td>{invoice.totalPrice.toFixed(2)}</td>
+                  <td>{invoice.total.toFixed(2)}</td>
 
                   <td>
                     <Button

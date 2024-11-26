@@ -106,9 +106,9 @@ export default function AccountUserScreen() {
   const calculatotal = async () => {
     let sum = 0;
     invoices.forEach((invoice) => {
-      invoice.invoiceItems
-        ? (sum = sum - invoice.totalPrice)
-        : (sum = sum + invoice.totalPrice);
+      invoice.orderItems
+        ? (sum = sum - invoice.total)
+        : (sum = sum + invoice.total);
     });
 
     setTotal(sum);
@@ -196,10 +196,10 @@ export default function AccountUserScreen() {
                   <td>{invoice.invDat}</td>
                   <td>{invoice.recNum}</td>
                   <td>{invoice.recDat}</td>
-                  <td>{invoice.totalPrice.toFixed(2)}</td>
+                  <td>{invoice.total.toFixed(2)}</td>
 
                   <td>
-                    {invoice.invoiceItems ? (
+                    {invoice.orderItems ? (
                       <Button
                         type="button"
                         title="Print Invoice"
@@ -221,7 +221,7 @@ export default function AccountUserScreen() {
                       </Button>
                     )}
                     &nbsp;
-                    {invoice.invoiceItems ? (
+                    {invoice.orderItems ? (
                       <Button
                         type="button"
                         title="Send Email Invoice"
@@ -243,7 +243,7 @@ export default function AccountUserScreen() {
                       </Button>
                     )}
                     &nbsp;
-                    {invoice.invoiceItems ? (
+                    {invoice.orderItems ? (
                       <Button
                         type="button"
                         title="Consult Invoice"
@@ -261,7 +261,7 @@ export default function AccountUserScreen() {
                       </Button>
                     )}
                     &nbsp;
-                    {invoice.invoiceItems ? (
+                    {invoice.orderItems ? (
                       <Button
                         type="button"
                         title="Delete Invoice"

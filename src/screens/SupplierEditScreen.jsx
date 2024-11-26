@@ -61,7 +61,8 @@ export default function ProductEditScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`/api/suppliers/${supplierId}`);
+        const { data } = await axios.get(`${API}/api/suppliers/${supplierId}`);
+        // console.log(data);
         setCodSup(data.codSup);
         setName(data.name);
         setEmail(data.email);
@@ -81,7 +82,7 @@ export default function ProductEditScreen() {
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(
-        `/api/suppliers/${supplierId}`,
+        `${API}/api/suppliers/${supplierId}`,
         {
           _id: supplierId,
           codSup,
@@ -116,7 +117,7 @@ export default function ProductEditScreen() {
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
         <Form onSubmit={submitHandler}>
-          <Form.Group className="mb-3" controlId="slug">
+          <Form.Group className="mb-3" controlId="codSup">
             <Form.Label>Code</Form.Label>
             <Form.Control
               value={codSup}
@@ -132,7 +133,7 @@ export default function ProductEditScreen() {
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="name">
+          <Form.Group className="mb-3" controlId="email">
             <Form.Label>Email</Form.Label>
             <Form.Control
               value={email}

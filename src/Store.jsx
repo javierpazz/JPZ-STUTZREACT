@@ -26,8 +26,8 @@ const initialState = {
     paymentMethod: localStorage.getItem('paymentMethod')
       ? localStorage.getItem('paymentMethod')
       : '',
-    invoiceItems: localStorage.getItem('invoiceItems')
-      ? JSON.parse(localStorage.getItem('invoiceItems'))
+    orderItems: localStorage.getItem('orderItems')
+      ? JSON.parse(localStorage.getItem('orderItems'))
       : [],
   },
   receipt: {
@@ -75,25 +75,25 @@ function reducer(state, action) {
     case 'INVOICE_ADD_ITEM':
       // add to cart
       const newItemInv = action.payload;
-      const existItemInv = state.invoice.invoiceItems.find(
+      const existItemInv = state.invoice.orderItems.find(
         (itemInv) => itemInv._id === newItemInv._id
       );
-      const invoiceItems = existItemInv
-        ? state.invoice.invoiceItems.map((itemInv) =>
+      const orderItems = existItemInv
+        ? state.invoice.orderItems.map((itemInv) =>
             itemInv._id === existItemInv._id ? newItemInv : itemInv
           )
-        : [...state.invoice.invoiceItems, newItemInv];
-      localStorage.setItem('invoiceItems', JSON.stringify(invoiceItems));
-      return { ...state, invoice: { ...state.invoice, invoiceItems } };
+        : [...state.invoice.orderItems, newItemInv];
+      localStorage.setItem('orderItems', JSON.stringify(orderItems));
+      return { ...state, invoice: { ...state.invoice, orderItems } };
     case 'INVOICE_REMOVE_ITEM': {
-      const invoiceItems = state.invoice.invoiceItems.filter(
+      const orderItems = state.invoice.orderItems.filter(
         (itemInv) => itemInv._id !== action.payload._id
       );
-      localStorage.setItem('invoiceItems', JSON.stringify(invoiceItems));
-      return { ...state, invoice: { ...state.invoice, invoiceItems } };
+      localStorage.setItem('orderItems', JSON.stringify(orderItems));
+      return { ...state, invoice: { ...state.invoice, orderItems } };
     }
     case 'INVOICE_CLEAR':
-      return { ...state, invoice: { ...state.invoice, invoiceItems: [] } };
+      return { ...state, invoice: { ...state.invoice, orderItems: [] } };
 
     case 'RECEIPT_ADD_ITEM':
       // add to cart
@@ -130,7 +130,7 @@ function reducer(state, action) {
           paymentMethod: '',
         },
         invoice: {
-          invoiceItems: [],
+          orderItems: [],
           shippingAddress: {},
           paymentMethod: '',
         },

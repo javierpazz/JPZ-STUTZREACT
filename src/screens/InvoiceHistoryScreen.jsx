@@ -101,7 +101,7 @@ export default function InvoiceHistoryScreen() {
                     {invoice.isPaid ? invoice.paidAt.substring(0, 10) : 'No'}
                   </td>
                   <td>{invoice.desVal}</td>
-                  <td>{invoice.totalPrice.toFixed(2)}</td>
+                  <td>{invoice.total.toFixed(2)}</td>
 
                   <td>
                     <Button

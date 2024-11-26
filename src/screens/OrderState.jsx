@@ -53,7 +53,7 @@ export default function OrderState({ invoice, show, setShow }) {
 
   const { state } = useContext(Store);
   const { userInfo } = state;
-  const [total, setTotal] = useState(invoice.totalPrice);
+  const [total, setTotal] = useState(invoice.total);
   const [invId, setInvId] = useState(invoice._id);
   const [name, setName] = useState(invoice.user.name);
   const [remNum, setRemNum] = useState(invoice.remNum);
@@ -68,7 +68,7 @@ export default function OrderState({ invoice, show, setShow }) {
 
   const LoadInvoice = (invoice) => {
     setInvId(invoice._id);
-    setTotal(invoice.totalPrice);
+    setTotal(invoice.total);
     setName(invoice.user.name);
     setRemNum(invoice.remNum);
     setInvNum(invoice.invNum);

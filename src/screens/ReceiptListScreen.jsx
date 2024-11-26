@@ -207,7 +207,7 @@ const prodeleteReceipt = (receipt) => {
         </Col>
         <Col>
           <h3>
-            Total: ${receiptsT?.reduce((a, c) => a + c.totalPrice * 1, 0)}
+            Total: ${receiptsT?.reduce((a, c) => a + c.total * 1, 0)}
           </h3>
         </Col>
 
@@ -249,7 +249,7 @@ const prodeleteReceipt = (receipt) => {
                   <td>{receipt.recDat.substring(0, 10)}</td>
                   <td>{receipt.user ? receipt.user.name : 'DELETED CLIENT'}</td>
                   <td>{receipt.desval}</td>
-                  <td>{receipt.totalPrice.toFixed(2)}</td>
+                  <td>{receipt.total.toFixed(2)}</td>
 
                   <td>
                     <Button

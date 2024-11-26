@@ -22,7 +22,7 @@ export default function TableFormOrd({
   total,
   setTotal,
   isPaying,
-  invoiceItems,
+  orderItems,
 }) {
   return (
     <>
@@ -41,12 +41,12 @@ export default function TableFormOrd({
             <td className="font-bold">Options</td>
           </tr>
         </thead>
-        {invoiceItems?.map((itemInv) => (
+        {orderItems?.map((itemInv) => (
           <React.Fragment key={itemInv._id}>
             <tbody>
               <tr className="h-10">
                 <td>{itemInv._id}</td>
-                <td>{itemInv.name}</td>
+                <td>{itemInv.title}</td>
                 <td>{itemInv.quantity}</td>
                 <td>{itemInv.price}</td>
                 <td className="amount">{itemInv.quantity * itemInv.price}</td>

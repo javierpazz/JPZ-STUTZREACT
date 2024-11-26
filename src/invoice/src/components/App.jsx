@@ -76,7 +76,7 @@ function App() {
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const {
-    invoice: { invoiceItems },
+    invoice: { orderItems },
     receipt: { receiptItems },
   } = state;
 
@@ -128,7 +128,7 @@ function App() {
   useEffect(() => {
     const calculateAmountval = (amountval) => {
       setAmountval(
-        invoiceItems?.reduce((a, c) => a + c.quantity * c.price, 0) * 1.15
+        orderItems?.reduce((a, c) => a + c.quantity * c.price, 0) * 1.15
       );
     };
     if (numval === '') {
@@ -138,7 +138,7 @@ function App() {
     setDesVal(desVal);
     calculateAmountval(amountval);
     addToCartHandler(valueeR);
-  }, [invoiceItems, numval, desval, recNum, recDat]);
+  }, [orderItems, numval, desval, recNum, recDat]);
 
   useEffect(() => {
     clearitems();
@@ -203,18 +203,18 @@ function App() {
       unloadpayment();
     } else {
       if (invNum && invDat && codUse) {
-        invoiceItems.map((item) => stockHandler({ item }));
+        orderItems.map((item) => stockHandler({ item }));
         const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
-        invoice.itemsPrice = round2(
-          invoice.invoiceItems.reduce((a, c) => a + c.quantity * c.price, 0)
+        invoice.subTotal = round2(
+          invoice.orderItems.reduce((a, c) => a + c.quantity * c.price, 0)
         );
         invoice.shippingPrice = 0;
 
         //        invoice.shippingPrice =
-        //        invoice.itemsPrice > 100 ? round2(0) : round2(10);
-        invoice.taxPrice = round2(0.15 * invoice.itemsPrice);
-        invoice.totalPrice =
-          invoice.itemsPrice + invoice.shippingPrice + invoice.taxPrice;
+        //        invoice.subTotal > 100 ? round2(0) : round2(10);
+        invoice.tax = round2(0.15 * invoice.subTotal);
+        invoice.total =
+          invoice.subTotal + invoice.shippingPrice + invoice.tax;
         invoice.totalBuy = 0;
         invoice.codUse = codUse;
 
@@ -228,7 +228,7 @@ function App() {
         invoice.notes = notes;
 
         if (recNum && recDat && desVal) {
-          receipt.totalPrice = invoice.totalPrice;
+          receipt.total = invoice.total;
           receipt.totalBuy = invoice.totalBuy;
           receipt.codUse = invoice.codUse;
           receipt.codSup = '0';
@@ -270,10 +270,10 @@ function App() {
           receiptItems: receipt.receiptItems,
           shippingAddress: receipt.shippingAddress,
           paymentMethod: receipt.paymentMethod,
-          itemsPrice: receipt.itemsPrice,
+          subTotal: receipt.subTotal,
           shippingPrice: receipt.shippingPrice,
-          taxPrice: receipt.taxPrice,
-          totalPrice: receipt.totalPrice,
+          tax: receipt.tax,
+          total: receipt.total,
           totalBuy: receipt.totalBuy,
 
           codUse: receipt.codUse,
@@ -337,13 +337,13 @@ function App() {
         `${API}/api/invoices`,
 
         {
-          invoiceItems: invoice.invoiceItems,
+          orderItems: invoice.orderItems,
           shippingAddress: invoice.shippingAddress,
           paymentMethod: invoice.paymentMethod,
-          itemsPrice: invoice.itemsPrice,
+          subTotal: invoice.subTotal,
           shippingPrice: invoice.shippingPrice,
-          taxPrice: invoice.taxPrice,
-          totalPrice: invoice.totalPrice,
+          tax: invoice.tax,
+          total: invoice.total,
           totalBuy: invoice.totalBuy,
 
           codUse: invoice.codUse,
@@ -367,7 +367,7 @@ function App() {
       );
       //ctxDispatch({ type: 'INVOICE_CLEAR' });
       //      dispatch({ type: 'CREATE_SUCCESS' });
-      //      localStorage.removeItem('invoiceItems');
+      //      localStorage.removeItem('orderItems');
       setIsPaying(false);
       setDesval('');
       setDesVal('');
@@ -403,7 +403,7 @@ function App() {
   const clearitems = () => {
     ctxDispatch({ type: 'INVOICE_CLEAR' });
     dispatch({ type: 'CREATE_SUCCESS' });
-    localStorage.removeItem('invoiceItems');
+    localStorage.removeItem('orderItems');
     localStorage.removeItem('receiptItems');
     setShowInvoice(false);
   };
@@ -630,7 +630,7 @@ function App() {
                           onClick={Paying}
                           className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                           disabled={
-                            invoiceItems.length === 0 ||
+                            orderItems.length === 0 ||
                             !invNum ||
                             !invDat ||
                             !codUse
@@ -664,7 +664,7 @@ function App() {
                           type="button"
                           onClick={placeCancelInvoiceHandler}
                           disabled={
-                            invoiceItems.length === 0 ||
+                            orderItems.length === 0 ||
                             !invNum ||
                             !invDat ||
                             !codUse
@@ -682,7 +682,7 @@ function App() {
                           type="button"
                           onClick={placeInvoiceHandler}
                           disabled={
-                            invoiceItems.length === 0 ||
+                            orderItems.length === 0 ||
                             !invNum ||
                             !invDat ||
                             !codUse
@@ -764,7 +764,7 @@ function App() {
                 quantity={quantity}
                 price={price}
                 amount={amount}
-                invoiceItems={invoiceItems}
+                orderItems={orderItems}
                 setList={setList}
                 total={total}
                 setTotal={setTotal}

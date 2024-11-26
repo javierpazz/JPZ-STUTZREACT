@@ -54,13 +54,13 @@ export default function ProductEditScreen() {
       error: '',
     });
 
-  const [name, setName] = useState('');
+  const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [price, setPrice] = useState('');
   const [image, setImage] = useState('');
   const [images, setImages] = useState([]);
   const [category, setCategory] = useState('');
-  const [countInStock, setCountInStock] = useState('');
+  const [inStock, setInStock] = useState('');
   const [brand, setBrand] = useState('');
   const [description, setDescription] = useState('');
 
@@ -69,13 +69,13 @@ export default function ProductEditScreen() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(`${API}/api/products/${productId}`);
-        setName(data.name);
+        setTitle(data.title);
         setSlug(data.slug);
         setPrice(data.price);
         setImage(data.image);
         setImages(data.images);
         setCategory(data.category);
-        setCountInStock(data.countInStock);
+        setInStock(data.inStock);
         setBrand(data.brand);
         setDescription(data.description);
         dispatch({ type: 'FETCH_SUCCESS' });
@@ -97,14 +97,14 @@ export default function ProductEditScreen() {
         `${API}/api/products/${productId}`,
         {
           _id: productId,
-          name,
+          title,
           slug,
           price,
           image,
           images,
           category,
           brand,
-          countInStock,
+          inStock,
           description,
         },
         {
@@ -169,8 +169,8 @@ export default function ProductEditScreen() {
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Name</Form.Label>
             <Form.Control
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               required
             />
           </Form.Group>
@@ -243,11 +243,11 @@ export default function ProductEditScreen() {
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="countInStock">
+          <Form.Group className="mb-3" controlId="inStock">
             <Form.Label>Count In Stock</Form.Label>
             <Form.Control
-              value={countInStock}
-              onChange={(e) => setCountInStock(e.target.value)}
+              value={inStock}
+              onChange={(e) => setInStock(e.target.value)}
               required
             />
           </Form.Group>
