@@ -138,7 +138,7 @@ export default function ProductEditScreen() {
       if (forImages) {
         setImages([...images, data.secure_url]);
       } else {
-        setImage(data.secure_url);
+        setImages([data.secure_url]);
       }
       toast.success('Image uploaded successfully. click Update to apply it');
     } catch (err) {
@@ -190,7 +190,7 @@ export default function ProductEditScreen() {
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="image">
+          {/* <Form.Group className="mb-3" controlId="image">
             <Form.Label>Image File</Form.Label>
             <Form.Control
               value={image}
@@ -203,9 +203,17 @@ export default function ProductEditScreen() {
             <Form.Control type="file" onChange={uploadFileHandler} />
             {loadingUpload && <LoadingBox></LoadingBox>}
           </Form.Group>
-
+          */}
+          <Form.Group className="mb-3" controlId="additionalImageFile">
+            <Form.Label>Upload Image</Form.Label>
+            <Form.Control
+              type="file"
+              onChange={(e) => uploadFileHandler(e, true)}
+            />
+            {loadingUpload && <LoadingBox></LoadingBox>}
+          </Form.Group>
           <Form.Group className="mb-3" controlId="additionalImage">
-            <Form.Label>Additional Images</Form.Label>
+            <Form.Label>Images</Form.Label>
             {images.length === 0 && <MessageBox>No image</MessageBox>}
             <ListGroup variant="flush">
               {images.map((x) => (
@@ -217,14 +225,6 @@ export default function ProductEditScreen() {
                 </ListGroup.Item>
               ))}
             </ListGroup>
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="additionalImageFile">
-            <Form.Label>Upload Aditional Image</Form.Label>
-            <Form.Control
-              type="file"
-              onChange={(e) => uploadFileHandler(e, true)}
-            />
-            {loadingUpload && <LoadingBox></LoadingBox>}
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="category">

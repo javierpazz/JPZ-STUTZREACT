@@ -127,7 +127,7 @@ function ProductScreen() {
         <Col md={6}>
           <img
             className="img-large"
-            src={selectedImage || product.image}
+            src={selectedImage || product.images[0]}
             alt={product.title}
           ></img>
         </Col>
@@ -148,7 +148,7 @@ function ProductScreen() {
             <ListGroup.Item>Price : ${product.price}</ListGroup.Item>
             <ListGroup.Item>
               <Row xs={1} md={2} className="g-2">
-                {[product.image, ...product.images].map((x) => (
+                {[ ...product.images].map((x) => (
                   <Col key={x}>
                     <Card>
                       <Button

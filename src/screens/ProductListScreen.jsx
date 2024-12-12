@@ -177,7 +177,7 @@ export default function ProductListScreen() {
                   <td>{product._id}</td>
                   <td>{product.title}</td>
                   <td>{product.price}</td>
-                  <td>{product.category}</td>
+                  <td>{product.type}</td>
                   <td>{product.brand}</td>
                   <td>{product.inStock}</td>
                   <td>

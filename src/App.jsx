@@ -210,13 +210,13 @@ function App() {
             <Nav.Item>
               <strong>Categories</strong>
             </Nav.Item>
-            {categories.map((category) => (
-              <Nav.Item key={category}>
+            {categories.map((type) => (
+              <Nav.Item key={type}>
                 <LinkContainer
-                  to={`/search?category=${category}`}
+                  to={`/search?category=${type}`}
                   onClick={() => setSidebarIsOpen(false)}
                 >
-                  <Nav.Link>{category}</Nav.Link>
+                  <Nav.Link>{type}</Nav.Link>
                 </LinkContainer>
               </Nav.Item>
             ))}
