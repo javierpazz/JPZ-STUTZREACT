@@ -43,6 +43,7 @@ export default function PlaceOrderScreen() {
   cart.shippingPrice = cart.subTotal > 100 ? round2(0) : round2(10);
   cart.tax = round2(0.15 * cart.subTotal);
   cart.total = cart.subTotal + cart.shippingPrice + cart.tax;
+  cart.totaldeItems= cart.cartItems.reduce((a, c) => a + c.quantity, 0);
 
   const placeOrderHandler = async () => {
     cart.cartItems.map((item) => stockHandler({ item }));
@@ -78,6 +79,7 @@ export default function PlaceOrderScreen() {
       const { data } = await Axios.post(
         `${API}/api/orders`,
         {
+          numberOfItems: cart.totaldeItems,
           orderItems: cart.cartItems,
           shippingAddress: cart.shippingAddress,
           paymentMethod: cart.paymentMethod,
@@ -151,7 +153,7 @@ export default function PlaceOrderScreen() {
                     <Row className="align-items-center">
                       <Col md={6}>
                         <img
-                          src={item.image}
+                          src={item.images[0]}
                           alt={item.title}
                           className="img-fluid rounded img-thumbnail"
                         ></img>{' '}

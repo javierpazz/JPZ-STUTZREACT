@@ -4,5 +4,5 @@ export const getError = (error) => {
     : error.message;
 };
         
-// export const API = "https://jpz-stutz.onrender.com";
-export const API = "http://127.0.0.101:3000";
+export const API = "https://jpz-stutz.onrender.com";
+// export const API = "http://127.0.0.101:4000";
