@@ -102,7 +102,6 @@ export default function AccountUserScreen() {
         //        let kiki = data?.filter((data) => data.user === userId);
         const sortedList = data.sort((a, b) => (a.docDat > b.docDat ? -1 : 0));
         setInvoices(sortedList);
-        console.log(data);
       } catch (err) {
         dispatch({
           type: 'TOTAL_FETCH_FAIL',

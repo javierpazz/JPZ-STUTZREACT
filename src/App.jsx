@@ -499,7 +499,7 @@ function App() {
           </Container>
         </main>
         <footer>
-        {userInfo && !userInfo.role=="admin" && <ChatBox userInfo={userInfo} />}
+        {userInfo && !(userInfo.role==='admin') && <ChatBox userInfo={userInfo} />}
           <div className="text-center">All rights reserved</div>
         </footer>
       </div>

@@ -185,7 +185,6 @@ useEffect(() => {
 //cr/
 //
 const RecControl = (e) => {
-  console.log(receiptss);
 
   const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum) && row.user._id === codUse );
   if (oldRecipt.length > 0) {

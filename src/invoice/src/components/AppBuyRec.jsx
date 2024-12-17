@@ -148,7 +148,7 @@ function AppBuyRec() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`/api/users/`, {
+        const { data } = await axios.get(`${API}/api/users/`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         setUserss(data);
@@ -162,7 +162,7 @@ function AppBuyRec() {
     clearitems();
     const fetchDataVal = async () => {
       try {
-        const { data } = await axios.get(`/api/suppliers/`, {
+        const { data } = await axios.get(`${API}/api/suppliers/`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         setSuppliers(data);

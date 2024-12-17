@@ -95,14 +95,13 @@ export default function AccountUserScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'TOTAL_FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/invoices/ctaB/${suppliId} `, {
+        const { data } = await axios.get(`${API}/api/invoices/ctaB/${suppliId}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'TOTAL_FETCH_SUCCESS', payload: data });
         //        let kiki = data?.filter((data) => data.user === userId);
         const sortedList = data.sort((a, b) => (a.docDat > b.docDat ? -1 : 0));
         setInvoices(sortedList);
-        console.log(data);
       } catch (err) {
         dispatch({
           type: 'TOTAL_FETCH_FAIL',

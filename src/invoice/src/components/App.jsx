@@ -228,6 +228,7 @@ function App() {
         invoice.notes = notes;
 
         if (recNum && recDat && desVal) {
+          receipt.subTotal = invoice.subTotal;
           receipt.total = invoice.total;
           receipt.totalBuy = invoice.totalBuy;
           receipt.codUse = invoice.codUse;
