@@ -126,7 +126,7 @@ export default function TableFormBuy({
     setQuantity(1);
     setPrice(productRow.price);
     setAmount(productRow.price);
-    setStock(productRow.countInStock);
+    setStock(productRow.inStock);
   };
 
 //   const stockControl = (e) => {
@@ -178,7 +178,7 @@ export default function TableFormBuy({
                         disabled={isPaying}
                       >
                         {productss.map((elementoP) => (
-                          <option key={elementoP.id} value={elementoP._id}>
+                          <option key={elementoP._id} value={elementoP._id}>
                             {elementoP.title}
                           </option>
                         ))}

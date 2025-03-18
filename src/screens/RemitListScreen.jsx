@@ -19,11 +19,10 @@ import { Store } from '../Store';
 import { getError, API } from '../utils';
 import SearchBox from '../components/SearchBox';
 import Modal from 'react-bootstrap/Modal';
-import InvoiceListChaNum from './InvoiceListChaNum';
+import InvoiceListChaNum from './../screens/InvoiceListChaNum';
 
 const reducer = (state, action) => {
   switch (action.type) {
-
     case 'FETCH_REQUEST':
       return { ...state, loading: true };
     case 'FETCH_SUCCESS':
@@ -48,11 +47,18 @@ const reducer = (state, action) => {
       return { ...state, loadingDelete: false };
     case 'DELETE_RESET':
       return { ...state, loadingDelete: false, successDelete: false };
+    case 'UPDATE_REQUEST':
+      return { ...state, loadingUpdate: true };
+    case 'UPDATE_SUCCESS':
+      return { ...state, loadingUpdate: false };
+    case 'UPDATE_FAIL':
+      return { ...state, loadingUpdate: false };
+
     default:
       return state;
   }
 };
-export default function InvoiceBuyListScreen() {
+export default function RemitListScreen() {
   const [
     {
       loading,
@@ -60,6 +66,7 @@ export default function InvoiceBuyListScreen() {
       invoices,
       invoicesT,
       pages,
+      loadingUpdate,
       loadingDelete,
       successDelete,
     },
@@ -80,15 +87,23 @@ export default function InvoiceBuyListScreen() {
   const [show, setShow] = useState(false);
   const [invoice, setInvoice] = useState('');
 
+  const [invId, setInvId] = useState('');
+  const [name, setName] = useState('');
+  const [remNum, setRemNum] = useState('');
+  const [invNum, setInvNum] = useState('');
+  const [ordNum, setOrdNum] = useState('');
+  const [invDat, setInvDat] = useState('');
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/invoices/adminB?page=${page} `, {
+        const { data } = await axios.get(`${API}/api/invoices/adminS?page=${page} `, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
+        //        calculatotal();
       } catch (err) {
         dispatch({
           type: 'FETCH_FAIL',
@@ -117,7 +132,7 @@ const stockHandler = async (item) => {
 try {
   dispatch({ type: 'CREATE_REQUEST' });
   await axios.put(
-    `${API}/api/products/downstock/${item.item._id}`,
+    `${API}/api/products/upstock/${item.item._id}`,
     {
       quantitys: item.item.quantity,
     },
@@ -137,51 +152,94 @@ try {
 //do
 
 
+
+  const noDelInvoice = async () => {
+    if (
+      window.confirm(
+        'This Invoice have a Receipt, You Must delete the receipt Before'
+      )
+    ) {
+    }
+  };
+  
+
+
   const deleteHandler = async (invoice) => {
-    if (window.confirm('Are you sure to delete?')) {
-      controlStockHandler(invoice);
-      try {
-        dispatch({ type: 'DELETE_REQUEST' });
-        await axios.delete(`${API}/api/invoices/${invoice._id}`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
-        toast.success('invoice deleted successfully');
-        dispatch({ type: 'DELETE_SUCCESS' });
-      } catch (err) {
-        toast.error(getError(error));
-        dispatch({
-          type: 'DELETE_FAIL',
-        });
+    if (invoice.recNum) {
+      noDelInvoice();
+    } else {
+      if (!invoice.ordYes) {
+        //do
+        controlStockHandler(invoice);
+        try {
+          dispatch({ type: 'DELETE_REQUEST' });
+          await axios.delete(`${API}/api/orders/${invoice._id}`, {
+            headers: { Authorization: `Bearer ${userInfo.token}` },
+          });
+          toast.success('order deleted successfully');
+          dispatch({ type: 'DELETE_SUCCESS' });
+        } catch (err) {
+          toast.error(getError(error));
+          dispatch({
+            type: 'DELETE_FAIL',
+          });
+        }
+
+        //do
       }
+      else {
+            if (window.confirm('Are you sure to delete?')) {
+              try {
+                dispatch({ type: 'UPDATE_REQUEST' });
+                await axios.put(
+                  `${API}/api/invoices/${invoice._id}/deleteinvoice`,
+                  {
+                    remNum: null,
+                    invNum: null,
+                  },
+                  {
+                    headers: { Authorization: `Bearer ${userInfo.token}` },
+                  }
+                );
+                dispatch({ type: 'UPDATE_SUCCESS' });
+                toast.success('Invoice deleted successfully');
+              } catch (err) {
+                toast.error(getError(error));
+                dispatch({
+                  type: 'UPDATE_FAIL',
+                });
+              }
+            }
+          }
     }
   };
 
   const calculatotal = () => {
     let tot = 0;
-    invoicesT?.map((inv) => (tot = tot + inv.totalBuy));
+    invoicesT?.map((inv) => (tot = tot + inv.priceTotal));
     setTotal(tot);
   };
 
   const createHandler = async () => {
     if (window.confirm('Are you sure to create?')) {
-      navigate(`/admin/invoicerBuy`);
+      navigate(`/admin/remiter`);
     }
   };
 
   return (
     <div>
       <Helmet>
-        <title>Buy Invoices</title>
+        <title>Sale Remits</title>
       </Helmet>
       <Row>
         <Col>
-          <h1>Buy Invoices</h1>
+          <h1>Sale Remits</h1>
         </Col>
 
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Buy Invoice
+              Create Sale Remit
             </Button>
           </div>
         </Col>
@@ -197,12 +255,11 @@ try {
           <table className="table">
             <thead>
               <tr>
-                <th>FACTURA</th>
                 <th>FECHA</th>
                 <th>REMITO</th>
                 <th>PEDIDO</th>
                 <th>RECIBO</th>
-                <th>PROVEEDOR</th>
+                <th>CLIENTE</th>
                 <th>PAGOS</th>
                 <th>FORMA PAGO</th>
                 <th>TOTAL</th>
@@ -212,19 +269,14 @@ try {
             <tbody>
               {invoices?.map((invoice) => (
                 <tr key={invoice._id}>
-                  <td>{invoice.invNum}</td>
-                  <td>{invoice.invDat.substring(0, 10)}</td>
+                  <td>{invoice.remDat.substring(0, 10)}</td>
                   <td>{invoice.remNum}</td>
-                  <td>{invoice.ordNum}</td>
+                  {invoice.ordYes === 'Y' ? <td>{invoice._id}</td> : <td></td>}
                   <td>{invoice.recNum}</td>
-                  <td>
-                    {invoice.supplier
-                      ? invoice.supplier.name
-                      : 'DELETED SUPPLIER'}
-                  </td>
+                  <td>{invoice.id_client ? invoice.id_client.nameCus : 'DELETED USER'}</td>
                   <td>{invoice.recNum ? invoice.recDat : 'No'}</td>
                   <td>{invoice.desVal}</td>
-                  <td>{invoice.totalBuy.toFixed(2)}</td>
+                  <td>{invoice.total.toFixed(2)}</td>
 
                   <td>
                     <Button
@@ -250,7 +302,7 @@ try {
                     <Button
                       type="button"
                       title="Add or Change Invoice or Remit Number"
-                      onClick={() => handleShow(invoice._id)}
+                      onClick={() => handleShow(invoice)}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                     </Button>
@@ -272,7 +324,7 @@ try {
               <Link
                 className={x + 1 === Number(page) ? 'btn text-bold' : 'btn'}
                 key={x + 1}
-                to={`/admin/invoicesBuy?page=${x + 1}`}
+                to={`/admin/invoices?page=${x + 1}`}
               >
                 {x + 1}
               </Link>
@@ -286,7 +338,7 @@ try {
           >
             <Modal.Header closeButton>
               <Modal.Title id="example-modal-sizes-title-lg">
-                Change REmit Invoice Number of {invoice}
+                Change Remit Invoice Number of {invoice._id}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>

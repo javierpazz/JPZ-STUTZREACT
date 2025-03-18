@@ -1,14 +1,14 @@
-import axios from 'axios';
 import React, { useContext, useEffect, useReducer } from 'react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
+import axios from 'axios';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
-
+import { Store } from '../Store';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
-import { Store } from '../Store';
 import { getError, API } from '../utils';
 
 const reducer = (state, action) => {
@@ -18,25 +18,24 @@ const reducer = (state, action) => {
     case 'FETCH_SUCCESS':
       return {
         ...state,
-        users: action.payload.users,
+        customers: action.payload.customers,
         page: action.payload.page,
         pages: action.payload.pages,
         loading: false,
       };
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
+    case 'CREATE_REQUEST':
+      return { ...state, loadingCreate: true };
+    case 'CREATE_SUCCESS':
+      return {
+        ...state,
+        loadingCreate: false,
+      };
+    case 'CREATE_FAIL':
+      return { ...state, loadingCreate: false };
 
-      case 'CREATE_REQUEST':
-        return { ...state, loadingCreate: true };
-      case 'CREATE_SUCCESS':
-        return {
-          ...state,
-          loadingCreate: false,
-        };
-      case 'CREATE_FAIL':
-        return { ...state, loadingCreate: false };
-  
-      case 'DELETE_REQUEST':
+    case 'DELETE_REQUEST':
       return { ...state, loadingDelete: true, successDelete: false };
     case 'DELETE_SUCCESS':
       return {
@@ -45,23 +44,33 @@ const reducer = (state, action) => {
         successDelete: true,
       };
     case 'DELETE_FAIL':
-      return { ...state, loadingDelete: false };
+      return { ...state, loadingDelete: false, successDelete: false };
+
     case 'DELETE_RESET':
       return { ...state, loadingDelete: false, successDelete: false };
     default:
       return state;
   }
 };
-export default function UserListScreen() {
-  const navigate = useNavigate();
+
+export default function CustomerListScreen() {
   const [
-    { loading, error, users, pages, loadingDelete, successDelete },
+    {
+      loading,
+      error,
+      customers,
+      pages,
+      loadingCreate,
+      loadingDelete,
+      successDelete,
+    },
     dispatch,
   ] = useReducer(reducer, {
     loading: true,
     error: '',
   });
 
+  const navigate = useNavigate();
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
   const page = sp.get('page') || 1;
@@ -72,18 +81,14 @@ export default function UserListScreen() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/users/admin?page=${page} `, {
+        const { data } = await axios.get(`${API}/api/customers/admin?page=${page} `, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
+
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
-      } catch (err) {
-        dispatch({
-          type: 'FETCH_FAIL',
-          payload: getError(err),
-        });
-      }
+      } catch (err) {}
     };
+
     if (successDelete) {
       dispatch({ type: 'DELETE_RESET' });
     } else {
@@ -91,43 +96,20 @@ export default function UserListScreen() {
     }
   }, [page, userInfo, successDelete]);
 
-  const deleteHandler = async (user) => {
-    if (window.confirm('Are you sure to delete?')) {
-      try {
-        dispatch({ type: 'DELETE_REQUEST' });
-        await axios.delete(`${API}/api/users/${user._id}`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
-        toast.success('user deleted successfully');
-        dispatch({ type: 'DELETE_SUCCESS' });
-      } catch (error) {
-        toast.error(getError(error));
-        dispatch({
-          type: 'DELETE_FAIL',
-        });
-      }
-    }
-  };
-
   const createHandler = async () => {
     if (window.confirm('Are you sure to create?')) {
       try {
         dispatch({ type: 'CREATE_REQUEST' });
         const { data } = await axios.post(
-          `${API}/api/users/signup`,
-          {
-            name:'sample name ' + Date.now(),
-            email:'sample-mail@' + Date.now() +".com",
-            password: "123456",
-          },
+          `${API}/api/customers`,
+          {},
           {
             headers: { Authorization: `Bearer ${userInfo.token}` },
           }
         );
-        console.log(data);
-        toast.success('user created successfully');
+        toast.success('customer created successfully');
         dispatch({ type: 'CREATE_SUCCESS' });
-        navigate(`/admin/user/${data._id}`);
+        navigate(`/admin/customer/${data.customer._id}`);
       } catch (err) {
         toast.error(getError(error));
         dispatch({
@@ -137,23 +119,41 @@ export default function UserListScreen() {
     }
   };
 
-
-  const accountShow = (userId) => {};
+  const deleteHandler = async (customer) => {
+    if (window.confirm('Are you sure to delete?')) {
+      try {
+        await axios.delete(`${API}/api/customers/${customer._id}`, {
+          headers: { Authorization: `Bearer ${userInfo.token}` },
+        });
+        toast.success('customer deleted successfully');
+        dispatch({ type: 'DELETE_SUCCESS' });
+      } catch (err) {
+        toast.error(getError(error));
+        dispatch({
+          type: 'DELETE_FAIL',
+        });
+      }
+    }
+  };
 
   return (
     <div>
-      <Col>
-        <h1>Users</h1>
-      </Col>
-      <Col className="col text-end">
+      <Row>
+        <Col>
+          <h1>customers</h1>
+        </Col>
+        <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create User
+              Create customer
             </Button>
           </div>
         </Col>
- 
+      </Row>
+
+      {loadingCreate && <LoadingBox></LoadingBox>}
       {loadingDelete && <LoadingBox></LoadingBox>}
+
       {loading ? (
         <LoadingBox></LoadingBox>
       ) : error ? (
@@ -163,25 +163,31 @@ export default function UserListScreen() {
           <table className="table">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>NAME</th>
+                <th>CODIGO</th>
+                <th>NOMBRE COMERCIAL</th>
+                <th>DOMICILIO</th>
+                <th>CUIT</th>
+                <th>CONDICION FRENTE AL IVA</th>
                 <th>EMAIL</th>
-                <th>IS ADMIN</th>
                 <th>ACTIONS</th>
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
-                <tr key={user._id}>
-                  <td>{user._id}</td>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>{user.role == "admin" ? 'YES' : 'NO'}</td>
+              {customers.map((customer) => (
+                <tr key={customer._id}>
+                  <td>{customer.codCus}</td>
+                  <td>{customer.nameCus}</td>
+                  <td>{customer.domcomer}</td>
+                  <td>{customer.cuit}</td>
+                  <td>{customer.coniva}</td>
+                  <td>{customer.emailCus}</td>
                   <td>
                     <Button
                       type="button"
                       title="Edit"
-                      onClick={() => navigate(`/admin/user/${user._id}`)}
+                      onClick={() =>
+                        navigate(`/admin/customer/${customer._id}`)
+                      }
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                     </Button>
@@ -190,7 +196,7 @@ export default function UserListScreen() {
                       type="button"
                       title="Account"
                       onClick={() => {
-                        navigate(`/admin/user/cta/${user._id}`);
+                        navigate(`/admin/customer/cta/${customer._id}`);
                       }}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
@@ -199,7 +205,7 @@ export default function UserListScreen() {
                     <Button
                       type="button"
                       title="Delete"
-                      onClick={() => deleteHandler(user)}
+                      onClick={() => deleteHandler(customer)}
                     >
                       <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                     </Button>
@@ -213,7 +219,7 @@ export default function UserListScreen() {
               <Link
                 className={x + 1 === Number(page) ? 'btn text-bold' : 'btn'}
                 key={x + 1}
-                to={`/admin/users?page=${x + 1}`}
+                to={`/admin/customers?page=${x + 1}`}
               >
                 {x + 1}
               </Link>

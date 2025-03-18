@@ -52,7 +52,7 @@ const reducer = (state, action) => {
       return state;
   }
 };
-export default function InvoiceBuyListScreen() {
+export default function RemitBuyListScreen() {
   const [
     {
       loading,
@@ -164,24 +164,24 @@ try {
 
   const createHandler = async () => {
     if (window.confirm('Are you sure to create?')) {
-      navigate(`/admin/invoicerBuy`);
+      navigate(`/admin/remiterBuy`);
     }
   };
 
   return (
     <div>
       <Helmet>
-        <title>Buy Invoices</title>
+        <title>Buy Remits</title>
       </Helmet>
       <Row>
         <Col>
-          <h1>Buy Invoices</h1>
+          <h1>Buy Remits</h1>
         </Col>
 
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Buy Invoice
+              Create Buy Remit
             </Button>
           </div>
         </Col>
@@ -197,7 +197,6 @@ try {
           <table className="table">
             <thead>
               <tr>
-                <th>FACTURA</th>
                 <th>FECHA</th>
                 <th>REMITO</th>
                 <th>PEDIDO</th>
@@ -212,8 +211,7 @@ try {
             <tbody>
               {invoices?.map((invoice) => (
                 <tr key={invoice._id}>
-                  <td>{invoice.invNum}</td>
-                  <td>{invoice.invDat.substring(0, 10)}</td>
+                  <td>{invoice.remDat.substring(0, 10)}</td>
                   <td>{invoice.remNum}</td>
                   <td>{invoice.ordNum}</td>
                   <td>{invoice.recNum}</td>

@@ -23,16 +23,6 @@ import InvoiceListApliRec from './../screens/InvoiceListApliRec';
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'TOTAL_FETCH_REQUEST':
-      return { ...state, loading: true };
-    case 'TOTAL_FETCH_SUCCESS':
-      return {
-        ...state,
-        receiptsT: action.payload,
-        loading: false,
-      };
-    case 'TOTAL_FETCH_FAIL':
-      return { ...state, loading: false, error: action.payload };
     case 'FETCH_SUCCESS':
       return {
         ...state,
@@ -89,23 +79,6 @@ export default function ReceiptListScreen() {
   const [recDat, setRecDat] = useState('');
   const [userId, setUserId] = useState('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        dispatch({ type: 'TOTAL_FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/receipts/S`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
-        dispatch({ type: 'TOTAL_FETCH_SUCCESS', payload: data });
-      } catch (err) {
-        dispatch({
-          type: 'TOTAL_FETCH_FAIL',
-          payload: getError(err),
-        });
-      }
-    };
-    fetchData();
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -205,15 +178,6 @@ const prodeleteReceipt = (receipt) => {
         <Col>
           <h1>Sale Receipts</h1>
         </Col>
-        <Col>
-          <h3>
-            Total: ${receiptsT?.reduce((a, c) => a + c.total * 1, 0)}
-          </h3>
-        </Col>
-
-        <Col>
-          <SearchBox />
-        </Col>
 
         <Col className="col text-end">
           <div>
@@ -247,7 +211,7 @@ const prodeleteReceipt = (receipt) => {
                 <tr key={receipt._id}>
                   <td>{receipt.recNum}</td>
                   <td>{receipt.recDat.substring(0, 10)}</td>
-                  <td>{receipt.user ? receipt.user.name : 'DELETED CLIENT'}</td>
+                  <td>{receipt.id_client ? receipt.id_client.nameCus : 'DELETED CLIENT'}</td>
                   <td>{receipt.desval}</td>
                   <td>{receipt.total.toFixed(2)}</td>
 

@@ -166,8 +166,14 @@ export default function ConfigurationListScreen() {
           <table className="table">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>NAME</th>
+                <th>PUNTO VENTA</th>
+                <th>NOMBRE COMERCIAL</th>
+                <th>DIRECCION COMERCIAL</th>
+                <th>CUIT</th>
+                <th>COND. FRENTE AL IVA</th>
+                <th>IVA %</th>
+                <th>INGRESOS BRUTOS</th>
+                <th>FECHA INIC.ACT</th>
                 <th>ACTIONS</th>
               </tr>
             </thead>
@@ -176,6 +182,12 @@ export default function ConfigurationListScreen() {
                 <tr key={configuration._id}>
                   <td>{configuration.codCon}</td>
                   <td>{configuration.name}</td>
+                  <td>{configuration.domcomer}</td>
+                  <td>{configuration.cuit}</td>
+                  <td>{configuration.coniva}</td>
+                  <td>{configuration.poriva}</td>
+                  <td>{configuration.ib}</td>
+                  <td>{configuration.feciniact}</td>
                   <td>
                     <Button
                       type="button"

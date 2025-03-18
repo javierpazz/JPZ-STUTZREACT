@@ -67,7 +67,7 @@ const reducer = (state, action) => {
   }
 };
 
-function AppBuy() {
+function AppBuyRem() {
   const [
     {
       loading,
@@ -96,17 +96,12 @@ function AppBuy() {
   const { invoice, receipt, userInfo, values } = state;
   const [poriva, setPorIva] = useState(userInfo.configurationObj.poriva);
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
-  const [noDisc, setNoDisc] = useState(false);
-  const [toDisc, setToDisc] = useState(true);
-  const [itDisc, setItDisc] = useState(false);
-  const [codCom, setCodCom] = useState('');
-  const [nameCom, setNameCom] = useState('');
-
 
   const [codUse, setCodUse] = useState('');
   const [name, setName] = useState('');
   const [suppObj, setSuppObj] = useState({});
   const [remNum, setRemNum] = useState('');
+  const [remDat, setRemDat] = useState('');
   const [invNum, setInvNum] = useState('');
   const [invDat, setInvDat] = useState('');
   const [recNum, setRecNum] = useState('');
@@ -120,7 +115,6 @@ function AppBuy() {
   const [suppliers, setSuppliers] = useState([]);
   const [codSup, setCodSup] = useState('');
   const [valuess, setValuess] = useState([]);
-  const [comprobantes, setComprobantes] = useState([]);
   const [codPro, setCodPro] = useState('');
   const [codPro1, setCodPro1] = useState('');
   const [address, setAddress] = useState('Direccion Usuario');
@@ -222,22 +216,6 @@ function AppBuy() {
     fetchDataVal();
   }, []);
 
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(`${API}/api/comprobantes`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
-        setComprobantes(data);
-        dispatch({ type: 'FETCH_SUCCESS', payload: data });
-      } catch (err) {}
-    };
-    fetchData();
-  }, []);
-
-
-
   useEffect(() => {
     if (window.innerWidth < width) {
       alert('Place your phone in landscape mode for the best experience');
@@ -258,7 +236,6 @@ function AppBuy() {
 
 
 
-
   const searchSup = (codSup) => {
     const supplierRow = suppliers.find((row) => row._id === codSup);
     setSuppObj(supplierRow);
@@ -268,18 +245,6 @@ function AppBuy() {
 
   const handleChange = (e) => {
     searchSup(e.target.value);
-  };
-
-  const handleChangeCom = (e) => {
-    searchComprobante(e.target.value);
-  };
-  const searchComprobante = (codCom) => {
-    const comprobantesRow = comprobantes.find((row) => row._id === codCom);
-    setCodCom(comprobantesRow._id);
-    setNameCom(comprobantesRow.nameCom);
-    setNoDisc(comprobantesRow.noDisc);
-    setToDisc(comprobantesRow.toDisc);
-    setItDisc(comprobantesRow.itDisc);
   };
 
   const searchValue = (codVal) => {
@@ -301,7 +266,7 @@ function AppBuy() {
     if (isPaying && (!recNum || !recDat || !desVal)) {
       unloadpayment();
     } else {
-      if (invNum && invDat && codSup) {
+      if (remNum && remDat && codSup) {
         //    list.map((item) => stockHandler({ item }));
         orderItems.map((item) => stockHandler({ item }));
 
@@ -321,7 +286,7 @@ function AppBuy() {
         invoice.codCon = userInfo.codCon;
         invoice.codConNum = codConNum;
         invoice.remNum = remNum;
-        invoice.remDat = invDat;
+        invoice.remDat = remDat;
         invoice.invNum = invNum;
         invoice.invDat = invDat;
         invoice.recNum = recNum;
@@ -387,6 +352,7 @@ function AppBuy() {
           codConNum: receipt.codConNum,
 
           remNum: receipt.remNum,
+          remDat: receipt.remDat,
           invNum: receipt.invNum,
           invDat: receipt.invDat,
           recNum: receipt.recNum,
@@ -525,45 +491,6 @@ function AppBuy() {
             {/* name, address, email, phone, bank name, bank account number, website client name, client address, invoice number, invoice date, due date, notes */}
             <div>
               <div className="bordeTable">
-              <Row>
-                  <Col md={4}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Tipo Comprobante</Form.Label>
-                          <Form.Control
-                            className="input"
-                            placeholder="Tipo Comprobante"
-                            value={codCom}
-                            onChange={(e) => setCodCom(e.target.value)}
-                            required
-                          />
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-
-                  <Col md={8}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Tipo Comprobante</Form.Label>
-                          <Form.Select
-                            className="input"
-                            onClick={(e) => handleChangeCom(e)}
-                          >
-                            {comprobantes.map((elemento) => (
-                              <option key={elemento._id} value={elemento._id}>
-                                {elemento.nameCom}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-                </Row>
-
                 <Row>
                   <Col md={4}>
                     <Card.Body>
@@ -603,16 +530,16 @@ function AppBuy() {
                 </Row>
 
                 <Row>
-                  <Col md={1}>
+                <Col md={1}>
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Invoice N°</Form.Label>
+                          <Form.Label>Remit N°</Form.Label>
                           <Form.Control
                             className="input"
-                            placeholder="Invoice N°"
-                            value={invNum}
-                            onChange={(e) => setInvNum(e.target.value)}
+                            placeholder="Remit N°"
+                            value={remNum}
+                            onChange={(e) => setRemNum(e.target.value)}
                             required
                           />
                         </Form.Group>
@@ -624,13 +551,13 @@ function AppBuy() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Invoice Date</Form.Label>
+                          <Form.Label>Remit Date</Form.Label>
                           <Form.Control
                             className="input"
                             type="date"
-                            placeholder="Invoice Date"
-                            value={invDat}
-                            onChange={(e) => setInvDat(e.target.value)}
+                            placeholder="Remit Date"
+                            value={remDat}
+                            onChange={(e) => setRemDat(e.target.value)}
                             required
                           />
                         </Form.Group>
@@ -648,22 +575,6 @@ function AppBuy() {
                             placeholder="Due Date"
                             value={dueDat}
                             onChange={(e) => setDueDat(e.target.value)}
-                            required
-                          />
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-                  <Col md={1}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Remit N°</Form.Label>
-                          <Form.Control
-                            className="input"
-                            placeholder="Remit N°"
-                            value={remNum}
-                            onChange={(e) => setRemNum(e.target.value)}
                             required
                           />
                         </Form.Group>
@@ -808,8 +719,8 @@ function AppBuy() {
                           onClick={placeCancelInvoiceHandler}
                           disabled={
                             orderItems.length === 0 ||
-                            !invNum ||
-                            !invDat ||
+                            !remNum ||
+                            !remDat ||
                             !codSup
                           }
                         >
@@ -826,8 +737,8 @@ function AppBuy() {
                           onClick={placeInvoiceHandler}
                           disabled={
                             orderItems.length === 0 ||
-                            !invNum ||
-                            !invDat ||
+                            !remNum ||
+                            !remDat ||
                             !codSup
                           }
                         >
@@ -886,26 +797,22 @@ function AppBuy() {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
-            <Button onClick={() => clearitems()}>New Invoice</Button>
+            <Button onClick={() => clearitems()}>New Remit</Button>
 
             {/* Invoice Preview */}
 
             <div ref={componentRef} className="p-5">
               <Header handlePrint={handlePrint} />
 
-
-
               <div className="container mt-4">
       <div className="card border-dark">
         <div className="card-header bg-dark text-white text-center"></div>
         <div className="card-body">
           
-        <div className="text-black text-center">{nameCom}</div>
- 
-
+        <div className="card-header text-black text-center">REMITO</div>
         <div className="row">
               <div className="col-md-6">
-                <p><strong>Comprobante de:</strong> {suppObj.name}</p>
+                <p><strong>Remito de:</strong> {suppObj.name}</p>
               </div>
           </div>
 
@@ -927,9 +834,8 @@ function AppBuy() {
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>
             </div>
           </div>
- 
- 
-          { toDisc &&
+          </div>
+          { true &&
           (
             <div>
               <table className="table table-bordered mt-3">
@@ -966,80 +872,14 @@ function AppBuy() {
             </div>
           )}
 
-          { itDisc &&
-          (
-            <div>
-              <table className="table table-bordered mt-3">
-                <thead className="table-dark text-white">
-                  <tr>
-                    <th>#</th>
-                    <th>Descripción</th>
-                    <th className="text-end">Cantidad</th>
-                    <th className="text-end">Precio</th>
-                    <th className="text-end">IVA (%)</th>
-                    <th className="text-end">Imp. IVA</th>
-                    <th className="text-end">Subtotal</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orderItems.map((item, index) => (
-                    <tr key={item.id}>
-                      <td>{index + 1}</td>
-                      <td>{item.title}</td>
-                      <td className="text-end">{item.quantity}</td>
-                      <td className="text-end">${item.price.toFixed(2)}</td>
-                      <td className="text-end">%{poriva}</td>
-                      <td className="text-end">${(item.price*(poriva/100)).toFixed(2)}</td>
-                      <td className="text-end">${(item.quantity * item.price*(1+(poriva/100))).toFixed(2)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className="text-end">
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
-              </div>
-            </div>
-          )}
-
-          { noDisc &&
-          (
-            <div>
-              <table className="table table-bordered mt-3">
-                <thead className="table-dark text-white">
-                  <tr>
-                    <th>#</th>
-                    <th>Descripción</th>
-                    <th className="text-end">Cantidad</th>
-                    <th className="text-end">Precio</th>
-                    <th className="text-end">IVA (%)</th>
-                    <th className="text-end">Subtotal</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orderItems.map((item, index) => (
-                    <tr key={item.id}>
-                      <td>{index + 1}</td>
-                      <td>{item.title}</td>
-                      <td className="text-end">{item.quantity}</td>
-                      <td className="text-end">${(item.price*(1+(poriva/100))).toFixed(2)}</td>
-                      <td className="text-end">$0.00</td>
-                      
-                      <td className="text-end">${(item.quantity * item.price * (1+(poriva/100))).toFixed(2)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className="text-end">
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
-              </div>
-            </div>
-          )}
-
-
-        </div>
 
       </div>
     </div>
+
+
+
+
+
             </div>
           </>
         )}
@@ -1048,4 +888,4 @@ function AppBuy() {
   );
 }
 
-export default AppBuy;
+export default AppBuyRem;

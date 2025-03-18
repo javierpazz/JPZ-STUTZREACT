@@ -10,22 +10,29 @@ export default function Table({ orderItems, total }) {
       <table width="100%" className="mb-10">
         <thead>
           <tr className="bg-gray-100 p-1">
-            <td className="font-bold">Product Code</td>
-            <td className="font-bold">Product Description</td>
-            <td className="font-bold">Quantity</td>
-            <td className="font-bold">Price</td>
-            <td className="font-bold">Amount</td>
+            <td className="font-bold text-end">Product Code</td>
+            <td className="font-bold text-end">Product Description</td>
+            <td className="font-bold text-end">Quantity</td>
+            <td className="font-bold text-end">Price</td>
+            <td className="font-bold text-end">Amount</td>
           </tr>
         </thead>
         {orderItems?.map((itemInv) => (
           <React.Fragment key={itemInv._id}>
             <tbody>
               <tr className="h-10">
-                <td>{itemInv._id}</td>
+              <td className="px-4 py-2 text-left">{itemInv._id}</td>
+              <td className="px-4 py-2 text-left">{itemInv.title}</td>
+              <td className="px-4 py-2 text-end">{itemInv.quantity.toFixed(2)}</td>
+              <td className="px-4 py-2 text-end">${itemInv.price.toFixed(2)}</td>
+              <td className="px-4 py-2 text-end">${itemInv.amount.toFixed(2)}</td>
+
+
+                {/* <td>{itemInv._id}</td>
                 <td>{itemInv.title}</td>
                 <td>{itemInv.quantity}</td>
                 <td>{itemInv.price}</td>
-                <td>{itemInv.amount}</td>
+                <td>{itemInv.amount}</td> */}
               </tr>
             </tbody>
           </React.Fragment>

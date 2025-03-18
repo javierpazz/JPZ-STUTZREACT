@@ -56,6 +56,15 @@ export default function ConfigurationEditScreen() {
 
   const [codCon, setCodCon] = useState('');
   const [name, setName] = useState('');
+  const [cuit, setCuit] = useState('');
+  const [domcomer, setDomcomer] = useState('');
+  const [coniva, setConiva] = useState('');
+  const [poriva, setPoriva] = useState('');
+  const [ib, setIb] = useState('');
+  const [feciniact, setFeciniact] = useState('');
+
+
+
   const [email, setEmail] = useState('');
 
   useEffect(() => {
@@ -67,6 +76,11 @@ export default function ConfigurationEditScreen() {
         );
         setCodCon(data.codCon);
         setName(data.name);
+        setCuit(data.cuit);
+        setDomcomer(data.domcomer);
+        setConiva(data.coniva);
+        setIb(data.ib);
+        setFeciniact(data.feciniact);
         dispatch({ type: 'FETCH_SUCCESS' });
       } catch (err) {
         dispatch({
@@ -88,6 +102,12 @@ export default function ConfigurationEditScreen() {
           _id: configurationId,
           codCon,
           name,
+          cuit,
+          domcomer,
+          coniva,
+          poriva,
+          ib,
+          feciniact,
         },
         {
           headers: { Authorization: `Bearer ${userInfo.token}` },
@@ -118,7 +138,7 @@ export default function ConfigurationEditScreen() {
       ) : (
         <Form onSubmit={submitHandler}>
           <Form.Group className="mb-3" controlId="slug">
-            <Form.Label>Code</Form.Label>
+            <Form.Label>Punto Venta</Form.Label>
             <Form.Control
               value={codCon}
               onChange={(e) => setCodCon(e.target.value)}
@@ -130,6 +150,54 @@ export default function ConfigurationEditScreen() {
             <Form.Control
               value={name}
               onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="name">
+            <Form.Label>Domicilio Comercial</Form.Label>
+            <Form.Control
+              value={domcomer}
+              onChange={(e) => setDomcomer(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="name">
+            <Form.Label>CUIT</Form.Label>
+            <Form.Control
+              value={cuit}
+              onChange={(e) => setCuit(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="name">
+            <Form.Label>Condicion Frente al IVA</Form.Label>
+            <Form.Control
+              value={coniva}
+              onChange={(e) => setConiva(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="name">
+            <Form.Label>IVA % </Form.Label>
+            <Form.Control
+              value={poriva}
+              onChange={(e) => setPoriva(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="name">
+            <Form.Label>Ingresos Brutos</Form.Label>
+            <Form.Control
+              value={ib}
+              onChange={(e) => setIb(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="name">
+            <Form.Label>Fecha Inicio Actividades</Form.Label>
+            <Form.Control
+              value={feciniact}
+              onChange={(e) => setFeciniact(e.target.value)}
               required
             />
           </Form.Group>

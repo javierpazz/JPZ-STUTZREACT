@@ -82,8 +82,10 @@ function AppRec() {
   } = state;
 
   const { receipt, userInfo, values } = state;
+  const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
 
-  const [codUse, setCodUse] = useState('');
+  // const [codUse, setCodUse] = useState('');
+  const [codCus, setCodCus] = useState('');
   const [name, setName] = useState('');
   const [remNum, setRemNum] = useState('');
   const [invNum, setInvNum] = useState('');
@@ -93,7 +95,8 @@ function AppRec() {
   const [codVal, setCodVal] = useState('');
   const [desval, setDesval] = useState('');
   const [receiptss, setReceiptss] = useState([]);
-  const [userss, setUserss] = useState([]);
+  // const [userss, setUserss] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [valuess, setValuess] = useState([]);
   const [codPro, setCodPro] = useState('');
   const [codPro1, setCodPro1] = useState('');
@@ -147,10 +150,10 @@ useEffect(() => {
     clearitems();
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${API}/api/users/`, {
+        const { data } = await axios.get(`${API}/api/customers/`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        setUserss(data);
+        setCustomers(data);
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (err) {}
     };
@@ -176,17 +179,17 @@ useEffect(() => {
     }
   }, [width]);
 
-  const searchUser = (codUse) => {
-    const usersRow = userss.find((row) => row._id === codUse);
-    setCodUse(usersRow._id);
-    setName(usersRow.name);
+  const searchUser = (codCus) => {
+    const customersRow = customers.find((row) => row._id === codCus);
+    setCodCus(customersRow._id);
+    setName(customersRow.nameCus);
   };
 
 //cr/
 //
 const RecControl = (e) => {
 
-  const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum) && row.user._id === codUse );
+  const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum) && row.user._id === codCus );
   if (oldRecipt.length > 0) {
       toast.error(`This N° ${(recNum)} Receipt Exist, use other Number Please!`);
       setRecNum(e.target.value)
@@ -217,7 +220,7 @@ const RecControl = (e) => {
   const placeReceiptHandler = async () => {
 //cr/
 //
-const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum) && row.user._id === codUse );
+const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum) && row.user._id === codCus );
 if (oldRecipt.length > 0) {
     toast.error(`This N° ${(recNum)} Receipt Exist, use other Number Please!`);
     return;
@@ -227,7 +230,7 @@ if (oldRecipt.length > 0) {
 //cr/
 
 
-    if (recNum && recDat && codUse) {
+    if (recNum && recDat && codCus) {
       const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
       receipt.subTotal = round2(
         receipt.receiptItems.reduce((a, c) => a + c.amountval * 1, 0)
@@ -236,7 +239,9 @@ if (oldRecipt.length > 0) {
       receipt.tax = round2(0.15 * 0);
       receipt.total = receipt.subTotal;
       receipt.totalBuy = 0;
-      receipt.codUse = codUse;
+      receipt.codCus = codCus;
+      receipt.codCon = userInfo.codCon;
+      receipt.codConNum = codConNum;
       receipt.codSup = 0;
       receipt.remNum = remNum;
       receipt.invNum = invNum;
@@ -271,7 +276,9 @@ if (oldRecipt.length > 0) {
           total: receipt.total,
           totalBuy: receipt.totalBuy,
 
-          codUse: receipt.codUse,
+          codCus: receipt.codCus,
+          codCon: receipt.codCon,
+          codConNum: receipt.codConNum,
 
           //          supplier: receipt.codSup,
 
@@ -326,12 +333,12 @@ if (oldRecipt.length > 0) {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>User Code</Form.Label>
+                          <Form.Label>Customer Code</Form.Label>
                           <Form.Control
                             className="input"
-                            placeholder="User Code"
-                            value={codUse}
-                            onChange={(e) => setCodUse(e.target.value)}
+                            placeholder="Customer Code"
+                            value={codCus}
+                            onChange={(e) => setCodCus(e.target.value)}
                             required
                           />
                         </Form.Group>
@@ -343,14 +350,14 @@ if (oldRecipt.length > 0) {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>User Name</Form.Label>
+                          <Form.Label>Customer Name</Form.Label>
                           <Form.Select
                             className="input"
                             onClick={(e) => handleChange(e)}
                           >
-                            {userss.map((elemento) => (
+                            {customers.map((elemento) => (
                               <option key={elemento._id} value={elemento._id}>
-                                {elemento.name}
+                                {elemento.nameCus}
                               </option>
                             ))}
                           </Form.Select>
@@ -424,7 +431,7 @@ if (oldRecipt.length > 0) {
                             receiptItems.length === 0 ||
                             !recNum ||
                             !recDat ||
-                            !codUse
+                            !codCus
                           }
                         >
                           Cancel
@@ -442,7 +449,7 @@ if (oldRecipt.length > 0) {
                             receiptItems.length === 0 ||
                             !recNum ||
                             !recDat ||
-                            !codUse
+                            !codCus
                           }
                         >
                           Save Recipt
@@ -504,7 +511,7 @@ if (oldRecipt.length > 0) {
             <div ref={componentRef} className="p-5">
               <Header handlePrint={handlePrint} />
 
-              <MainDetails codUse={codUse} name={name} address={address} />
+              <MainDetails codCus={codCus} name={name} address={address} />
 
               <ClientDetails
                 clientName={clientName}

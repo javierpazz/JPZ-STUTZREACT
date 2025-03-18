@@ -23,17 +23,6 @@ import InvoiceListChaNum from './../screens/InvoiceListChaNum';
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'TOTAL_FETCH_REQUEST':
-      return { ...state, loading: true };
-    case 'TOTAL_FETCH_SUCCESS':
-      return {
-        ...state,
-        invoicesT: action.payload,
-        loading: false,
-      };
-    case 'TOTAL_FETCH_FAIL':
-      return { ...state, loading: false, error: action.payload };
-
     case 'FETCH_REQUEST':
       return { ...state, loading: true };
     case 'FETCH_SUCCESS':
@@ -105,24 +94,6 @@ export default function InvoiceListScreen() {
   const [ordNum, setOrdNum] = useState('');
   const [invDat, setInvDat] = useState('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        dispatch({ type: 'TOTAL_FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/invoices/S `, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
-        dispatch({ type: 'TOTAL_FETCH_SUCCESS', payload: data });
-        calculatotal();
-      } catch (err) {
-        dispatch({
-          type: 'TOTAL_FETCH_FAIL',
-          payload: getError(err),
-        });
-      }
-    };
-    fetchData();
-  }, [show]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -264,14 +235,6 @@ try {
         <Col>
           <h1>Sale Invoices</h1>
         </Col>
-        <Col>
-          <h3>
-            Total: ${invoicesT?.reduce((a, c) => a + c.total * 1, 0)}
-          </h3>
-        </Col>
-        <Col>
-          <SearchBox />
-        </Col>
 
         <Col className="col text-end">
           <div>
@@ -312,7 +275,7 @@ try {
                   <td>{invoice.remNum}</td>
                   {invoice.ordYes === 'Y' ? <td>{invoice._id}</td> : <td></td>}
                   <td>{invoice.recNum}</td>
-                  <td>{invoice.user ? invoice.user.name : 'DELETED USER'}</td>
+                  <td>{invoice.id_client ? invoice.id_client.nameCus : 'DELETED USER'}</td>
                   <td>{invoice.recNum ? invoice.recDat : 'No'}</td>
                   <td>{invoice.desVal}</td>
                   <td>{invoice.total.toFixed(2)}</td>

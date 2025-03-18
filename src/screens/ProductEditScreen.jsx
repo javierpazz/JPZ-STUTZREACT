@@ -61,6 +61,7 @@ export default function ProductEditScreen() {
   const [images, setImages] = useState([]);
   const [category, setCategory] = useState('');
   const [inStock, setInStock] = useState('');
+  const [minStock, setMinStock] = useState('');
   const [brand, setBrand] = useState('');
   const [description, setDescription] = useState('');
 
@@ -76,6 +77,7 @@ export default function ProductEditScreen() {
         setImages(data.images);
         setCategory(data.category);
         setInStock(data.inStock);
+        setMinStock(data.minStock);
         setBrand(data.brand);
         setDescription(data.description);
         dispatch({ type: 'FETCH_SUCCESS' });
@@ -105,6 +107,7 @@ export default function ProductEditScreen() {
           category,
           brand,
           inStock,
+          minStock,
           description,
         },
         {
@@ -248,6 +251,14 @@ export default function ProductEditScreen() {
             <Form.Control
               value={inStock}
               onChange={(e) => setInStock(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="inStock">
+            <Form.Label>Stock Minimo</Form.Label>
+            <Form.Control
+              value={minStock}
+              onChange={(e) => setMinStock(e.target.value)}
               required
             />
           </Form.Group>

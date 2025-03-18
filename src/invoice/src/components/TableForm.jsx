@@ -75,6 +75,7 @@ export default function TableForm({
   const [productss, setProductss] = useState([]);
   const [productR, setProductR] = useState('');
   const [stock, setStock] = useState(0);
+  const [miStock, setMiStock] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -127,7 +128,8 @@ export default function TableForm({
     setQuantity(1);
     setPrice(productRow.price);
     setAmount(productRow.price);
-    setStock(productRow.countInStock);
+    setStock(productRow.inStock);
+    setMiStock(productRow.minStock);
   };
 
   const stockControl = (e) => {
@@ -135,6 +137,10 @@ export default function TableForm({
       setQuantity(e.target.value);
     } else {
       toast.error('This Product does not have stock enough');
+    }
+    if (stock-e.target.value <= miStock) {
+      setQuantity(e.target.value);
+      toast.error('This Product has Minim Stock');
     }
   };
 
@@ -179,7 +185,7 @@ export default function TableForm({
                         disabled={isPaying}
                       >
                         {productss.map((elementoP) => (
-                          <option key={elementoP.id} value={elementoP._id}>
+                          <option key={elementoP._id} value={elementoP._id}>
                             {elementoP.title}
                           </option>
                         ))}

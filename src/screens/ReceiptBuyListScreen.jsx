@@ -23,16 +23,6 @@ import InvoiceListApliRecBuy from './InvoiceListApliRecBuy';
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'TOTAL_FETCH_REQUEST':
-      return { ...state, loading: true };
-    case 'TOTAL_FETCH_SUCCESS':
-      return {
-        ...state,
-        receiptsT: action.payload,
-        loading: false,
-      };
-    case 'TOTAL_FETCH_FAIL':
-      return { ...state, loading: false, error: action.payload };
     case 'FETCH_REQUEST':
       return { ...state, loading: true };
     case 'FETCH_SUCCESS':
@@ -90,24 +80,6 @@ export default function ReceiptListScreen() {
   const [recNum, setRecNum] = useState('');
   const [recDat, setRecDat] = useState('');
   const [suppId, setSuppId] = useState('');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        dispatch({ type: 'TOTAL_FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/receipts/B`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
-        dispatch({ type: 'TOTAL_FETCH_SUCCESS', payload: data });
-      } catch (err) {
-        dispatch({
-          type: 'TOTAL_FETCH_FAIL',
-          payload: getError(err),
-        });
-      }
-    };
-    fetchData();
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -179,7 +151,6 @@ const prodeleteReceipt = (receipt) => {
 
 
   const deleteReceipt = async (receipt) => {
-    if (window.confirm('Are you sure to delete?')) {
       try {
         dispatch({ type: 'DELETE_REQUEST' });
         await axios.delete(`${API}/api/receipts/${receipt._id}`, {
@@ -193,8 +164,7 @@ const prodeleteReceipt = (receipt) => {
           type: 'DELETE_FAIL',
         });
       }
-    }
-  };
+    };
 
   const createHandler = async () => {
     if (window.confirm('Are you sure to create?')) {
@@ -210,13 +180,6 @@ const prodeleteReceipt = (receipt) => {
       <Row>
         <Col>
           <h1>Buy Receipts</h1>
-        </Col>
-        <Col>
-          <h3>Total: ${receiptsT?.reduce((a, c) => a + c.totalBuy * 1, 0)}</h3>
-        </Col>
-
-        <Col>
-          <SearchBox />
         </Col>
 
         <Col className="col text-end">

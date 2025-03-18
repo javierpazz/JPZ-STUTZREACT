@@ -40,10 +40,10 @@ const reducer = (state, action) => {
       return state;
   }
 };
-export default function SupplierEditScreen() {
+export default function CustomerEditScreen() {
   const navigate = useNavigate();
-  const params = useParams(); // /supplier/:id
-  const { id: supplierId } = params;
+  const params = useParams(); // /customer/:id
+  const { id: customerId } = params;
 
   const { state } = useContext(Store);
   const { userInfo } = state;
@@ -53,19 +53,25 @@ export default function SupplierEditScreen() {
       error: '',
     });
 
-  const [codSup, setCodSup] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [codCus, setCodCus] = useState('');
+  const [nameCus, setName] = useState('');
+  const [emailCus, setEmail] = useState('');
+  const [domcomer, setDomcomer] = useState('');
+  const [cuit, setCuit] = useState('');
+  const [coniva, setConiva] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/suppliers/${supplierId}`);
+        const { data } = await axios.get(`${API}/api/customers/${customerId}`);
         // console.log(data);
-        setCodSup(data.codSup);
-        setName(data.name);
-        setEmail(data.email);
+        setCodCus(data.codCus);
+        setName(data.nameCus);
+        setEmail(data.emailCus);
+        setDomcomer(data.domcomer);
+        setCuit(data.cuit);
+        setConiva(data.coniva);
         dispatch({ type: 'FETCH_SUCCESS' });
       } catch (err) {
         dispatch({
@@ -75,19 +81,22 @@ export default function SupplierEditScreen() {
       }
     };
     fetchData();
-  }, [supplierId]);
+  }, [customerId]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(
-        `${API}/api/suppliers/${supplierId}`,
+        `${API}/api/customers/${customerId}`,
         {
-          _id: supplierId,
-          codSup,
-          name,
-          email,
+          _id: customerId,
+          codCus,
+          nameCus,
+          emailCus,
+          domcomer,
+          cuit,
+          coniva,
         },
         {
           headers: { Authorization: `Bearer ${userInfo.token}` },
@@ -96,8 +105,8 @@ export default function SupplierEditScreen() {
       dispatch({
         type: 'UPDATE_SUCCESS',
       });
-      toast.success('Supplier updated successfully');
-      navigate('/admin/suppliers');
+      toast.success('Customer updated successfully');
+      navigate('/admin/customers');
     } catch (err) {
       toast.error(getError(err));
       dispatch({ type: 'UPDATE_FAIL' });
@@ -107,9 +116,9 @@ export default function SupplierEditScreen() {
   return (
     <Container className="small-container">
       <Helmet>
-        <title>Edit Supplier ${supplierId}</title>
+        <title>Edit Customer ${customerId}</title>
       </Helmet>
-      <h1>Edit Supplier {supplierId}</h1>
+      <h1>Edit Customer {customerId}</h1>
 
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -117,26 +126,50 @@ export default function SupplierEditScreen() {
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
         <Form onSubmit={submitHandler}>
-          <Form.Group className="mb-3" controlId="codSup">
+          <Form.Group className="mb-3" controlId="codCus">
             <Form.Label>Code</Form.Label>
             <Form.Control
-              value={codSup}
-              onChange={(e) => setCodSup(e.target.value)}
+              value={codCus}
+              onChange={(e) => setCodCus(e.target.value)}
               required
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Name</Form.Label>
             <Form.Control
-              value={name}
+              value={nameCus}
               onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="email">
+            <Form.Label>Domicilio Comercial</Form.Label>
+            <Form.Control
+              value={domcomer}
+              onChange={(e) => setDomcomer(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="email">
+            <Form.Label>Cuit</Form.Label>
+            <Form.Control
+              value={cuit}
+              onChange={(e) => setCuit(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="email">
+            <Form.Label>Condicion frente al IVA</Form.Label>
+            <Form.Control
+              value={coniva}
+              onChange={(e) => setConiva(e.target.value)}
               required
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="email">
             <Form.Label>Email</Form.Label>
             <Form.Control
-              value={email}
+              value={emailCus}
               onChange={(e) => setEmail(e.target.value)}
               required
             />

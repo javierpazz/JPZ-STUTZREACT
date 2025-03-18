@@ -82,6 +82,7 @@ function AppBuyRec() {
   } = state;
 
   const { receipt, userInfo, values } = state;
+  const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
 
   const [codUse, setCodUse] = useState('');
   const [name, setName] = useState('');
@@ -250,6 +251,8 @@ if (oldRecipt.length > 0) {
       receipt.total = 0;
       receipt.totalBuy = receipt.subTotal;
       receipt.codSup = codSup;
+      receipt.codCon = userInfo.codCon;
+      receipt.codConNum = codConNum;
       receipt.remNum = remNum;
       receipt.invNum = invNum;
       receipt.invDat = invDat;
@@ -280,6 +283,8 @@ if (oldRecipt.length > 0) {
           totalBuy: receipt.totalBuy,
 
           codSup: receipt.codSup,
+          codCon: receipt.codCon,
+          codConNum: receipt.codConNum,
 
           recNum: receipt.recNum,
           recDat: receipt.recDat,

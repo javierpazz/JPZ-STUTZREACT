@@ -122,7 +122,7 @@ export default function SupplierListScreen() {
   const deleteHandler = async (supplier) => {
     if (window.confirm('Are you sure to delete?')) {
       try {
-        await axios.delete(`${API}/api/suppliers/${supplier._id}`, {
+        await axios.delete(`${API}/api/supplier/${supplier._id}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         toast.success('supplier deleted successfully');

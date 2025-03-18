@@ -40,10 +40,10 @@ const reducer = (state, action) => {
       return state;
   }
 };
-export default function SupplierEditScreen() {
+export default function ComprobanteEditScreen() {
   const navigate = useNavigate();
-  const params = useParams(); // /supplier/:id
-  const { id: supplierId } = params;
+  const params = useParams(); // /comprobante/:id
+  const { id: comprobanteId } = params;
 
   const { state } = useContext(Store);
   const { userInfo } = state;
@@ -53,19 +53,27 @@ export default function SupplierEditScreen() {
       error: '',
     });
 
-  const [codSup, setCodSup] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [codCom, setCodCom] = useState('');
+  const [nameCom, setNameCom] = useState('');
+  const [claCom, setClaCom] = useState('');
+  const [isHaber, setIsHaber] = useState(true);
+  const [noDisc, setNoDisc] = useState(true);
+  const [toDisc, setToDisc] = useState(false);
+  const [itDisc, setItDisc] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/suppliers/${supplierId}`);
+        const { data } = await axios.get(`${API}/api/comprobantes/${comprobanteId}`);
         // console.log(data);
-        setCodSup(data.codSup);
-        setName(data.name);
-        setEmail(data.email);
+        setCodCom(data.codCom);
+        setNameCom(data.nameCom);
+        setClaCom(data.claCom);
+        setIsHaber(data.isHaber);
+        setNoDisc(data.noDisc);
+        setToDisc(data.toDisc);
+        setItDisc(data.itDisc);
         dispatch({ type: 'FETCH_SUCCESS' });
       } catch (err) {
         dispatch({
@@ -75,19 +83,23 @@ export default function SupplierEditScreen() {
       }
     };
     fetchData();
-  }, [supplierId]);
+  }, [comprobanteId]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(
-        `${API}/api/suppliers/${supplierId}`,
+        `${API}/api/comprobantes/${comprobanteId}`,
         {
-          _id: supplierId,
-          codSup,
-          name,
-          email,
+          _id: comprobanteId,
+          codCom,
+          nameCom,
+          isHaber,
+          noDisc,
+          toDisc,
+          itDisc,
+          claCom,
         },
         {
           headers: { Authorization: `Bearer ${userInfo.token}` },
@@ -96,8 +108,8 @@ export default function SupplierEditScreen() {
       dispatch({
         type: 'UPDATE_SUCCESS',
       });
-      toast.success('Supplier updated successfully');
-      navigate('/admin/suppliers');
+      toast.success('Comprobante updated successfully');
+      navigate('/admin/comprobantes');
     } catch (err) {
       toast.error(getError(err));
       dispatch({ type: 'UPDATE_FAIL' });
@@ -107,9 +119,9 @@ export default function SupplierEditScreen() {
   return (
     <Container className="small-container">
       <Helmet>
-        <title>Edit Supplier ${supplierId}</title>
+        <title>Edit Comprobante ${comprobanteId}</title>
       </Helmet>
-      <h1>Edit Supplier {supplierId}</h1>
+      <h1>Edit Comprobante {comprobanteId}</h1>
 
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -117,30 +129,63 @@ export default function SupplierEditScreen() {
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
         <Form onSubmit={submitHandler}>
-          <Form.Group className="mb-3" controlId="codSup">
-            <Form.Label>Code</Form.Label>
+          <Form.Group className="mb-3" controlId="name">
+            <Form.Label>Codigo Comprobante</Form.Label>
             <Form.Control
-              value={codSup}
-              onChange={(e) => setCodSup(e.target.value)}
+              value={codCom}
+              onChange={(e) => setCodCom(e.target.value)}
               required
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="name">
-            <Form.Label>Name</Form.Label>
+            <Form.Label>Tipo Comprobante</Form.Label>
             <Form.Control
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={nameCom}
+              onChange={(e) => setNameCom(e.target.value)}
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="email">
-            <Form.Label>Email</Form.Label>
+          <Form.Check
+            className="mb-3"
+            type="checkbox"
+            id="isHaber"
+            label="Imputa en Cuenta Haber"
+            checked={isHaber}
+            onChange={(e) => setIsHaber(e.target.checked)}
+          />
+          <Form.Check
+            className="mb-3"
+            type="checkbox"
+            id="noDisc"
+            label="No Discrimina IVA"
+            checked={noDisc}
+            onChange={(e) => setNoDisc(e.target.checked)}
+          />
+          <Form.Check
+            className="mb-3"
+            type="checkbox"
+            id="itDisc"
+            label="Discrimina IVA en Item"
+            checked={itDisc}
+            onChange={(e) => setItDisc(e.target.checked)}
+          />
+          <Form.Check
+            className="mb-3"
+            type="checkbox"
+            id="toDisc"
+            label="Discrimina IVA en Total"
+            checked={toDisc}
+            onChange={(e) => setToDisc(e.target.checked)}
+          />
+
+          {/* <Form.Group className="mb-3" controlId="name">
+            <Form.Label>Clave Comprobante</Form.Label>
             <Form.Control
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={claCom}
+              onChange={(e) => setClaCom(e.target.value)}
               required
             />
-          </Form.Group>
+          </Form.Group> */}
           <div className="mb-3">
             <Button disabled={loadingUpdate} type="submit">
               Update

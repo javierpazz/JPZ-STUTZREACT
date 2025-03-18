@@ -168,6 +168,7 @@ export default function ProductListScreen() {
                 <th>CATEGORY</th>
                 <th>BRAND</th>
                 <th>STOCK</th>
+                <th>STOCK MINIMO</th>
                 <th>ACTIONS</th>
               </tr>
             </thead>
@@ -180,6 +181,7 @@ export default function ProductListScreen() {
                   <td>{product.category}</td>
                   <td>{product.brand}</td>
                   <td>{product.inStock}</td>
+                  <td>{product.minStock}</td>
                   <td>
                     <Button
                       type="button"

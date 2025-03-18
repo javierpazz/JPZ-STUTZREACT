@@ -30,27 +30,27 @@ function HomeScreen() {
     error: '',
   });
   // const [products, setProducts] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      dispatch({ type: 'FETCH_REQUEST' });
-      try {
-        const result = await axios.get(`${API}/api/products`);
-        dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
-      } catch (err) {
-        dispatch({ type: 'FETCH_FAIL', payload: err.message });
-      }
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     dispatch({ type: 'FETCH_REQUEST' });
+  //     try {
+  //       const result = await axios.get(`${API}/api/products`);
+  //       dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
+  //     } catch (err) {
+  //       dispatch({ type: 'FETCH_FAIL', payload: err.message });
+  //     }
 
-      // setProducts(result.data);
-    };
-    fetchData();
-  }, []);
+  //     // setProducts(result.data);
+  //   };
+  //   fetchData();
+  // }, []);
   return (
     <div>
       <Helmet>
-        <title>S T U T Z - Wines</title>
+        <title>Invoicer</title>
       </Helmet>
       {/* <h1>Featured Products</h1> */}
-      <div className="products">
+      {/* <div className="products">
         {loading ? (
           <LoadingBox />
         ) : error ? (
@@ -71,7 +71,7 @@ function HomeScreen() {
             ))}
           </Row>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }

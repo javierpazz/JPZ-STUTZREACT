@@ -29,6 +29,16 @@ export default function SignupScreen() {
       return;
     }
     try {
+      const { data1 } = await Axios.post(
+        `${API}/api/customers/signup`,
+        {
+          nameCus: name,
+          emailCus: email,
+        },
+        // {
+        //   headers: { Authorization: `Bearer ${userInfo.token}` },
+        // }
+      );
       const { data } = await Axios.post(`${API}/api/users/signup`, {
         name,
         email,

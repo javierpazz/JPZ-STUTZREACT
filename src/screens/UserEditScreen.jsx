@@ -45,6 +45,9 @@ export default function UserEditScreen() {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
@@ -56,6 +59,7 @@ export default function UserEditScreen() {
         });
         setName(data.name);
         setEmail(data.email);
+        // setPassword(data.password);
         setIsAdmin(data.isAdmin);
         dispatch({ type: 'FETCH_SUCCESS' });
       } catch (err) {
@@ -70,11 +74,19 @@ export default function UserEditScreen() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    try {
+    if (password !== confirmPassword) {
+      toast.error('Passwords does not match');
+      return;
+    }
+    if (password == '') {
+      toast.error('Passwords does not exist');
+      return;
+    }
+      try {
       dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(
         `${API}/api/users/${userId}`,
-        { _id: userId, name, email, isAdmin },
+        { _id: userId, name, email, password, isAdmin },
         {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         }
@@ -89,6 +101,8 @@ export default function UserEditScreen() {
       dispatch({ type: 'UPDATE_FAIL' });
     }
   };
+
+
   return (
     <Container className="small-container">
       <Helmet>
@@ -119,6 +133,21 @@ export default function UserEditScreen() {
               required
             />
           </Form.Group>
+
+        <Form.Group className="mb-3" controlId="password">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="password">
+          <Form.Label>Confirm Password</Form.Label>
+          <Form.Control
+            type="password"
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+        </Form.Group>
 
           <Form.Check
             className="mb-3"
