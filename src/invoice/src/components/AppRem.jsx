@@ -14,10 +14,12 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { BiFileFind } from "react-icons/bi";
 import { Store } from '../../../Store';
 import ReactToPrint from 'react-to-print';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../../../components/LoadingBox';
 import { getError, API } from '../../../utils';
@@ -81,11 +83,26 @@ function AppRem() {
   } = state;
 
   const { invoice, receipt, userInfo, values } = state;
+
+  const input1Ref = useRef(null);
+  const input2Ref = useRef(null);
+  const input3Ref = useRef(null);
+  const input4Ref = useRef(null);
+  const input5Ref = useRef(null);
+  const input6Ref = useRef(null);
+  const input7Ref = useRef(null);
+  const input8Ref = useRef(null);
+  const input9Ref = useRef(null);
+  const input0Ref = useRef(null);
+
+
   const [poriva, setPorIva] = useState(userInfo.configurationObj.poriva);
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
+  const [showCus, setShowCus] = useState(false);
 
   // const [codUse, setCodUse] = useState('');
   const [codCus, setCodCus] = useState('');
+  const [codCust, setCodCust] = useState('');
   const [name, setName] = useState('');
   const [userObj, setUserObj] = useState({});
   const [remNum, setRemNum] = useState('');
@@ -127,7 +144,6 @@ function AppRem() {
   const [isPaying, setIsPaying] = useState(false);
 
   const config = {
-    cuit: userInfo.configurationObj.cuit,
     salePoint: userInfo.configurationObj.codCon,
     name: userInfo.configurationObj.name,
     cuit: userInfo.configurationObj.cuit,
@@ -163,6 +179,7 @@ function AppRem() {
 
   useEffect(() => {
     clearitems();
+    input2Ref.current.focus()
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`${API}/api/customers/`, {
@@ -205,13 +222,31 @@ function AppRem() {
   const getTotalWithIVA = () => {
     return (parseFloat(getTotal()) + parseFloat(getIVA())).toFixed(2);
   };
+  const handleShowCus = () => {
+    setShowCus(true);
+  };
 
 
   const searchUser = (codCus) => {
     const usersRow = customers.find((row) => row._id === codCus);
     setUserObj(usersRow);
     setCodCus(usersRow._id);
+    setCodCust(usersRow.codCus);
     setName(usersRow.nameCus);
+  };
+  const buscarPorCodCus = (codCust) => {
+    const usersRow = customers.find((row) => row.codCus === codCust);
+    if (!usersRow) {
+        setCodCus('');
+        setCodCust('');
+        setName('Elija Cliente');
+    }else{
+      setCodCus(usersRow._id);
+      setCodCust(usersRow.codCust);
+      setUserObj(usersRow);
+      setName(usersRow.nameCus);
+      input6Ref.current.focus();
+      };
   };
 
   const handleChange = (e) => {
@@ -222,9 +257,7 @@ function AppRem() {
     const valuesRow = valuess.find((row) => row._id === codVal);
     setValueeR(valuesRow);
     setCodVal(valuesRow.codVal);
-    setCodval(valuesRow.codVal);
     setDesVal(valuesRow.desVal);
-    setDesval(valuesRow.desVal);
   };
 
   const handleValueChange = (e) => {
@@ -234,57 +267,59 @@ function AppRem() {
   const placeCancelInvoiceHandler = async () => {};
 
   const placeInvoiceHandler = async () => {
-    if (isPaying && (!recNum || !recDat || !desVal)) {
-      unloadpayment();
-    } else {
-      if (remNum && remDat && codCus) {
-        orderItems.map((item) => stockHandler({ item }));
-        const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
-        invoice.subTotal = round2(
-          invoice.orderItems.reduce((a, c) => a + c.quantity * c.price, 0)
-        );
-        invoice.shippingPrice = 0;
+    if (window.confirm('Are you sure to create?')) {
+      if (isPaying && (!recNum || !recDat || !desVal)) {
+        unloadpayment();
+      } else {
+        if (remNum && remDat && codCus) {
+          orderItems.map((item) => stockHandler({ item }));
+          const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
+          invoice.subTotal = round2(
+            invoice.orderItems.reduce((a, c) => a + c.quantity * c.price, 0)
+          );
+          invoice.shippingPrice = 0;
 
-        //        invoice.shippingPrice =
-        //        invoice.subTotal > 100 ? round2(0) : round2(10);
-        invoice.tax = round2((poriva/100) * invoice.subTotal);
-        invoice.total =
-          invoice.subTotal + invoice.shippingPrice + invoice.tax;
-        invoice.totalBuy = 0;
-        invoice.codCus = codCus;
-        invoice.codCon = userInfo.codCon;
-        invoice.codConNum = codConNum;
+          //        invoice.shippingPrice =
+          //        invoice.subTotal > 100 ? round2(0) : round2(10);
+          invoice.tax = round2((poriva/100) * invoice.subTotal);
+          invoice.total =
+            invoice.subTotal + invoice.shippingPrice + invoice.tax;
+          invoice.totalBuy = 0;
+          invoice.codCus = codCus;
+          invoice.codCon = userInfo.codCon;
+          invoice.codConNum = codConNum;
 
-        invoice.codSup = '0';
-        invoice.remNum = remNum;
-        invoice.remDat = remDat;
-        invoice.invNum = 0 ;
-        invoice.invDat = invDat;
-        invoice.recNum = recNum;
-        invoice.recDat = recDat;
-        invoice.desVal = desVal;
-        invoice.notes = notes;
+          invoice.codSup = '0';
+          invoice.remNum = remNum;
+          invoice.remDat = remDat;
+          invoice.invNum = 0 ;
+          invoice.invDat = invDat;
+          invoice.recNum = recNum;
+          invoice.recDat = recDat;
+          invoice.desVal = desVal;
+          invoice.notes = notes;
 
-        if (recNum && recDat && desVal) {
-          receipt.subTotal = invoice.subTotal;
-          receipt.total = invoice.total;
-          receipt.totalBuy = invoice.totalBuy;
-          receipt.codCus = invoice.codCus;
-          receipt.codCon = invoice.codCon;
-          receipt.codConNum = invoice.codConNum;
-          receipt.codSup = '0';
-          receipt.recNum = invoice.recNum;
-          receipt.recDat = invoice.recDat;
-          receipt.desVal = invoice.desVal;
-          receipt.notes = invoice.notes;
+          if (recNum && recDat && desVal) {
+            receipt.subTotal = invoice.subTotal;
+            receipt.total = invoice.total;
+            receipt.totalBuy = invoice.totalBuy;
+            receipt.codCus = invoice.codCus;
+            receipt.codCon = invoice.codCon;
+            receipt.codConNum = invoice.codConNum;
+            receipt.codSup = '0';
+            receipt.recNum = invoice.recNum;
+            receipt.recDat = invoice.recDat;
+            receipt.desVal = invoice.desVal;
+            receipt.notes = invoice.notes;
 
-          receiptHandler();
+            receiptHandler();
+          }
+          orderHandler();
+          setShowInvoice(true);
+          //      handlePrint();
         }
-        orderHandler();
-        setShowInvoice(true);
-        //      handlePrint();
       }
-    }
+    };
   };
 
   /////////////////////////////////////////////
@@ -466,43 +501,77 @@ function AppRem() {
             {/* name, address, email, phone, bank name, bank account number, website client name, client address, invoice number, invoice date, due date, notes */}
             <div>
               <div className="bordeTable">
-                <Row>
+              <Row>
                   <Col md={4}>
+                    <Card.Body>
+                      <Card.Title>
+                      <ListGroup.Item>
+                            <h3>
+                              
+                            </h3>
+                          </ListGroup.Item>
+
+                      </Card.Title>
+                    </Card.Body>
+                  </Col>
+
+                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                      <Card.Body>
+                        <Card.Title>
+                          <ListGroup.Item>
+                            <h3>
+                              REMITO DE EGRESO
+                            </h3>
+                          </ListGroup.Item>
+                        </Card.Title>
+                      </Card.Body>
+                    </Col>
+
+
+                </Row>
+
+              <Row>
+                  <Col md={2}>
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
                           <Form.Label>Customer Code</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input2Ref}
                             placeholder="Customer Code"
-                            value={codCus}
-                            onChange={(e) => setCodCus(e.target.value)}
+                            value={codCust}
+                            onChange={(e) => setCodCust(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && buscarPorCodCus(codCust)}
                             required
-                          />
+                            />
                         </Form.Group>
                       </Card.Title>
                     </Card.Body>
+                  </Col>
+                  <Col md={1}>
+                    <Button
+                      className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
+                      type="button"
+                      title="Buscador"
+                      onClick={() => handleShowCus()}
+                      >
+                      <BiFileFind className="text-blue-500 font-bold text-xl" />
+                    </Button>
                   </Col>
 
-                  <Col md={8}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Customer Name</Form.Label>
-                          <Form.Select
-                            className="input"
-                            onClick={(e) => handleChange(e)}
-                          >
-                            {customers.map((elemento) => (
-                              <option key={elemento._id} value={elemento._id}>
-                                {elemento.nameCus}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
+                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                      <Card.Body>
+                        <Card.Title>
+                          <ListGroup.Item>
+                            <h3>
+                              {name}
+                            </h3>
+                          </ListGroup.Item>
+                        </Card.Title>
+                      </Card.Body>
+                    </Col>
+
                 </Row>
 
                 <Row>
@@ -513,9 +582,11 @@ function AppRem() {
                           <Form.Label>Remit N°</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input6Ref}
                             placeholder="Remit N°"
                             value={remNum}
                             onChange={(e) => setRemNum(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && input9Ref.current.focus()}
                             required
                           />
                         </Form.Group>
@@ -530,10 +601,12 @@ function AppRem() {
                           <Form.Label>Remit Date</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input9Ref}
                             type="date"
                             placeholder="Remit Date"
                             value={remDat}
                             onChange={(e) => setRemDat(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
                             required
                           />
                         </Form.Group>
@@ -547,10 +620,12 @@ function AppRem() {
                           <Form.Label>Due Date</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input5Ref}
                             type="date"
                             placeholder="Due Date"
                             value={dueDat}
                             onChange={(e) => setDueDat(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && input7Ref.current.focus()}
                             required
                           />
                         </Form.Group>
@@ -564,9 +639,11 @@ function AppRem() {
                           <Form.Label>Additional Notes</Form.Label>
                           <textarea
                             className="input"
+                            ref={input7Ref}
                             placeholder="Additional notes to the client"
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && input8Ref.current.focus()}
                           ></textarea>
                         </Form.Group>
                       </Card.Title>
@@ -700,7 +777,7 @@ function AppRem() {
                             !codCus
                           }
                         >
-                          Cancel
+                          CANCELA
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -710,6 +787,7 @@ function AppRem() {
                       <div className="d-grid">
                         <Button
                           type="button"
+                          ref={input0Ref}
                           onClick={placeInvoiceHandler}
                           disabled={
                             orderItems.length === 0 ||
@@ -718,7 +796,7 @@ function AppRem() {
                             !codCus
                           }
                         >
-                          Save Invoice
+                          GRABA REMITO
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -742,6 +820,8 @@ function AppRem() {
                 {/* This is our table form */}
                 <article>
                   <TableForm
+                    input0Ref={input0Ref}
+                    input8Ref={input8Ref}
                     codPro={codPro}
                     setCodPro={setCodPro}
                     desPro={desPro}
@@ -764,6 +844,42 @@ function AppRem() {
                     //                    setTotInvwithTax={setTotInvwithTax}
                   />
                 </article>
+
+
+                <Modal
+                  size="md"
+                  show={showCus}
+                  onHide={() => setShowCus(false)}
+                  aria-labelledby="example-modal-sizes-title-lg"
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title id="example-modal-sizes-title-lg">
+                    Elija un Cliente
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                  <Col md={8}>
+                    <Card.Body>
+                      <Card.Title>
+                        <Form.Group className="input" controlId="name">
+                          <Form.Label>Customer Name</Form.Label>
+                          <Form.Select
+                            className="input"
+                            onClick={(e) => handleChange(e)}
+                          >
+                            {customers.map((elemento) => (
+                              <option key={elemento._id} value={elemento._id}>
+                                {elemento.nameCus}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+                      </Card.Title>
+                    </Card.Body>
+                  </Col>
+                  </Modal.Body>
+                </Modal>
+
               </div>
             </div>
           </>

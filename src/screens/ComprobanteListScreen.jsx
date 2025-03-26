@@ -152,7 +152,6 @@ export default function ComprobanteListScreen() {
       </Row>
 
       {loadingCreate && <LoadingBox></LoadingBox>}
-      {loadingDelete && <LoadingBox></LoadingBox>}
 
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -164,6 +163,7 @@ export default function ComprobanteListScreen() {
             <thead>
               <tr>
                 <th>ID</th>
+                <th>CODIGO COMPROBANTE</th>
                 <th>TYPO COMPROBANTE</th>
                 <th>IMPUTA EN CUENTA HABER</th>
                 <th>CLAVE</th>
@@ -173,6 +173,7 @@ export default function ComprobanteListScreen() {
             <tbody>
               {comprobantes.map((comprobante) => (
                 <tr key={comprobante._id}>
+                  <td>{comprobante._id}</td>
                   <td>{comprobante.codCom}</td>
                   <td>{comprobante.nameCom}</td>
                   <td>{comprobante.isHaber == true ? 'HABER' : 'DEBE'}</td>

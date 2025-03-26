@@ -14,10 +14,12 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { BiFileFind } from "react-icons/bi";
 import { Store } from '../../../Store';
 import ReactToPrint from 'react-to-print';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../../../components/LoadingBox';
 import { getError, API } from '../../../utils';
@@ -82,9 +84,24 @@ function AppBuyRec() {
   } = state;
 
   const { receipt, userInfo, values } = state;
+  const input1Ref = useRef(null);
+  const input2Ref = useRef(null);
+  const input3Ref = useRef(null);
+  const input4Ref = useRef(null);
+  const input5Ref = useRef(null);
+  const input6Ref = useRef(null);
+  const input7Ref = useRef(null);
+  const input8Ref = useRef(null);
+  const input0Ref = useRef(null);
+
+  const [showSup, setShowSup] = useState(false);
+
+
+
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
 
   const [codUse, setCodUse] = useState('');
+  
   const [name, setName] = useState('');
   const [remNum, setRemNum] = useState('');
   const [invNum, setInvNum] = useState('');
@@ -97,6 +114,7 @@ function AppBuyRec() {
   const [userss, setUserss] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
   const [codSup, setCodSup] = useState('');
+  const [codSupp, setCodSupp] = useState('');
   const [valuess, setValuess] = useState([]);
   const [codPro, setCodPro] = useState('');
   const [codPro1, setCodPro1] = useState('');
@@ -161,6 +179,7 @@ function AppBuyRec() {
 
   useEffect(() => {
     clearitems();
+    input2Ref.current.focus()
     const fetchDataVal = async () => {
       try {
         const { data } = await axios.get(`${API}/api/suppliers/`, {
@@ -192,11 +211,33 @@ function AppBuyRec() {
     }
   }, [width]);
 
+  const handleShowSup = () => {
+    setShowSup(true);
+  };
+
+
   const searchSup = (codSup) => {
     const supplierRow = suppliers.find((row) => row._id === codSup);
     setCodSup(supplierRow._id);
+    setCodSupp(supplierRow.codSup);
     setName(supplierRow.name);
   };
+
+  const buscarPorCodSup = (codSupp) => {
+    const supplierRow = suppliers.find((row) => row.codSup === codSupp);
+    if (!supplierRow) {
+        setCodSup('');
+        setCodSupp('');
+        setName('Elija Proovedor');
+    }else{
+      setCodSup(supplierRow._id);
+      setCodSupp(supplierRow.codSupp);
+      setName(supplierRow.name);
+      input3Ref.current.focus();
+      };
+  };
+
+
 
   //cr/
 //
@@ -329,43 +370,78 @@ if (oldRecipt.length > 0) {
             {/* name, address, email, phone, bank name, bank account number, website client name, client address, receipt number, receipt date, due date, notes */}
             <div>
               <div className="bordeTable">
-                <Row>
+              <Row>
                   <Col md={4}>
+                    <Card.Body>
+                      <Card.Title>
+                      <ListGroup.Item>
+                            <h3>
+                              
+                            </h3>
+                          </ListGroup.Item>
+
+                      </Card.Title>
+                    </Card.Body>
+                  </Col>
+
+                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                      <Card.Body>
+                        <Card.Title>
+                          <ListGroup.Item>
+                            <h3>
+                              ORDEN DE PAGO
+                            </h3>
+                          </ListGroup.Item>
+                        </Card.Title>
+                      </Card.Body>
+                    </Col>
+
+
+                </Row>
+
+                <Row>
+                  <Col md={2}>
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
                           <Form.Label>Supplier Code</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input2Ref}
                             placeholder="Supplier Code"
-                            value={codSup}
-                            onChange={(e) => setCodSup(e.target.value)}
-                            required
+                            value={codSupp}
+                            onChange={(e) => setCodSupp(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && buscarPorCodSup(codSupp)}
+                            buscarPorCodSup
                           />
                         </Form.Group>
                       </Card.Title>
                     </Card.Body>
                   </Col>
-                  <Col md={8}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Supplier Name</Form.Label>
-                          <Form.Select
-                            className="input"
-                            onClick={(e) => handleChange(e)}
-                          >
-                            {suppliers.map((elemento) => (
-                              <option key={elemento._id} value={elemento._id}>
-                                {elemento.name}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
+                  <Col md={1}>
+                    <Button
+                      className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
+                      type="button"
+                      title="Buscador"
+                      onClick={() => handleShowSup()}
+                      >
+                      <BiFileFind className="text-blue-500 font-bold text-xl" />
+                    </Button>
                   </Col>
+
+                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                      <Card.Body>
+                        <Card.Title>
+                          <ListGroup.Item>
+                            <h3>
+                              {name}
+                            </h3>
+                          </ListGroup.Item>
+                        </Card.Title>
+                      </Card.Body>
+                    </Col>
                 </Row>
+
 
                 <Row>
                   <Col md={2}>
@@ -375,9 +451,11 @@ if (oldRecipt.length > 0) {
                           <Form.Label>Receipt Number</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input3Ref}
                             placeholder="Receipt Number"
                             value={recNum}
                             onChange={(e) => RecControl(e)}
+                            onKeyDown={(e) => e.key === "Enter" && input4Ref.current.focus()}
                             // onChange={(e) => setRecNum(e.target.value)}
                             required
                           />
@@ -392,10 +470,12 @@ if (oldRecipt.length > 0) {
                           <Form.Label>Receipt Date</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input4Ref}
                             type="date"
                             placeholder="Receipt Date"
                             value={recDat}
                             onChange={(e) => setRecDat(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
                             required
                           />
                         </Form.Group>
@@ -409,9 +489,11 @@ if (oldRecipt.length > 0) {
                           <Form.Label>Additional Notes</Form.Label>
                           <textarea
                             className="input"
+                            ref={input5Ref}
                             placeholder="Additional notes to the client"
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && input8Ref.current.focus()}
                           ></textarea>
                         </Form.Group>
                       </Card.Title>
@@ -434,7 +516,7 @@ if (oldRecipt.length > 0) {
                             !codSup
                           }
                         >
-                          Cancel
+                          CANCELA
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -444,6 +526,7 @@ if (oldRecipt.length > 0) {
                       <div className="d-grid">
                         <Button
                           type="button"
+                          ref={input0Ref}
                           onClick={placeReceiptHandler}
                           disabled={
                             receiptItems.length === 0 ||
@@ -452,7 +535,7 @@ if (oldRecipt.length > 0) {
                             !codSup
                           }
                         >
-                          Save Recipt
+                          GRABA ORDEN PAGO
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -479,6 +562,8 @@ if (oldRecipt.length > 0) {
                 {/* This is our table form */}
                 <article>
                   <TableFormRec
+                    input0Ref={input0Ref}
+                    input8Ref={input8Ref}
                     codVal={codVal}
                     setCodVal={setCodVal}
                     desval={desval}
@@ -495,6 +580,39 @@ if (oldRecipt.length > 0) {
                     setTotal={setTotal}
                   />
                 </article>
+                <Modal
+                  size="md"
+                  show={showSup}
+                  onHide={() => setShowSup(false)}
+                  aria-labelledby="example-modal-sizes-title-lg"
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title id="example-modal-sizes-title-lg">
+                    Elija un Proovedor
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                  <Col md={8}>
+                    <Card.Body>
+                      <Card.Title>
+                        <Form.Group className="input" controlId="name">
+                          <Form.Label>Proveedor</Form.Label>
+                          <Form.Select
+                            className="input"
+                            onClick={(e) => handleChange(e)}
+                          >
+                            {suppliers.map((elemento) => (
+                              <option key={elemento._id} value={elemento._id}>
+                                {elemento.name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+                      </Card.Title>
+                    </Card.Body>
+                  </Col>
+                  </Modal.Body>
+                </Modal>
               </div>
             </div>
           </>

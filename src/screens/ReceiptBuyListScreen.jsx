@@ -175,17 +175,17 @@ const prodeleteReceipt = (receipt) => {
   return (
     <div>
       <Helmet>
-        <title>Buy Receipts</title>
+        <title>Ordenes de Pago</title>
       </Helmet>
       <Row>
         <Col>
-          <h1>Buy Receipts</h1>
+          <h1>Ordenes de Pago</h1>
         </Col>
 
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Buy Receipt
+              Create Orden de Pago
             </Button>
           </div>
         </Col>

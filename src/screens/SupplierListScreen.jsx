@@ -140,19 +140,18 @@ export default function SupplierListScreen() {
     <div>
       <Row>
         <Col>
-          <h1>Suppliers</h1>
+          <h1>Proveedores</h1>
         </Col>
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Supplier
+              Create Proveedor
             </Button>
           </div>
         </Col>
       </Row>
 
       {loadingCreate && <LoadingBox></LoadingBox>}
-      {loadingDelete && <LoadingBox></LoadingBox>}
 
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -164,7 +163,7 @@ export default function SupplierListScreen() {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>NAME</th>
+                <th>NOMBRE COMERCIAL</th>
                 <th>EMAIL</th>
                 <th>ACTIONS</th>
               </tr>

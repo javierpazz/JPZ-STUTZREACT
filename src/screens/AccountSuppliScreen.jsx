@@ -17,7 +17,6 @@ import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { Store } from '../Store';
 import { getError, API } from '../utils';
-import SearchBox from '../components/SearchBox';
 import Modal from 'react-bootstrap/Modal';
 import InvoiceListChaNum from './../screens/InvoiceListChaNum';
 
@@ -210,21 +209,22 @@ export default function AccountUserScreen() {
   return (
     <div>
       <Helmet>
-        <title>Buy Invoices</title>
+        <title>Cuenta Proovedores</title>
       </Helmet>
       <Row>
         <Col>
-          <h1>Account</h1>
+          <h1>Cuenta Proovedores</h1>
         </Col>
 
         <Col>
-          <SearchBox />
+          <h3>           Saldo: ${total.toFixed(2)}</h3>
         </Col>
+
 
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Select Other Supplier
+              Seleccione otro Proveedor
             </Button>
           </div>
         </Col>
@@ -243,29 +243,21 @@ export default function AccountUserScreen() {
                 <th>DATE</th>
                 <th>DOCUMENT</th>
                 <th>NUMBER</th>
-                <th>ORDER N°</th>
-                <th>STATE</th>
                 <th>AMOUNT</th>
                 <th>ACTIONS</th>
-                <th>
-                  <h4>Account: ${total}</h4>
-                </th>
               </tr>
             </thead>
             <tbody>
               {invoices?.map((invoice) => (
                 <tr key={invoice._id}>
-                  <td>{invoice.docDat.substring(0, 10)}</td>
-                  {invoice.orderItems ? <td>Invoice</td> : <td>Receipt</td>}
+                  <td>{invoice.docDat ? invoice.docDat.substring(0, 10): '' }</td>
+                  {invoice.orderItems ? <td>Factura</td> : <td>Recibo</td>}
                   {invoice.orderItems ? (
-                    <td>{invoice.invNum}</td>
+                    <td>{invoice.invNum ? invoice.invNum : 'REMITO S/F'}</td>
                   ) : (
                     <td>{invoice.recNum}</td>
                   )}
 
-                  {invoice.ordYes === 'Y' ? <td>{invoice._id}</td> : <td></td>}
-
-                  <td>{invoice.staOrd}</td>
                   <td>{invoice.totalBuy.toFixed(2)}</td>
 
                   <td>

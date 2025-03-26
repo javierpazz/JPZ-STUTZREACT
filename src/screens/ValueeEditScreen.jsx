@@ -103,9 +103,9 @@ export default function ValueEditScreen() {
   return (
     <Container className="small-container">
       <Helmet>
-        <title>Edit Value ${valueeId}</title>
+        <title>Edit Valor</title>
       </Helmet>
-      <h1>Edit Value {valueeId}</h1>
+      <h1>Edit Valor</h1>
 
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -114,7 +114,7 @@ export default function ValueEditScreen() {
       ) : (
         <Form onSubmit={submitHandler}>
           <Form.Group className="mb-3" controlId="slug">
-            <Form.Label>Code</Form.Label>
+            <Form.Label>Codigo</Form.Label>
             <Form.Control
               value={codVal}
               onChange={(e) => setCodVal(e.target.value)}
@@ -122,7 +122,7 @@ export default function ValueEditScreen() {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="desVal">
-            <Form.Label>Name</Form.Label>
+            <Form.Label>Descripcion Valor</Form.Label>
             <Form.Control
               value={desVal}
               onChange={(e) => setDesVal(e.target.value)}
@@ -131,7 +131,7 @@ export default function ValueEditScreen() {
           </Form.Group>
           <div className="mb-3">
             <Button disabled={loadingUpdate} type="submit">
-              Update
+              Graba
             </Button>
             {loadingUpdate && <LoadingBox></LoadingBox>}
           </div>

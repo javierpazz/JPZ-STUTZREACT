@@ -212,8 +212,8 @@ try {
             <tbody>
               {invoices?.map((invoice) => (
                 <tr key={invoice._id}>
-                  <td>{invoice.invNum}</td>
-                  <td>{invoice.invDat.substring(0, 10)}</td>
+                  <td>{invoice.invNum ? invoice.invNum : 'REMITO S/F'}</td>
+                  <td>{invoice.invDat ? invoice.invDat.substring(0, 10): ''}</td>
                   <td>{invoice.remNum}</td>
                   <td>{invoice.ordNum}</td>
                   <td>{invoice.recNum}</td>
@@ -222,7 +222,7 @@ try {
                       ? invoice.supplier.name
                       : 'DELETED SUPPLIER'}
                   </td>
-                  <td>{invoice.recNum ? invoice.recDat : 'No'}</td>
+                  <td>{invoice.recNum ? invoice.recDat.substring(0, 10) : 'No'}</td>
                   <td>{invoice.desVal}</td>
                   <td>{invoice.totalBuy.toFixed(2)}</td>
 

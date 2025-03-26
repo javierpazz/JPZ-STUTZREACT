@@ -123,10 +123,10 @@ function App() {
               </Button> */}
 
               <LinkContainer to="/salepoint">
-                <Navbar.Brand>{userInfo ? userInfo.salePoint : "Chose Sale Point"}</Navbar.Brand>
+                <Navbar.Brand>{userInfo && userInfo.salePoint || ""}</Navbar.Brand>
               </LinkContainer>
               <LinkContainer to="/salepoint">
-                <Navbar.Brand>{userInfo ? userInfo.nameCon : "Chose Sale Point"}</Navbar.Brand>
+                <Navbar.Brand>{userInfo && userInfo.nameCon || ""}</Navbar.Brand>
               </LinkContainer>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
@@ -167,42 +167,52 @@ function App() {
                   )} */}
                   {/* {userInfo && userInfo.role=="admin" && ( */}
                   {userInfo && (
-                    <NavDropdown title="Sales" id="sales-nav-dropdown">
+                    <NavDropdown title="Ventas" id="sales-nav-dropdown">
                       <LinkContainer to="/admin/invoicer">
-                        <NavDropdown.Item>Sales Invoices</NavDropdown.Item>
+                        <NavDropdown.Item>Facturas de Venta</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/invoicerRec">
-                        <NavDropdown.Item>Receipts Sales</NavDropdown.Item>
+                        <NavDropdown.Item>Recibos</NavDropdown.Item>
                       </LinkContainer>
                       {/* <LinkContainer to="/admin/invoices"> */}
                       <LinkContainer to="/admin/remits">
-                        <NavDropdown.Item>Sales Remits</NavDropdown.Item>
+                        <NavDropdown.Item>Remitos de Entregas</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/admin/orders">
-                        <NavDropdown.Item>Orders</NavDropdown.Item>
-                      </LinkContainer>
-                      <LinkContainer to="/admin/stateOrds">
+                      {/* <LinkContainer to="/admin/orders">
+                        <NavDropdown.Item>Ordenes de Comprars</NavDropdown.Item>
+                      </LinkContainer> */}
+                      {/* <LinkContainer to="/admin/stateOrds">
                         <NavDropdown.Item>States Order</NavDropdown.Item>
-                      </LinkContainer>
+                      </LinkContainer> */}
                       <LinkContainer to="/admin/customers">
-                        <NavDropdown.Item>Customers</NavDropdown.Item>
+                        <NavDropdown.Item>Clientes</NavDropdown.Item>
                       </LinkContainer>
+                      {userInfo && userInfo.role=="admin" && (
+                        <LinkContainer to="/admin/infocust">
+                          <NavDropdown.Item>Informes</NavDropdown.Item>
+                        </LinkContainer>
+                        )}
                     </NavDropdown>
                   )}
                   {userInfo && (
-                    <NavDropdown title="Buys" id="buys-nav-dropdown">
+                    <NavDropdown title="Compras" id="buys-nav-dropdown">
                       <LinkContainer to="/admin/invoicerBuy">
-                        <NavDropdown.Item>Buy Invoices</NavDropdown.Item>
+                        <NavDropdown.Item>Facturas de Compra</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/invoicerBuyRec">
-                        <NavDropdown.Item>Receipt Buys</NavDropdown.Item>
+                        <NavDropdown.Item>Ordenes de Pago</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/remitsBuy">
-                        <NavDropdown.Item>Buy Remits</NavDropdown.Item>
+                        <NavDropdown.Item>Remitos de Ingresos</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/suppliers">
-                        <NavDropdown.Item>Suppliers</NavDropdown.Item>
+                        <NavDropdown.Item>Proveedores</NavDropdown.Item>
                       </LinkContainer>
+                      {userInfo && userInfo.role=="admin" && (
+                        <LinkContainer to="/admin/infosupp">
+                          <NavDropdown.Item>Informes</NavDropdown.Item>
+                        </LinkContainer>
+                        )}
                     </NavDropdown>
                   )}
 
@@ -213,54 +223,58 @@ function App() {
                         <NavDropdown.Item>Dashboard</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/invoices">
-                        <NavDropdown.Item>Sales Invoices</NavDropdown.Item>
+                        <NavDropdown.Item>Facturas de Ventas</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/invoicesRec">
-                        <NavDropdown.Item>Receipts Sales</NavDropdown.Item>
+                        <NavDropdown.Item>Recibos </NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/invoicesBuy">
-                        <NavDropdown.Item>Buy Invoices</NavDropdown.Item>
+                        <NavDropdown.Item>Facturas de Compras</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/invoicesBuyRec">
-                        <NavDropdown.Item>Receipt Buys</NavDropdown.Item>
+                        <NavDropdown.Item>Ordenes de Pago</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/products">
-                        <NavDropdown.Item>Products</NavDropdown.Item>
+                        <NavDropdown.Item>Productos</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/customers">
-                        <NavDropdown.Item>Customers</NavDropdown.Item>
+                        <NavDropdown.Item>Clientes</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/suppliers">
-                        <NavDropdown.Item>Suppliers</NavDropdown.Item>
+                        <NavDropdown.Item>Proveedores</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/valuees">
-                        <NavDropdown.Item>Values</NavDropdown.Item>
+                        <NavDropdown.Item>Valores</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/configurations">
-                        <NavDropdown.Item>Configurations</NavDropdown.Item>
+                        <NavDropdown.Item>Puntos de Venta</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/comprobantes">
                         <NavDropdown.Item>Comprobantes</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/admin/support">
-                        <NavDropdown.Item>Chat Support</NavDropdown.Item>
-                      </LinkContainer>
                       <LinkContainer to="/admin/users">
-                        <NavDropdown.Item>Users</NavDropdown.Item>
+                        <NavDropdown.Item>Usuarios</NavDropdown.Item>
                       </LinkContainer>
+                      {/* <LinkContainer to="/admin/support">
+                        <NavDropdown.Item>Chat Support</NavDropdown.Item>
+                      </LinkContainer> */}
 
 
                     </NavDropdown>
                   )}
 
-                  {userInfo && (
+                  {userInfo ? (
                       <Link
                         className="nav-link"
                         to="#signout"
                         onClick={signoutHandler}
                       >
-                        Sign Out
+                        Salir
                       </Link>
+                  ) : (
+                    <Link className="nav-link" to="/signin">
+                      Entrar
+                    </Link>
                   )}
                 </Nav>
               </Navbar.Collapse>

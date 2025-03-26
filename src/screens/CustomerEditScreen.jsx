@@ -116,9 +116,9 @@ export default function CustomerEditScreen() {
   return (
     <Container className="small-container">
       <Helmet>
-        <title>Edit Customer ${customerId}</title>
+        <title>Edita Cliente </title>
       </Helmet>
-      <h1>Edit Customer {customerId}</h1>
+      <h1>Edita Cliente </h1>
 
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -127,7 +127,7 @@ export default function CustomerEditScreen() {
       ) : (
         <Form onSubmit={submitHandler}>
           <Form.Group className="mb-3" controlId="codCus">
-            <Form.Label>Code</Form.Label>
+            <Form.Label>Codigo</Form.Label>
             <Form.Control
               value={codCus}
               onChange={(e) => setCodCus(e.target.value)}
@@ -135,7 +135,7 @@ export default function CustomerEditScreen() {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="name">
-            <Form.Label>Name</Form.Label>
+            <Form.Label>Nombre Comercial</Form.Label>
             <Form.Control
               value={nameCus}
               onChange={(e) => setName(e.target.value)}
@@ -176,7 +176,7 @@ export default function CustomerEditScreen() {
           </Form.Group>
           <div className="mb-3">
             <Button disabled={loadingUpdate} type="submit">
-              Update
+              Graba
             </Button>
             {loadingUpdate && <LoadingBox></LoadingBox>}
           </div>

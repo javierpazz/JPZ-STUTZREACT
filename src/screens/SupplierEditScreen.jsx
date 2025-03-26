@@ -107,9 +107,9 @@ export default function SupplierEditScreen() {
   return (
     <Container className="small-container">
       <Helmet>
-        <title>Edit Supplier ${supplierId}</title>
+        <title>Edita Proveedor</title>
       </Helmet>
-      <h1>Edit Supplier {supplierId}</h1>
+      <h1>Edita Proveedor</h1>
 
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -118,7 +118,7 @@ export default function SupplierEditScreen() {
       ) : (
         <Form onSubmit={submitHandler}>
           <Form.Group className="mb-3" controlId="codSup">
-            <Form.Label>Code</Form.Label>
+            <Form.Label>Codigo</Form.Label>
             <Form.Control
               value={codSup}
               onChange={(e) => setCodSup(e.target.value)}
@@ -126,7 +126,7 @@ export default function SupplierEditScreen() {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="name">
-            <Form.Label>Name</Form.Label>
+            <Form.Label>Nombre Comercial</Form.Label>
             <Form.Control
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -143,7 +143,7 @@ export default function SupplierEditScreen() {
           </Form.Group>
           <div className="mb-3">
             <Button disabled={loadingUpdate} type="submit">
-              Update
+              Graba
             </Button>
             {loadingUpdate && <LoadingBox></LoadingBox>}
           </div>

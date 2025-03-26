@@ -14,10 +14,12 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { BiFileFind } from "react-icons/bi";
 import { Store } from '../../../Store';
 import ReactToPrint from 'react-to-print';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../../../components/LoadingBox';
 import { getError, API } from '../../../utils';
@@ -94,13 +96,28 @@ function AppBuy() {
   } = state;
 
   const { invoice, receipt, userInfo, values } = state;
+
+  const input1Ref = useRef(null);
+  const input2Ref = useRef(null);
+  const input3Ref = useRef(null);
+  const input4Ref = useRef(null);
+  const input5Ref = useRef(null);
+  const input6Ref = useRef(null);
+  const input7Ref = useRef(null);
+  const input8Ref = useRef(null);
+  const input0Ref = useRef(null);
+
+
   const [poriva, setPorIva] = useState(userInfo.configurationObj.poriva);
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
   const [noDisc, setNoDisc] = useState(false);
   const [toDisc, setToDisc] = useState(true);
   const [itDisc, setItDisc] = useState(false);
   const [codCom, setCodCom] = useState('');
+  const [codComp, setCodComp] = useState();
   const [nameCom, setNameCom] = useState('');
+  const [showSup, setShowSup] = useState(false);
+  const [showCom, setShowCom] = useState(false);
 
 
   const [codUse, setCodUse] = useState('');
@@ -119,6 +136,7 @@ function AppBuy() {
   const [userss, setUserss] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
   const [codSup, setCodSup] = useState('');
+  const [codSupp, setCodSupp] = useState('');
   const [valuess, setValuess] = useState([]);
   const [comprobantes, setComprobantes] = useState([]);
   const [codPro, setCodPro] = useState('');
@@ -147,7 +165,6 @@ function AppBuy() {
 
 
   const config = {
-    cuit: userInfo.configurationObj.cuit,
     salePoint: userInfo.configurationObj.codCon,
     name: userInfo.configurationObj.name,
     cuit: userInfo.configurationObj.cuit,
@@ -197,6 +214,7 @@ function AppBuy() {
 
   useEffect(() => {
     clearitems();
+    input1Ref.current.focus()
     const fetchDataVal = async () => {
       try {
         const { data } = await axios.get(`${API}/api/suppliers/`, {
@@ -256,6 +274,13 @@ function AppBuy() {
     return (parseFloat(getTotal()) + parseFloat(getIVA())).toFixed(2);
   };
 
+  const handleShowCom = () => {
+    setShowCom(true);
+  };
+
+  const handleShowSup = () => {
+    setShowSup(true);
+  };
 
 
 
@@ -263,8 +288,25 @@ function AppBuy() {
     const supplierRow = suppliers.find((row) => row._id === codSup);
     setSuppObj(supplierRow);
     setCodSup(supplierRow._id);
+    setCodSupp(supplierRow.codSup);
     setName(supplierRow.name);
   };
+
+  const buscarPorCodSup = (codSupp) => {
+    const supplierRow = suppliers.find((row) => row.codSup === codSupp);
+    if (!supplierRow) {
+        setCodSup('');
+        setCodSupp('');
+        setName('Elija Proovedor');
+    }else{
+      setCodSup(supplierRow._id);
+      setCodSupp(supplierRow.codSupp);
+      setName(supplierRow.name);
+      input3Ref.current.focus();
+      };
+  };
+
+
 
   const handleChange = (e) => {
     searchSup(e.target.value);
@@ -276,11 +318,31 @@ function AppBuy() {
   const searchComprobante = (codCom) => {
     const comprobantesRow = comprobantes.find((row) => row._id === codCom);
     setCodCom(comprobantesRow._id);
+    setCodComp(comprobantesRow.codCom);
     setNameCom(comprobantesRow.nameCom);
     setNoDisc(comprobantesRow.noDisc);
     setToDisc(comprobantesRow.toDisc);
     setItDisc(comprobantesRow.itDisc);
   };
+
+  const buscarPorCodCom = (codComp) => {
+    const comprobantesRow = comprobantes.find((row) => row.codCom === codComp);
+    if (!comprobantesRow) {
+        setCodCom('');
+        setCodComp('');
+        setNameCom('Elija Documento');
+    }else{
+      setCodCom(comprobantesRow._id);
+      setCodComp(comprobantesRow.codComp);
+      setNameCom(comprobantesRow.nameCom);
+      setNoDisc(comprobantesRow.noDisc);
+      setToDisc(comprobantesRow.toDisc);
+      setItDisc(comprobantesRow.itDisc);
+      input2Ref.current.focus();
+
+    };
+  };
+
 
   const searchValue = (codVal) => {
     const valuesRow = valuess.find((row) => row._id === codVal);
@@ -298,56 +360,58 @@ function AppBuy() {
   const placeCancelInvoiceHandler = async () => {};
 
   const placeInvoiceHandler = async () => {
-    if (isPaying && (!recNum || !recDat || !desVal)) {
-      unloadpayment();
-    } else {
-      if (invNum && invDat && codSup) {
-        //    list.map((item) => stockHandler({ item }));
-        orderItems.map((item) => stockHandler({ item }));
+    if (window.confirm('Are you sure to create?')) {
+      if (isPaying && (!recNum || !recDat || !desVal)) {
+        unloadpayment();
+      } else {
+        if (invNum && invDat && codSup) {
+          //    list.map((item) => stockHandler({ item }));
+          orderItems.map((item) => stockHandler({ item }));
 
-        const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
-        invoice.subTotal = round2(
-          invoice.orderItems.reduce((a, c) => a + c.quantity * c.price, 0)
-        );
-        invoice.shippingPrice = 0;
-        //        invoice.shippingPrice =
-        //        invoice.subTotal > 100 ? round2(0) : round2(10);
-        invoice.tax = round2((poriva/100) * invoice.subTotal);
-        invoice.totalBuy =
-          invoice.subTotal + invoice.shippingPrice + invoice.tax;
-        invoice.total = 0;
+          const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
+          invoice.subTotal = round2(
+            invoice.orderItems.reduce((a, c) => a + c.quantity * c.price, 0)
+          );
+          invoice.shippingPrice = 0;
+          //        invoice.shippingPrice =
+          //        invoice.subTotal > 100 ? round2(0) : round2(10);
+          invoice.tax = round2((poriva/100) * invoice.subTotal);
+          invoice.totalBuy =
+            invoice.subTotal + invoice.shippingPrice + invoice.tax;
+          invoice.total = 0;
 
-        invoice.codSup = codSup;
-        invoice.codCon = userInfo.codCon;
-        invoice.codConNum = codConNum;
-        invoice.remNum = remNum;
-        invoice.remDat = invDat;
-        invoice.invNum = invNum;
-        invoice.invDat = invDat;
-        invoice.recNum = recNum;
-        invoice.recDat = recDat;
-        invoice.desVal = desVal;
-        invoice.notes = notes;
+          invoice.codSup = codSup;
+          invoice.codCon = userInfo.codCon;
+          invoice.codConNum = codConNum;
+          invoice.remNum = remNum;
+          invoice.remDat = invDat;
+          invoice.invNum = invNum;
+          invoice.invDat = invDat;
+          invoice.recNum = recNum;
+          invoice.recDat = recDat;
+          invoice.desVal = desVal;
+          invoice.notes = notes;
 
-        if (recNum && recDat && desVal) {
-          receipt.total = invoice.total;
-          receipt.totalBuy = invoice.totalBuy;
-          receipt.codSup = invoice.codSup;
-          receipt.codCon = invoice.codCon;
-          receipt.codConNum = invoice.codConNum;
-          receipt.recNum = invoice.recNum;
-          receipt.recDat = invoice.recDat;
-          receipt.desVal = invoice.desVal;
-          receipt.notes = invoice.notes;
+          if (recNum && recDat && desVal) {
+            receipt.total = invoice.total;
+            receipt.totalBuy = invoice.totalBuy;
+            receipt.codSup = invoice.codSup;
+            receipt.codCon = invoice.codCon;
+            receipt.codConNum = invoice.codConNum;
+            receipt.recNum = invoice.recNum;
+            receipt.recDat = invoice.recDat;
+            receipt.desVal = invoice.desVal;
+            receipt.notes = invoice.notes;
 
-          receiptHandler();
+            receiptHandler();
+          }
+
+          orderHandler();
+          setShowInvoice(true);
+          //      handlePrint();
         }
-
-        orderHandler();
-        setShowInvoice(true);
-        //      handlePrint();
       }
-    }
+    };
   };
 
   /////////////////////////////////////////////
@@ -453,6 +517,7 @@ function AppBuy() {
           codSup: invoice.codSup,
           codCon: invoice.codCon,
           codConNum: invoice.codConNum,
+          codCom: invoice.codCom,
           
           remNum: invoice.remNum,
           remDat: invoice.remDat,
@@ -526,80 +591,90 @@ function AppBuy() {
             <div>
               <div className="bordeTable">
               <Row>
-                  <Col md={4}>
+                  <Col md={2}>
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
                           <Form.Label>Tipo Comprobante</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input1Ref}
                             placeholder="Tipo Comprobante"
-                            value={codCom}
-                            onChange={(e) => setCodCom(e.target.value)}
+                            value={codComp}
+                            onChange={(e) => setCodComp(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && buscarPorCodCom(codComp)}
                             required
                           />
                         </Form.Group>
                       </Card.Title>
                     </Card.Body>
                   </Col>
-
-                  <Col md={8}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Tipo Comprobante</Form.Label>
-                          <Form.Select
-                            className="input"
-                            onClick={(e) => handleChangeCom(e)}
-                          >
-                            {comprobantes.map((elemento) => (
-                              <option key={elemento._id} value={elemento._id}>
-                                {elemento.nameCom}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
+                  <Col md={1}>
+                    <Button
+                      className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
+                      type="button"
+                      title="Buscador"
+                      onClick={() => handleShowCom()}
+                      >
+                      <BiFileFind className="text-blue-500 font-bold text-xl" />
+                    </Button>
                   </Col>
+
+                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                      <Card.Body>
+                        <Card.Title>
+                          <ListGroup.Item>
+                            <h3>
+                              {nameCom}
+                            </h3>
+                          </ListGroup.Item>
+                        </Card.Title>
+                      </Card.Body>
+                    </Col>
+
                 </Row>
 
                 <Row>
-                  <Col md={4}>
+                  <Col md={2}>
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
                           <Form.Label>Supplier Code</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input2Ref}
                             placeholder="Supplier Code"
-                            value={codSup}
-                            onChange={(e) => setCodSup(e.target.value)}
-                            required
+                            value={codSupp}
+                            onChange={(e) => setCodSupp(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && buscarPorCodSup(codSupp)}
+                            buscarPorCodSup
                           />
                         </Form.Group>
                       </Card.Title>
                     </Card.Body>
                   </Col>
-                  <Col md={8}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Supplier Name</Form.Label>
-                          <Form.Select
-                            className="input"
-                            onClick={(e) => handleChange(e)}
-                          >
-                            {suppliers.map((elemento) => (
-                              <option key={elemento._id} value={elemento._id}>
-                                {elemento.name}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
+                  <Col md={1}>
+                    <Button
+                      className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
+                      type="button"
+                      title="Buscador"
+                      onClick={() => handleShowSup()}
+                      >
+                      <BiFileFind className="text-blue-500 font-bold text-xl" />
+                    </Button>
                   </Col>
+
+                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                      <Card.Body>
+                        <Card.Title>
+                          <ListGroup.Item>
+                            <h3>
+                              {name}
+                            </h3>
+                          </ListGroup.Item>
+                        </Card.Title>
+                      </Card.Body>
+                    </Col>
                 </Row>
 
                 <Row>
@@ -610,9 +685,11 @@ function AppBuy() {
                           <Form.Label>Invoice N°</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input3Ref}
                             placeholder="Invoice N°"
                             value={invNum}
                             onChange={(e) => setInvNum(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && input4Ref.current.focus()}
                             required
                           />
                         </Form.Group>
@@ -627,10 +704,12 @@ function AppBuy() {
                           <Form.Label>Invoice Date</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input4Ref}
                             type="date"
                             placeholder="Invoice Date"
                             value={invDat}
                             onChange={(e) => setInvDat(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
                             required
                           />
                         </Form.Group>
@@ -644,10 +723,12 @@ function AppBuy() {
                           <Form.Label>Due Date</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input5Ref}
                             type="date"
                             placeholder="Due Date"
                             value={dueDat}
                             onChange={(e) => setDueDat(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && input6Ref.current.focus()}
                             required
                           />
                         </Form.Group>
@@ -661,9 +742,11 @@ function AppBuy() {
                           <Form.Label>Remit N°</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input6Ref}
                             placeholder="Remit N°"
                             value={remNum}
                             onChange={(e) => setRemNum(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && input7Ref.current.focus()}
                             required
                           />
                         </Form.Group>
@@ -677,9 +760,11 @@ function AppBuy() {
                           <Form.Label>Additional Notes</Form.Label>
                           <textarea
                             className="input"
+                            ref={input7Ref}
                             placeholder="Additional notes to the client"
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && input8Ref.current.focus()}
                           ></textarea>
                         </Form.Group>
                       </Card.Title>
@@ -813,7 +898,7 @@ function AppBuy() {
                             !codSup
                           }
                         >
-                          Cancel
+                          CANCELA
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -823,6 +908,7 @@ function AppBuy() {
                       <div className="d-grid">
                         <Button
                           type="button"
+                          ref={input0Ref}
                           onClick={placeInvoiceHandler}
                           disabled={
                             orderItems.length === 0 ||
@@ -831,7 +917,7 @@ function AppBuy() {
                             !codSup
                           }
                         >
-                          Save Invoice
+                          GRABA FACTURA
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -855,6 +941,8 @@ function AppBuy() {
                 {/* This is our table form */}
                 <article>
                   <TableFormBuy
+                    input0Ref={input0Ref}
+                    input8Ref={input8Ref}
                     codPro={codPro}
                     setCodPro={setCodPro}
                     desPro={desPro}
@@ -877,6 +965,74 @@ function AppBuy() {
                     //                    setTotInvwithTax={setTotInvwithTax}
                   />
                 </article>
+                <Modal
+                  size="md"
+                  show={showCom}
+                  onHide={() => setShowCom(false)}
+                  aria-labelledby="example-modal-sizes-title-lg"
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title id="example-modal-sizes-title-lg">
+                    Elija un Comprobante
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                  <Col md={8}>
+                          <Card.Body>
+                            <Card.Title>
+                              <Form.Group className="input" controlId="name">
+                                <Form.Label>Tipo Comprobante</Form.Label>
+                                <Form.Select
+                                  className="input"
+                                  onClick={(e) => handleChangeCom(e)}
+                                >
+                                  {comprobantes.map((elemento) => (
+                                    <option key={elemento._id} value={elemento._id}>
+                                      {elemento.nameCom}
+                                    </option>
+                                  ))}
+                                </Form.Select>
+                              </Form.Group>
+                            </Card.Title>
+                          </Card.Body>
+                        </Col>
+                  </Modal.Body>
+                </Modal>
+
+                <Modal
+                  size="md"
+                  show={showSup}
+                  onHide={() => setShowSup(false)}
+                  aria-labelledby="example-modal-sizes-title-lg"
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title id="example-modal-sizes-title-lg">
+                    Elija un Proovedor
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                  <Col md={8}>
+                    <Card.Body>
+                      <Card.Title>
+                        <Form.Group className="input" controlId="name">
+                          <Form.Label>Proveedor</Form.Label>
+                          <Form.Select
+                            className="input"
+                            onClick={(e) => handleChange(e)}
+                          >
+                            {suppliers.map((elemento) => (
+                              <option key={elemento._id} value={elemento._id}>
+                                {elemento.name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+                      </Card.Title>
+                    </Card.Body>
+                  </Col>
+                  </Modal.Body>
+                </Modal>
+
               </div>
             </div>
           </>

@@ -119,9 +119,9 @@ export default function ComprobanteEditScreen() {
   return (
     <Container className="small-container">
       <Helmet>
-        <title>Edit Comprobante ${comprobanteId}</title>
+        <title>Edit Comprobante </title>
       </Helmet>
-      <h1>Edit Comprobante {comprobanteId}</h1>
+      <h1>Edit Comprobante </h1>
 
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -188,7 +188,7 @@ export default function ComprobanteEditScreen() {
           </Form.Group> */}
           <div className="mb-3">
             <Button disabled={loadingUpdate} type="submit">
-              Update
+              Graba
             </Button>
             {loadingUpdate && <LoadingBox></LoadingBox>}
           </div>

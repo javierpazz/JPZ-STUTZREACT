@@ -1,14 +1,16 @@
-import React, { useContext, useState, useEffect, useReducer } from 'react';
+import React, { useContext, useState, useRef, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 // import { v4 as uuidv4 } from 'uuid';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { BiFileFind } from "react-icons/bi";
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import { Store } from '../../../Store';
 import { getError, API } from '../../../utils';
 
@@ -32,6 +34,8 @@ const reducer = (state, action) => {
 };
 
 export default function TableFormRec({
+  input0Ref,
+  input8Ref,
   codVal,
   setCodVal,
   desval,
@@ -67,13 +71,22 @@ export default function TableFormRec({
     error: '',
   });
 
+
+  const input9Ref = useRef(null);
+  const input10Ref = useRef(null);
+  const input11Ref = useRef(null);
+
+
   const [isEditing, setIsEditing] = useState(false);
   const [valuees, setValuees] = useState([]);
-  const [valueeR, setValueeR] = useState('');
+  const [valueeR, setValueeR] = useState({});
   const [numval, setNumval] = useState(' ');
   const [stock, setStock] = useState(0);
+  const [showVal, setShowVal] = useState(false);
+  const [codValo, setCodValo] = useState('');
 
   useEffect(() => {
+    input8Ref.current.focus()
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`${API}/api/valuees/`, {
@@ -108,6 +121,10 @@ export default function TableFormRec({
 
   const addToCartHandler = async (itemVal) => {
     if (codVal && amountval > 0) {
+      setCodValo('');
+      setAmountval('');
+      setNumval('');
+        input8Ref.current.focus()
       ctxDispatch({
         type: 'RECEIPT_ADD_ITEM',
         payload: { ...itemVal, desval, amountval, numval },
@@ -116,6 +133,7 @@ export default function TableFormRec({
   };
 
   const removeItemHandler = (itemVal) => {
+    input8Ref.current.focus()
     ctxDispatch({ type: 'RECEIPT_REMOVE_ITEM', payload: itemVal });
   };
 
@@ -123,13 +141,44 @@ export default function TableFormRec({
 
   const searchValuee = (codVal) => {
     const valueeR = valuees.find((row) => row._id === codVal);
+    setAmountval('');
+    setNumval('');
     setValueeR(valueeR);
     setCodVal(valueeR._id);
+    setCodValo(valueeR.codValo);
     setDesval(valueeR.desVal);
   };
 
+  const buscarPorCodVal = (codValo) => {
+    if (codValo==='') {
+      input0Ref.current.focus();
+    } else {
+    const valueeR = valuees.find((row) => row.codVal === codValo);
+
+    if (!valueeR) {
+        setValueeR({});
+        setCodVal('');
+        setCodValo('');
+        setDesval('Elija un Valor');
+      }else{
+        setAmountval('');
+        setNumval('');
+        setValueeR(valueeR);
+        setCodVal(valueeR._id);
+        setCodValo(valueeR.codValo);
+        setDesval(valueeR.desVal);
+        input9Ref.current.focus()
+    };
+  };
+  };
+
+
+
   const handleChange = (e) => {
     searchValuee(e.target.value);
+  };
+  const handleShowVal = () => {
+    setShowVal(true);
   };
 
   return (
@@ -139,16 +188,19 @@ export default function TableFormRec({
       <div className="bordeTable">
         <form>
           <Row>
-            <Col md={2}>
+
+          <Col md={2}>
               <Card.Body>
                 <Card.Title>
                   <Form.Group className="input" controlId="name">
-                    <Form.Label>Value Code</Form.Label>
+                    <Form.Label>Codigo Valor</Form.Label>
                     <Form.Control
                       className="input"
-                      placeholder="Value Code"
-                      value={codVal}
-                      onChange={(e) => setCodVal(e.target.value)}
+                      ref={input8Ref}
+                      placeholder="Codigo Valor"
+                      value={codValo}
+                      onChange={(e) => setCodValo(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && buscarPorCodVal(codValo)}
                       required
                     />
                   </Form.Group>
@@ -156,12 +208,103 @@ export default function TableFormRec({
               </Card.Body>
             </Col>
 
+            <Col md={1}>
+                    <Button
+                      className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
+                      type="button"
+                      title="Buscador"
+                      onClick={() => handleShowVal()}
+                      >
+                      <BiFileFind className="text-blue-500 font-bold text-xl" />
+                    </Button>
+                  </Col>
+                  <Col md={4}>
+                    <Card.Body>
+                      <Card.Title>
+                        <Form.Group className="input">
+                          <Form.Label>Product</Form.Label>
+                          <h3>{desval}</h3>
+                        </Form.Group>
+                      </Card.Title>
+                    </Card.Body>
+                  </Col>
+
+
+
+            <Col md={2}>
+              <Card.Body>
+                <Card.Title>
+                  <Form.Group className="input" controlId="name">
+                    <Form.Label>Value Number</Form.Label>
+                    <Form.Control
+                      className="input"
+                      ref={input9Ref}
+                      placeholder="Value Number"
+                      value={numval}
+                      onChange={(e) => setNumval(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && input10Ref.current.focus()}
+                      required
+                    />
+                  </Form.Group>
+                </Card.Title>
+              </Card.Body>
+            </Col>
+
+            <Col md={1}>
+              <Card.Body>
+                <Card.Title>
+                  <Form.Group className="input" controlId="amount">
+                    <Form.Label>Amount</Form.Label>
+                    <Form.Control
+                      className="input"
+                      ref={input10Ref}
+                      placeholder="Amount"
+                      value={amountval}
+                      onChange={(e) => setAmountval(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && input11Ref.current.focus()}
+                      required
+                    />
+                  </Form.Group>
+                </Card.Title>
+              </Card.Body>
+            </Col>
+
+            <Col md={2}>
+              <Card.Body>
+                <Card.Title>
+                  <Form.Group>
+                    <Button
+                      ref={input11Ref}
+                      onClick={() => addToCartHandler(valueeR)}
+                      className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
+                      disabled={!codVal || !numval || !amountval}
+                    >
+                      {isEditing ? 'Editing Row Item' : 'Add Table Item'}
+                    </Button>
+                  </Form.Group>
+                </Card.Title>
+              </Card.Body>
+            </Col>
+          </Row>
+        </form>
+        <Modal
+            size="md"
+            show={showVal}
+            onHide={() => setShowVal(false)}
+            aria-labelledby="example-modal-sizes-title-lg"
+          >
+            <Modal.Header closeButton>
+              <Modal.Title id="example-modal-sizes-title-lg">
+              Elija un Valor
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
             <Col md={5}>
               <Card.Body>
                 <Card.Title>
                   <Card.Title>
                     <Form.Group className="input" controlId="name">
-                      <Form.Label>Valuee Description</Form.Label>
+                      <Form.Label>Description de Valor</Form.Label>
                       <Form.Select
                         className="input"
                         onClick={(e) => handleChange(e)}
@@ -177,57 +320,9 @@ export default function TableFormRec({
                 </Card.Title>
               </Card.Body>
             </Col>
-            <Col md={2}>
-              <Card.Body>
-                <Card.Title>
-                  <Form.Group className="input" controlId="name">
-                    <Form.Label>Value Number</Form.Label>
-                    <Form.Control
-                      className="input"
-                      placeholder="Value Number"
-                      value={numval}
-                      onChange={(e) => setNumval(e.target.value)}
-                      required
-                    />
-                  </Form.Group>
-                </Card.Title>
-              </Card.Body>
-            </Col>
 
-            <Col md={1}>
-              <Card.Body>
-                <Card.Title>
-                  <Form.Group className="input" controlId="amount">
-                    <Form.Label>Amount</Form.Label>
-                    <Form.Control
-                      className="input"
-                      placeholder="Amount"
-                      value={amountval}
-                      onChange={(e) => setAmountval(e.target.value)}
-                      required
-                    />
-                  </Form.Group>
-                </Card.Title>
-              </Card.Body>
-            </Col>
-
-            <Col md={2}>
-              <Card.Body>
-                <Card.Title>
-                  <Form.Group>
-                    <Button
-                      onClick={() => addToCartHandler(valueeR)}
-                      className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
-                      disabled={!codVal || !numval || !amountval}
-                    >
-                      {isEditing ? 'Editing Row Item' : 'Add Table Item'}
-                    </Button>
-                  </Form.Group>
-                </Card.Title>
-              </Card.Body>
-            </Col>
-          </Row>
-        </form>
+            </Modal.Body>
+          </Modal>
       </div>
       {/* Table items */}
 

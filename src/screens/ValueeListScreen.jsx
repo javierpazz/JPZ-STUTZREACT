@@ -142,19 +142,18 @@ export default function ValueeListScreen() {
     <div>
       <Row>
         <Col>
-          <h1>Values</h1>
+          <h1>Valores</h1>
         </Col>
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Value
+              Create Valor
             </Button>
           </div>
         </Col>
       </Row>
 
       {loadingCreate && <LoadingBox></LoadingBox>}
-      {loadingDelete && <LoadingBox></LoadingBox>}
 
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -165,7 +164,7 @@ export default function ValueeListScreen() {
           <table className="table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>CODIGO</th>
                 <th>VALOR</th>
                 <th>ACTIONS</th>
               </tr>

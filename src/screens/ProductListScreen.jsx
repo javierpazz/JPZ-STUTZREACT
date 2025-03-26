@@ -139,19 +139,18 @@ export default function ProductListScreen() {
     <div>
       <Row>
         <Col>
-          <h1>Products</h1>
+          <h1>Productos</h1>
         </Col>
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Product
+              Create Producto
             </Button>
           </div>
         </Col>
       </Row>
 
       {loadingCreate && <LoadingBox></LoadingBox>}
-      {loadingDelete && <LoadingBox></LoadingBox>}
 
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -163,10 +162,10 @@ export default function ProductListScreen() {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>NAME</th>
-                <th>PRICE</th>
-                <th>CATEGORY</th>
-                <th>BRAND</th>
+                <th>NOMBRE</th>
+                <th>PRECIO</th>
+                <th>CATEGORIA</th>
+                <th>MARCA</th>
                 <th>STOCK</th>
                 <th>STOCK MINIMO</th>
                 <th>ACTIONS</th>

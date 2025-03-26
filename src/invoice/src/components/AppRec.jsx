@@ -14,10 +14,12 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { BiFileFind } from "react-icons/bi";
 import { Store } from '../../../Store';
 import ReactToPrint from 'react-to-print';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../../../components/LoadingBox';
 import { getError, API } from '../../../utils';
@@ -82,11 +84,27 @@ function AppRec() {
   } = state;
 
   const { receipt, userInfo, values } = state;
+  const input1Ref = useRef(null);
+  const input2Ref = useRef(null);
+  const input3Ref = useRef(null);
+  const input4Ref = useRef(null);
+  const input5Ref = useRef(null);
+  const input6Ref = useRef(null);
+  const input7Ref = useRef(null);
+  const input8Ref = useRef(null);
+  const input0Ref = useRef(null);
+
+
+
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
+
+  const [showCus, setShowCus] = useState(false);
 
   // const [codUse, setCodUse] = useState('');
   const [codCus, setCodCus] = useState('');
+  const [codCust, setCodCust] = useState('');
   const [name, setName] = useState('');
+  const [userObj, setUserObj] = useState({});
   const [remNum, setRemNum] = useState('');
   const [invNum, setInvNum] = useState('');
   const [invDat, setInvDat] = useState('');
@@ -148,6 +166,7 @@ useEffect(() => {
 
   useEffect(() => {
     clearitems();
+    input2Ref.current.focus()
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`${API}/api/customers/`, {
@@ -179,17 +198,42 @@ useEffect(() => {
     }
   }, [width]);
 
+
+  const handleShowCus = () => {
+    setShowCus(true);
+  };
+
+
   const searchUser = (codCus) => {
     const customersRow = customers.find((row) => row._id === codCus);
     setCodCus(customersRow._id);
+    setCodCust(customersRow.codCus);
     setName(customersRow.nameCus);
   };
+
+  const buscarPorCodCus = (codCust) => {
+    const usersRow = customers.find((row) => row.codCus === codCust);
+    if (!usersRow) {
+        setUserObj({});
+        setCodCus('');
+        setCodCust('');
+        setName('Elija Cliente');
+    }else{
+      setCodCus(usersRow._id);
+      setCodCust(usersRow.codCust);
+      setUserObj(usersRow);
+      setName(usersRow.nameCus);
+      input3Ref.current.focus();
+      };
+  };
+
 
 //cr/
 //
 const RecControl = (e) => {
-
-  const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum) && row.user._id === codCus );
+  console.log(receiptss);
+  // const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum) && row.id_client === codCus );
+  const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum));
   if (oldRecipt.length > 0) {
       toast.error(`This N° ${(recNum)} Receipt Exist, use other Number Please!`);
       setRecNum(e.target.value)
@@ -220,7 +264,7 @@ const RecControl = (e) => {
   const placeReceiptHandler = async () => {
 //cr/
 //
-const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum) && row.user._id === codCus );
+const oldRecipt = receiptss.filter((row) => row.recNum === recNum && row.user._id === codCus );
 if (oldRecipt.length > 0) {
     toast.error(`This N° ${(recNum)} Receipt Exist, use other Number Please!`);
     return;
@@ -328,43 +372,76 @@ if (oldRecipt.length > 0) {
             {/* name, address, email, phone, bank name, bank account number, website client name, client address, receipt number, receipt date, due date, notes */}
             <div>
               <div className="bordeTable">
+              <Row>
+                  <Col md={5}>
+                    <Card.Body>
+                      <Card.Title>
+                      <ListGroup.Item>
+                            <h3>
+                              
+                            </h3>
+                          </ListGroup.Item>
+
+                      </Card.Title>
+                    </Card.Body>
+                  </Col>
+
+                  <Col md={7} className="mt-1 text-black py-1 px-1 rounded ">
+                      <Card.Body>
+                        <Card.Title>
+                          <ListGroup.Item>
+                            <h3>
+                              RECIBO
+                            </h3>
+                          </ListGroup.Item>
+                        </Card.Title>
+                      </Card.Body>
+                    </Col>
+
+
+                </Row>
                 <Row>
-                  <Col md={4}>
+                  <Col md={2}>
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
                           <Form.Label>Customer Code</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input2Ref}
                             placeholder="Customer Code"
-                            value={codCus}
-                            onChange={(e) => setCodCus(e.target.value)}
+                            value={codCust}
+                            onChange={(e) => setCodCust(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && buscarPorCodCus(codCust)}
                             required
-                          />
+                            />
                         </Form.Group>
                       </Card.Title>
                     </Card.Body>
+                  </Col>
+                  <Col md={1}>
+                    <Button
+                      className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
+                      type="button"
+                      title="Buscador"
+                      onClick={() => handleShowCus()}
+                      >
+                      <BiFileFind className="text-blue-500 font-bold text-xl" />
+                    </Button>
                   </Col>
 
-                  <Col md={8}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Customer Name</Form.Label>
-                          <Form.Select
-                            className="input"
-                            onClick={(e) => handleChange(e)}
-                          >
-                            {customers.map((elemento) => (
-                              <option key={elemento._id} value={elemento._id}>
-                                {elemento.nameCus}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
+                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                      <Card.Body>
+                        <Card.Title>
+                          <ListGroup.Item>
+                            <h3>
+                              {name}
+                            </h3>
+                          </ListGroup.Item>
+                        </Card.Title>
+                      </Card.Body>
+                    </Col>
+
                 </Row>
 
                 <Row>
@@ -375,9 +452,11 @@ if (oldRecipt.length > 0) {
                           <Form.Label>Receipt Number</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input3Ref}
                             placeholder="Receipt Number"
                             value={recNum}
                             onChange={(e) => RecControl(e)}
+                            onKeyDown={(e) => e.key === "Enter" && input4Ref.current.focus()}
                             // onChange={(e) => setRecNum(e.target.value)}
                             required
                           />
@@ -392,10 +471,12 @@ if (oldRecipt.length > 0) {
                           <Form.Label>Receipt Date</Form.Label>
                           <Form.Control
                             className="input"
+                            ref={input4Ref}
                             type="date"
                             placeholder="Receipt Date"
                             value={recDat}
                             onChange={(e) => setRecDat(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
                             required
                           />
                         </Form.Group>
@@ -409,9 +490,11 @@ if (oldRecipt.length > 0) {
                           <Form.Label>Additional Notes</Form.Label>
                           <textarea
                             className="input"
+                            ref={input5Ref}
                             placeholder="Additional notes to the client"
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && input8Ref.current.focus()}
                           ></textarea>
                         </Form.Group>
                       </Card.Title>
@@ -434,7 +517,7 @@ if (oldRecipt.length > 0) {
                             !codCus
                           }
                         >
-                          Cancel
+                          CANCELA
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -444,6 +527,7 @@ if (oldRecipt.length > 0) {
                       <div className="d-grid">
                         <Button
                           type="button"
+                          ref={input0Ref}
                           onClick={placeReceiptHandler}
                           disabled={
                             receiptItems.length === 0 ||
@@ -452,7 +536,7 @@ if (oldRecipt.length > 0) {
                             !codCus
                           }
                         >
-                          Save Recipt
+                          GRABA RECIBO
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -479,6 +563,8 @@ if (oldRecipt.length > 0) {
                 {/* This is our table form */}
                 <article>
                   <TableFormRec
+                    input0Ref={input0Ref}
+                    input8Ref={input8Ref}
                     codVal={codVal}
                     setCodVal={setCodVal}
                     desval={desval}
@@ -495,6 +581,39 @@ if (oldRecipt.length > 0) {
                     setTotal={setTotal}
                   />
                 </article>
+                <Modal
+                  size="md"
+                  show={showCus}
+                  onHide={() => setShowCus(false)}
+                  aria-labelledby="example-modal-sizes-title-lg"
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title id="example-modal-sizes-title-lg">
+                    Elija un Cliente
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                  <Col md={8}>
+                    <Card.Body>
+                      <Card.Title>
+                        <Form.Group className="input" controlId="name">
+                          <Form.Label>Customer Name</Form.Label>
+                          <Form.Select
+                            className="input"
+                            onClick={(e) => handleChange(e)}
+                          >
+                            {customers.map((elemento) => (
+                              <option key={elemento._id} value={elemento._id}>
+                                {elemento.nameCus}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+                      </Card.Title>
+                    </Card.Body>
+                  </Col>
+                  </Modal.Body>
+                </Modal>
               </div>
             </div>
           </>

@@ -89,6 +89,7 @@ export default function SalePointScreen() {
     userInfo.configurationObj = configurationObj
     localStorage.setItem('userInfo', JSON.stringify(userInfo));
     navigate('/');
+    window.location.reload();
   };
   
   // useEffect(() => {

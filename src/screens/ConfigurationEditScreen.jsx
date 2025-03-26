@@ -127,9 +127,9 @@ export default function ConfigurationEditScreen() {
   return (
     <Container className="small-container">
       <Helmet>
-        <title>Edit configuration ${configurationId}</title>
+        <title>Edit Punto de Venta </title>
       </Helmet>
-      <h1>Edit configuration {configurationId}</h1>
+      <h1>Edit Punto de Venta </h1>
 
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -138,7 +138,7 @@ export default function ConfigurationEditScreen() {
       ) : (
         <Form onSubmit={submitHandler}>
           <Form.Group className="mb-3" controlId="slug">
-            <Form.Label>Punto Venta</Form.Label>
+            <Form.Label>Punto Venta Nro</Form.Label>
             <Form.Control
               value={codCon}
               onChange={(e) => setCodCon(e.target.value)}
@@ -146,7 +146,7 @@ export default function ConfigurationEditScreen() {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="name">
-            <Form.Label>Name</Form.Label>
+            <Form.Label>Nombre Comercial</Form.Label>
             <Form.Control
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -203,7 +203,7 @@ export default function ConfigurationEditScreen() {
           </Form.Group>
           <div className="mb-3">
             <Button disabled={loadingUpdate} type="submit">
-              Update
+              Graba
             </Button>
             {loadingUpdate && <LoadingBox></LoadingBox>}
           </div>
