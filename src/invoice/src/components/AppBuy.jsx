@@ -107,8 +107,10 @@ function AppBuy() {
   const input8Ref = useRef(null);
   const input0Ref = useRef(null);
 
+  const input20Ref = useRef(null);
+  const input21Ref = useRef(null);
 
-  const [poriva, setPorIva] = useState(userInfo.configurationObj.poriva);
+
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
   const [noDisc, setNoDisc] = useState(false);
   const [toDisc, setToDisc] = useState(true);
@@ -154,6 +156,7 @@ function AppBuy() {
   const [desPro, setDesPro] = useState('');
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
+  const [porIva, setPorIva] = useState(0);
   const [amount, setAmount] = useState('');
   const [amountval, setAmountval] = useState(0);
   const [list, setList] = useState([]);
@@ -187,7 +190,7 @@ function AppBuy() {
   useEffect(() => {
     const calculateAmountval = (amountval) => {
       setAmountval(
-        orderItems?.reduce((a, c) => a + c.quantity * c.price, 0) * (1+(poriva/100))
+        orderItems?.reduce((a, c) => a + (c.quantity * c.price * (1+(c.porIva/100))), 0)
       );
     };
     if (numval === '') {
@@ -267,7 +270,7 @@ function AppBuy() {
   };
 
   const getIVA = () => {
-    return orderItems.reduce((acc, item) => acc + (item.quantity * item.price * poriva) / 100, 0).toFixed(2);
+    return orderItems.reduce((acc, item) => acc + (item.quantity * item.price * item.porIva) / 100, 0).toFixed(2);
   };
 
   const getTotalWithIVA = () => {
@@ -292,6 +295,13 @@ function AppBuy() {
     setName(supplierRow.name);
   };
 
+
+  const ayudaSup = (e) => {
+    e.key === "Enter" && buscarPorCodSup(codSupp);
+    e.key === "F2" && handleShowSup(codSup);
+  };
+  
+
   const buscarPorCodSup = (codSupp) => {
     const supplierRow = suppliers.find((row) => row.codSup === codSupp);
     if (!supplierRow) {
@@ -300,7 +310,7 @@ function AppBuy() {
         setName('Elija Proovedor');
     }else{
       setCodSup(supplierRow._id);
-      setCodSupp(supplierRow.codSupp);
+      setCodSupp(supplierRow.codSup);
       setName(supplierRow.name);
       input3Ref.current.focus();
       };
@@ -310,6 +320,16 @@ function AppBuy() {
 
   const handleChange = (e) => {
     searchSup(e.target.value);
+  };
+
+  const submitHandlerCom = async (e) => {
+    e.preventDefault();
+    setShowCom(false)
+  };
+
+  const submitHandlerSup = async (e) => {
+    e.preventDefault();
+    setShowSup(false)
   };
 
   const handleChangeCom = (e) => {
@@ -325,6 +345,12 @@ function AppBuy() {
     setItDisc(comprobantesRow.itDisc);
   };
 
+
+  const ayudaCom = (e) => {
+    e.key === "Enter" && buscarPorCodCom(codComp);
+    e.key === "F2" && handleShowCom(codCom);
+  };
+
   const buscarPorCodCom = (codComp) => {
     const comprobantesRow = comprobantes.find((row) => row.codCom === codComp);
     if (!comprobantesRow) {
@@ -333,7 +359,7 @@ function AppBuy() {
         setNameCom('Elija Documento');
     }else{
       setCodCom(comprobantesRow._id);
-      setCodComp(comprobantesRow.codComp);
+      setCodComp(comprobantesRow.codCom);
       setNameCom(comprobantesRow.nameCom);
       setNoDisc(comprobantesRow.noDisc);
       setToDisc(comprobantesRow.toDisc);
@@ -360,7 +386,7 @@ function AppBuy() {
   const placeCancelInvoiceHandler = async () => {};
 
   const placeInvoiceHandler = async () => {
-    if (window.confirm('Are you sure to create?')) {
+      if (window.confirm('Esta seguro de Grabar?')) {
       if (isPaying && (!recNum || !recDat || !desVal)) {
         unloadpayment();
       } else {
@@ -375,7 +401,10 @@ function AppBuy() {
           invoice.shippingPrice = 0;
           //        invoice.shippingPrice =
           //        invoice.subTotal > 100 ? round2(0) : round2(10);
-          invoice.tax = round2((poriva/100) * invoice.subTotal);
+          // invoice.tax = round2((poriva/100) * invoice.subTotal);
+          invoice.tax = round2(
+            invoice.orderItems.reduce((a, c) => a + c.quantity * c.price * c.porIva, 0)
+          );
           invoice.totalBuy =
             invoice.subTotal + invoice.shippingPrice + invoice.tax;
           invoice.total = 0;
@@ -602,7 +631,8 @@ function AppBuy() {
                             placeholder="Tipo Comprobante"
                             value={codComp}
                             onChange={(e) => setCodComp(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && buscarPorCodCom(codComp)}
+                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCom(codComp)}
+                            onKeyDown={(e) => ayudaCom(e)}
                             required
                           />
                         </Form.Group>
@@ -646,7 +676,8 @@ function AppBuy() {
                             placeholder="Supplier Code"
                             value={codSupp}
                             onChange={(e) => setCodSupp(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && buscarPorCodSup(codSupp)}
+                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodSup(codSupp)}
+                            onKeyDown={(e) => ayudaSup(e)}
                             buscarPorCodSup
                           />
                         </Form.Group>
@@ -929,7 +960,7 @@ function AppBuy() {
                           <ListGroup.Item>
                             <h3>
                               Total: $
-                              {amountval}
+                              {amountval.toFixed(2)}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -951,6 +982,8 @@ function AppBuy() {
                     setQuantity={setQuantity}
                     price={price}
                     setPrice={setPrice}
+                    porIva={porIva}
+                    setPorIva={setPorIva}
                     amount={amount}
                     setAmount={setAmount}
                     list={list}
@@ -966,6 +999,7 @@ function AppBuy() {
                   />
                 </article>
                 <Modal
+                  // input20Ref={input20Ref}
                   size="md"
                   show={showCom}
                   onHide={() => setShowCom(false)}
@@ -977,15 +1011,17 @@ function AppBuy() {
                     </Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                  <Col md={8}>
+                  <Col md={12}>
                           <Card.Body>
                             <Card.Title>
-                              <Form.Group className="input" controlId="name">
+                            <Form onSubmit={submitHandlerCom}>
+                            <Form.Group className="mb-3" controlId="name">
+                            {/* <Form.Group className="input" controlId="name"> */}
                                 <Form.Label>Tipo Comprobante</Form.Label>
                                 <Form.Select
                                   className="input"
                                   onClick={(e) => handleChangeCom(e)}
-                                >
+                                  >
                                   {comprobantes.map((elemento) => (
                                     <option key={elemento._id} value={elemento._id}>
                                       {elemento.nameCom}
@@ -993,6 +1029,21 @@ function AppBuy() {
                                   ))}
                                 </Form.Select>
                               </Form.Group>
+                              <Form.Group className="mb-3" controlId="name">
+                              <Form.Control
+                                placeholder="Tipo Comprobante"
+                                value={nameCom}
+                                disabled={true}
+                                required
+                                />
+                            </Form.Group>
+                              <div className="mb-3">
+                                <Button type="submit"
+                                  // ref={input20Ref}
+                                  disabled={nameCom ? false : true}
+                                  >Continuar</Button>
+                              </div>
+                              </Form>
                             </Card.Title>
                           </Card.Body>
                         </Col>
@@ -1011,10 +1062,12 @@ function AppBuy() {
                     </Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                  <Col md={8}>
+                  <Col md={12}>
                     <Card.Body>
                       <Card.Title>
-                        <Form.Group className="input" controlId="name">
+                      <Form onSubmit={submitHandlerSup}>
+                          <Form.Group className="mb-3" controlId="name">
+                          {/* <Form.Group className="input" controlId="name"> */}
                           <Form.Label>Proveedor</Form.Label>
                           <Form.Select
                             className="input"
@@ -1027,6 +1080,21 @@ function AppBuy() {
                             ))}
                           </Form.Select>
                         </Form.Group>
+                        <Form.Group className="mb-3" controlId="name">
+                              <Form.Control
+                                placeholder="Proveedor"
+                                value={name}
+                                disabled={true}
+                                required
+                                />
+                            </Form.Group>
+                              <div className="mb-3">
+                                <Button type="submit"
+                                  // ref={input21Ref}
+                                  disabled={name ? false : true}
+                                  >Continuar</Button>
+                              </div>
+                              </Form>
                       </Card.Title>
                     </Card.Body>
                   </Col>
@@ -1108,8 +1176,8 @@ function AppBuy() {
                       <td className="text-end">{item.quantity}</td>
                       <td className="text-end">${item.price.toFixed(2)}</td>
                       <td className="text-end">${(item.quantity * item.price).toFixed(2)}</td>
-                      <td className="text-end">%{poriva}</td>
-                      <td className="text-end">${(item.quantity * item.price*(1+(poriva/100))).toFixed(2)}</td>
+                      <td className="text-end">%{item.porIva}</td>
+                      <td className="text-end">${(item.quantity * item.price*(1+(item.porIva/100))).toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -1144,9 +1212,9 @@ function AppBuy() {
                       <td>{item.title}</td>
                       <td className="text-end">{item.quantity}</td>
                       <td className="text-end">${item.price.toFixed(2)}</td>
-                      <td className="text-end">%{poriva}</td>
-                      <td className="text-end">${(item.price*(poriva/100)).toFixed(2)}</td>
-                      <td className="text-end">${(item.quantity * item.price*(1+(poriva/100))).toFixed(2)}</td>
+                      <td className="text-end">%{item.porIva}</td>
+                      <td className="text-end">${(item.price*(item.porIva/100)).toFixed(2)}</td>
+                      <td className="text-end">${(item.quantity * item.price*(1+(item.porIva/100))).toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -1177,12 +1245,13 @@ function AppBuy() {
                       <td>{index + 1}</td>
                       <td>{item.title}</td>
                       <td className="text-end">{item.quantity}</td>
-                      <td className="text-end">${(item.price*(1+(poriva/100))).toFixed(2)}</td>
+                      <td className="text-end">${(item.price*(1+(item.porIva/100))).toFixed(2)}</td>
                       <td className="text-end">$0.00</td>
                       
-                      <td className="text-end">${(item.quantity * item.price * (1+(poriva/100))).toFixed(2)}</td>
+                      <td className="text-end">${(item.quantity * item.price * (1+(item.porIva/100))).toFixed(2)}</td>
                     </tr>
                   ))}
+
                 </tbody>
               </table>
               <div className="text-end">

@@ -163,25 +163,23 @@ try {
   };
 
   const createHandler = async () => {
-    if (window.confirm('Are you sure to create?')) {
       navigate(`/admin/remiterBuy`);
-    }
   };
 
   return (
     <div>
       <Helmet>
-        <title>Buy Remits</title>
+        <title>Remitos de Ingreso</title>
       </Helmet>
       <Row>
         <Col>
-          <h1>Buy Remits</h1>
+          <h1>Remitos de Ingreso</h1>
         </Col>
 
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Buy Remit
+              Create Remito de Ingreso
             </Button>
           </div>
         </Col>

@@ -163,25 +163,23 @@ try {
   };
 
   const createHandler = async () => {
-    if (window.confirm('Are you sure to create?')) {
       navigate(`/admin/invoicerBuy`);
-    }
   };
 
   return (
     <div>
       <Helmet>
-        <title>Buy Invoices</title>
+        <title>Facturas Compra</title>
       </Helmet>
       <Row>
         <Col>
-          <h1>Buy Invoices</h1>
+          <h1>Facturas Compra</h1>
         </Col>
 
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Buy Invoice
+              Create Factura Compra
             </Button>
           </div>
         </Col>

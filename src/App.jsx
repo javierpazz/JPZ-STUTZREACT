@@ -123,10 +123,13 @@ function App() {
               </Button> */}
 
               <LinkContainer to="/salepoint">
-                <Navbar.Brand>{userInfo && userInfo.salePoint || ""}</Navbar.Brand>
+                <Navbar.Brand>Punto.: {userInfo && userInfo.salePoint || ""}</Navbar.Brand>
               </LinkContainer>
               <LinkContainer to="/salepoint">
                 <Navbar.Brand>{userInfo && userInfo.nameCon || ""}</Navbar.Brand>
+              </LinkContainer>
+              <LinkContainer  className="nav-link" to="/">
+                <Navbar.Brand >User.:  {userInfo && userInfo.name || ""}</Navbar.Brand>
               </LinkContainer>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
@@ -176,7 +179,7 @@ function App() {
                       </LinkContainer>
                       {/* <LinkContainer to="/admin/invoices"> */}
                       <LinkContainer to="/admin/remits">
-                        <NavDropdown.Item>Remitos de Entregas</NavDropdown.Item>
+                        <NavDropdown.Item>Remitos de Egresos</NavDropdown.Item>
                       </LinkContainer>
                       {/* <LinkContainer to="/admin/orders">
                         <NavDropdown.Item>Ordenes de Comprars</NavDropdown.Item>

@@ -55,6 +55,7 @@ export default function ProductEditScreen() {
     });
 
   const [codPro, setCodPro] = useState('');
+  const [codigoPro, setCodigoPro] = useState('');
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [price, setPrice] = useState('');
@@ -63,6 +64,7 @@ export default function ProductEditScreen() {
   const [category, setCategory] = useState('');
   const [inStock, setInStock] = useState('');
   const [minStock, setMinStock] = useState('');
+  const [porIva, setPorIva] = useState(0);
   const [brand, setBrand] = useState('');
   const [description, setDescription] = useState('');
 
@@ -72,6 +74,7 @@ export default function ProductEditScreen() {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(`${API}/api/products/${productId}`);
         setCodPro(data.codPro);
+        setCodigoPro(data.codigoPro);
         setTitle(data.title);
         setSlug(data.slug);
         setPrice(data.price);
@@ -80,6 +83,7 @@ export default function ProductEditScreen() {
         setCategory(data.category);
         setInStock(data.inStock);
         setMinStock(data.minStock);
+        setPorIva(data.porIva);
         setBrand(data.brand);
         setDescription(data.description);
         dispatch({ type: 'FETCH_SUCCESS' });
@@ -101,6 +105,7 @@ export default function ProductEditScreen() {
         `${API}/api/products/${productId}`,
         {
           _id: productId,
+          codigoPro,
           codPro,
           title,
           slug,
@@ -111,6 +116,7 @@ export default function ProductEditScreen() {
           brand,
           inStock,
           minStock,
+          porIva,
           description,
         },
         {
@@ -175,6 +181,14 @@ export default function ProductEditScreen() {
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Codigo</Form.Label>
             <Form.Control
+              value={codigoPro}
+              onChange={(e) => setCodigoPro(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="name">
+            <Form.Label>Codigo Barra</Form.Label>
+            <Form.Control
               value={codPro}
               onChange={(e) => setCodPro(e.target.value)}
               required
@@ -185,6 +199,14 @@ export default function ProductEditScreen() {
             <Form.Control
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="description">
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               required
             />
           </Form.Group>
@@ -276,11 +298,11 @@ export default function ProductEditScreen() {
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="description">
-            <Form.Label>Description</Form.Label>
+          <Form.Group className="mb-3" controlId="inStock">
+            <Form.Label>% IVA</Form.Label>
             <Form.Control
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={porIva}
+              onChange={(e) => setPorIva(e.target.value)}
               required
             />
           </Form.Group>

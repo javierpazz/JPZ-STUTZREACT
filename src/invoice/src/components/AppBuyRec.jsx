@@ -93,12 +93,16 @@ function AppBuyRec() {
   const input7Ref = useRef(null);
   const input8Ref = useRef(null);
   const input0Ref = useRef(null);
+  
+  const input20Ref = useRef(null);
+  const input21Ref = useRef(null);
 
-  const [showSup, setShowSup] = useState(false);
-
-
+  // const [poriva, setPorIva] = useState(userInfo.configurationObj.poriva);
+  const [poriva, setPorIva] = useState(21);
 
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
+
+  const [showSup, setShowSup] = useState(false);
 
   const [codUse, setCodUse] = useState('');
   
@@ -136,6 +140,20 @@ function AppBuyRec() {
   const [total, setTotal] = useState(0);
   const [width] = useState(641);
   const [showReceipt, setShowReceipt] = useState(false);
+
+  
+  const config = {
+    salePoint: userInfo.configurationObj.codCon,
+    name: userInfo.configurationObj.name,
+    cuit: userInfo.configurationObj.cuit,
+    address: userInfo.configurationObj.domcomer,
+    ivaCondition: userInfo.configurationObj.coniva,
+    ib: userInfo.configurationObj.ib,
+    feciniact: userInfo.configurationObj.feciniact,
+    invoiceNumber: "",
+    date: "",
+
+  };
 
   const componentRef = useRef();
   const handlePrint = () => {
@@ -211,6 +229,10 @@ function AppBuyRec() {
     }
   }, [width]);
 
+  const getTotal = () => {
+    return receiptItems.reduce((acc, item) => acc + item.amountval, 0);
+  };
+
   const handleShowSup = () => {
     setShowSup(true);
   };
@@ -223,6 +245,13 @@ function AppBuyRec() {
     setName(supplierRow.name);
   };
 
+
+  const ayudaSup = (e) => {
+    e.key === "Enter" && buscarPorCodSup(codSupp);
+    e.key === "F2" && handleShowSup(codSup);
+  };
+  
+
   const buscarPorCodSup = (codSupp) => {
     const supplierRow = suppliers.find((row) => row.codSup === codSupp);
     if (!supplierRow) {
@@ -231,7 +260,7 @@ function AppBuyRec() {
         setName('Elija Proovedor');
     }else{
       setCodSup(supplierRow._id);
-      setCodSupp(supplierRow.codSupp);
+      setCodSupp(supplierRow.codSup);
       setName(supplierRow.name);
       input3Ref.current.focus();
       };
@@ -243,8 +272,9 @@ function AppBuyRec() {
 //
 const RecControl = (e) => {
   
-  const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum) && row.supplier === codSup );
-  if (oldRecipt.length > 0) {
+  // const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum) && row.supplier === codSup );
+  // if (oldRecipt.length > 0) {
+  if (false) {
       toast.error(`This N° ${(recNum)} Receipt Exist, use other Number Please!`);
       setRecNum(e.target.value)
     } else {
@@ -254,6 +284,11 @@ const RecControl = (e) => {
 //
 //cr/
 
+
+const submitHandlerSup = async (e) => {
+  e.preventDefault();
+  setShowSup(false)
+};
 
   const handleChange = (e) => {
     searchSup(e.target.value);
@@ -271,43 +306,44 @@ const RecControl = (e) => {
   const placeCancelReceiptHandler = async () => {};
 
   const placeReceiptHandler = async () => {
-//cr/
-//
-const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum) && row.supplier === codSup );
-if (oldRecipt.length > 0) {
-    toast.error(`This N° ${(recNum)} Receipt Exist, use other Number Please!`);
-    return;
-    } else {
+      if (window.confirm('Esta seguro de Grabar?')) {
+      //
+      // const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum) && row.supplier === codSup );
+      // if (oldRecipt.length > 0) {
+      if (false) {
+          toast.error(`This N° ${(recNum)} Receipt Exist, use other Number Please!`);
+          return;
+          } else {
 
-//
-//cr/
+      //
+      //cr/
 
-    if (recNum && recDat && codSup) {
-      const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
-      receipt.subTotal = round2(
-        receipt.receiptItems.reduce((a, c) => a + c.amountval * 1, 0)
-      );
-      receipt.shippingPrice = receipt.subTotal > 100 ? round2(0) : round2(10);
-      receipt.tax = round2(0.15 * 0);
-      receipt.total = 0;
-      receipt.totalBuy = receipt.subTotal;
-      receipt.codSup = codSup;
-      receipt.codCon = userInfo.codCon;
-      receipt.codConNum = codConNum;
-      receipt.remNum = remNum;
-      receipt.invNum = invNum;
-      receipt.invDat = invDat;
-      receipt.recNum = recNum;
-      receipt.recDat = recDat;
-      receipt.desval = desval;
-      receipt.notes = notes;
+      if (recNum && recDat && codSup) {
+        const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
+        receipt.subTotal = round2(
+          receipt.receiptItems.reduce((a, c) => a + c.amountval * 1, 0)
+        );
+        receipt.shippingPrice = receipt.subTotal > 100 ? round2(0) : round2(10);
+        receipt.tax = round2(0.15 * 0);
+        receipt.total = 0;
+        receipt.totalBuy = receipt.subTotal;
+        receipt.codSup = codSup;
+        receipt.codCon = userInfo.codCon;
+        receipt.codConNum = codConNum;
+        receipt.remNum = remNum;
+        receipt.invNum = invNum;
+        receipt.invDat = invDat;
+        receipt.recNum = recNum;
+        receipt.recDat = recDat;
+        receipt.desval = desval;
+        receipt.notes = notes;
 
-      orderHandler();
-      setShowReceipt(true);
-      //      handlePrint();
+        orderHandler();
+        setShowReceipt(true);
+        //      handlePrint();
+      }
     }
-  }
-
+    };
   };
 
   /////////////////////////////////////////////
@@ -411,7 +447,8 @@ if (oldRecipt.length > 0) {
                             placeholder="Supplier Code"
                             value={codSupp}
                             onChange={(e) => setCodSupp(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && buscarPorCodSup(codSupp)}
+                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodSup(codSupp)}
+                            onKeyDown={(e) => ayudaSup(e)}
                             buscarPorCodSup
                           />
                         </Form.Group>
@@ -547,10 +584,10 @@ if (oldRecipt.length > 0) {
                           <ListGroup.Item>
                             <h3>
                               Total: $
-                              {receiptItems.reduce(
+                              {(receiptItems.reduce(
                                 (a, c) => a + c.amountval * 1,
                                 0
-                              )}
+                              )).toFixed(2)}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -592,10 +629,12 @@ if (oldRecipt.length > 0) {
                     </Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                  <Col md={8}>
+                  <Col md={12}>
                     <Card.Body>
                       <Card.Title>
-                        <Form.Group className="input" controlId="name">
+                      <Form onSubmit={submitHandlerSup}>
+                          <Form.Group className="mb-3" controlId="name">
+                          {/* <Form.Group className="input" controlId="name"> */}
                           <Form.Label>Proveedor</Form.Label>
                           <Form.Select
                             className="input"
@@ -608,6 +647,21 @@ if (oldRecipt.length > 0) {
                             ))}
                           </Form.Select>
                         </Form.Group>
+                        <Form.Group className="mb-3" controlId="name">
+                              <Form.Control
+                                placeholder="Proveedor"
+                                value={name}
+                                disabled={true}
+                                required
+                                />
+                            </Form.Group>
+                              <div className="mb-3">
+                                <Button type="submit"
+                                  // ref={input21Ref}
+                                  disabled={name ? false : true}
+                                  >Continuar</Button>
+                              </div>
+                              </Form>
                       </Card.Title>
                     </Card.Body>
                   </Col>
@@ -629,34 +683,80 @@ if (oldRecipt.length > 0) {
             <div ref={componentRef} className="p-5">
               <Header handlePrint={handlePrint} />
 
-              <MainDetails codUse={codUse} name={name} address={address} />
+              <div className="container mt-4">
+      <div className="card border-dark">
+        <div className="card-header bg-dark text-white text-center"></div>
+        <div className="card-body">
+          
+        <div className="text-black text-center">ORDEN DE PAGO</div>
+          <div className="row">
+            <div className="col-md-6">
+              <p><strong>{userInfo.nameCon}</strong></p>
+              <p><strong>Razon Social:</strong> {userInfo.nameCon}</p>
+              <p><strong>Domicilio Comercial:</strong> {config.address}</p>
+              <p><strong>Condición frente al IVA:</strong> {config.ivaCondition}</p>
+            </div>
+            <div className="col-md-6 ">
+              <p><strong>FACTURA</strong></p>
+              <p><strong>Punto de Venta:</strong> {config.salePoint}    
+              <strong>     Comp. Nro:</strong> {invNum}</p>
+              <p><strong>Fecha de Emision:</strong> {invDat}</p>
+              <p><strong>CUIT:</strong> {config.cuit}</p>
+              <p><strong>Ingresos Brutos:</strong> {config.ib}</p>
+              <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>
+            </div>
+          </div>
+                    {/* <hr />
+            <div className="row">
+              <div className="col-md-6">
+                <p><strong>CUIT:</strong> {userObj.cuit}</p>
+                <p><strong>Condición IVA:</strong> {userObj.coniva}</p>
+              </div>
+              <div className="col-md-6">
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {userObj.nameCus}</p>
+                <p><strong>Dirección:</strong> {userObj.domcomer}</p>
+              </div>
+          </div> */}
 
-              <ClientDetails
-                clientName={clientName}
-                clientAddress={clientAddress}
-              />
+{ true &&
+          (
+            <div>
+              <table className="table table-bordered mt-3">
+                <thead className="table-dark text-white">
+                  <tr>
+                    <th>#</th>
+                    <th>Valor</th>
+                    <th className="text-end">Numero</th>
+                    <th className="text-end">Importe</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {receiptItems.map((item, index) => (
+                    <tr key={item.id}>
+                      <td>{index + 1}</td>
+                      <td>{item.desval}</td>
+                      <td className="text-end">{item.numval}</td>
+                      <td className="text-end">${item.amountval.toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="text-end">
+                <h5><strong>Total:</strong> ${getTotal().toFixed(2)}</h5>
+              </div>
+            </div>
+          )}
 
-              <Dates invNum={invNum} invDat={invDat} dueDat={dueDat} />
 
-              <TableRec
-                desval={desval}
-                amountval={amountval}
-                receiptItems={receiptItems}
-                total={total}
-                setTotal={setTotal}
-              />
+        </div>
 
-              <Notes notes={notes} />
+        
 
-              <Footer
-                name={name}
-                address={address}
-                website={website}
-                email={email}
-                phone={phone}
-                bankAccount={bankAccount}
-                bankName={bankName}
-              />
+
+      </div>
+    </div>
+
+
             </div>
           </>
         )}

@@ -75,7 +75,7 @@ export default function TableFormRec({
   const input9Ref = useRef(null);
   const input10Ref = useRef(null);
   const input11Ref = useRef(null);
-
+  const input22Ref = useRef(null);
 
   const [isEditing, setIsEditing] = useState(false);
   const [valuees, setValuees] = useState([]);
@@ -138,6 +138,12 @@ export default function TableFormRec({
   };
 
   // Edit function
+  const submitHandlerVal = async (e) => {
+    e.preventDefault();
+    setShowVal(false)
+    input8Ref.current.focus()
+  };
+
 
   const searchValuee = (codVal) => {
     const valueeR = valuees.find((row) => row._id === codVal);
@@ -145,9 +151,15 @@ export default function TableFormRec({
     setNumval('');
     setValueeR(valueeR);
     setCodVal(valueeR._id);
-    setCodValo(valueeR.codValo);
+    setCodValo(valueeR.codVal);
     setDesval(valueeR.desVal);
   };
+
+  const ayudaVal = (e) => {
+    e.key === "Enter" && buscarPorCodVal(codValo);
+    e.key === "F2" && handleShowVal(codVal);
+  };
+  
 
   const buscarPorCodVal = (codValo) => {
     if (codValo==='') {
@@ -179,6 +191,7 @@ export default function TableFormRec({
   };
   const handleShowVal = () => {
     setShowVal(true);
+    input22Ref.current.focus();
   };
 
   return (
@@ -200,7 +213,8 @@ export default function TableFormRec({
                       placeholder="Codigo Valor"
                       value={codValo}
                       onChange={(e) => setCodValo(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && buscarPorCodVal(codValo)}
+                      // onKeyDown={(e) => e.key === "Enter" && buscarPorCodVal(codValo)}
+                      onKeyDown={(e) => ayudaVal(e)}
                       required
                     />
                   </Form.Group>
@@ -260,7 +274,7 @@ export default function TableFormRec({
                       ref={input10Ref}
                       placeholder="Amount"
                       value={amountval}
-                      onChange={(e) => setAmountval(e.target.value)}
+                      onChange={(e) => setAmountval(+e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && input11Ref.current.focus()}
                       required
                     />
@@ -287,7 +301,9 @@ export default function TableFormRec({
             </Col>
           </Row>
         </form>
-        <Modal
+
+          <Modal
+            // input22Ref={input22Ref}
             size="md"
             show={showVal}
             onHide={() => setShowVal(false)}
@@ -299,15 +315,18 @@ export default function TableFormRec({
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            <Col md={5}>
+            <Col md={12}>
               <Card.Body>
                 <Card.Title>
                   <Card.Title>
-                    <Form.Group className="input" controlId="name">
-                      <Form.Label>Description de Valor</Form.Label>
+                      <Form onSubmit={submitHandlerVal}>
+                        <Form.Group className="mb-3" controlId="name">
+                        {/* <Form.Group className="input" controlId="name"> */}
+                         <Form.Label>Description de Valor</Form.Label>
                       <Form.Select
                         className="input"
                         onClick={(e) => handleChange(e)}
+                        // disabled={isPaying}
                       >
                         {valuees.map((elementoP) => (
                           <option key={elementoP._id} value={elementoP._id}>
@@ -316,13 +335,31 @@ export default function TableFormRec({
                         ))}
                       </Form.Select>
                     </Form.Group>
+                    <Form.Group className="mb-3" controlId="name">
+                      <Form.Control
+                        placeholder="Valor"
+                        value={desval}
+                        disabled={true}
+                        required
+                        />
+                    </Form.Group>
+                      <div className="mb-3">
+                        <Button type="submit"
+                          // ref={input22Ref}
+                          disabled={desval ? false : true}
+                          >Continuar</Button>
+                      </div>
+                      </Form>
+
+
                   </Card.Title>
                 </Card.Title>
               </Card.Body>
             </Col>
-
             </Modal.Body>
           </Modal>
+
+
       </div>
       {/* Table items */}
 

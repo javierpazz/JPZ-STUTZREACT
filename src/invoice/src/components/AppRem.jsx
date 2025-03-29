@@ -95,8 +95,9 @@ function AppRem() {
   const input9Ref = useRef(null);
   const input0Ref = useRef(null);
 
+  const input20Ref = useRef(null);
+  const input21Ref = useRef(null);
 
-  const [poriva, setPorIva] = useState(userInfo.configurationObj.poriva);
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
   const [showCus, setShowCus] = useState(false);
 
@@ -132,8 +133,9 @@ function AppRem() {
   const [dueDat, setDueDat] = useState('');
   const [notes, setNotes] = useState('');
   const [desPro, setDesPro] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [price, setPrice] = useState('');
+  const [quantity, setQuantity] = useState(0);
+  const [price, setPrice] = useState(0);
+  const [porIva, setPorIva] = useState(0);
   const [amount, setAmount] = useState('');
   const [amountval, setAmountval] = useState(0);
   const [list, setList] = useState([]);
@@ -165,7 +167,7 @@ function AppRem() {
   useEffect(() => {
     const calculateAmountval = (amountval) => {
       setAmountval(
-        orderItems?.reduce((a, c) => a + c.quantity * c.price, 0) * (1+(poriva/100))
+        orderItems?.reduce((a, c) => a + (c.quantity * c.price * (1+(c.porIva/100))), 0)
       );
     };
     if (numval === '') {
@@ -216,14 +218,16 @@ function AppRem() {
   };
 
   const getIVA = () => {
-    return orderItems.reduce((acc, item) => acc + (item.quantity * item.price * poriva) / 100, 0).toFixed(2);
+    return orderItems.reduce((acc, item) => acc + (item.quantity * item.price * item.porIva) / 100, 0).toFixed(2);
   };
 
   const getTotalWithIVA = () => {
     return (parseFloat(getTotal()) + parseFloat(getIVA())).toFixed(2);
   };
+
   const handleShowCus = () => {
     setShowCus(true);
+    input21Ref.current.focus();
   };
 
 
@@ -234,6 +238,14 @@ function AppRem() {
     setCodCust(usersRow.codCus);
     setName(usersRow.nameCus);
   };
+
+  
+  const ayudaCus = (e) => {
+    e.key === "Enter" && buscarPorCodCus(codCust);
+    e.key === "F2" && handleShowCus(codCus);
+  };
+  
+
   const buscarPorCodCus = (codCust) => {
     const usersRow = customers.find((row) => row.codCus === codCust);
     if (!usersRow) {
@@ -252,6 +264,11 @@ function AppRem() {
   const handleChange = (e) => {
     searchUser(e.target.value);
   };
+  const submitHandlerCus = async (e) => {
+    e.preventDefault();
+    setShowCus(false)
+  };
+
 
   const searchValue = (codVal) => {
     const valuesRow = valuess.find((row) => row._id === codVal);
@@ -267,7 +284,7 @@ function AppRem() {
   const placeCancelInvoiceHandler = async () => {};
 
   const placeInvoiceHandler = async () => {
-    if (window.confirm('Are you sure to create?')) {
+      if (window.confirm('Esta seguro de Grabar?')) {
       if (isPaying && (!recNum || !recDat || !desVal)) {
         unloadpayment();
       } else {
@@ -281,7 +298,10 @@ function AppRem() {
 
           //        invoice.shippingPrice =
           //        invoice.subTotal > 100 ? round2(0) : round2(10);
-          invoice.tax = round2((poriva/100) * invoice.subTotal);
+          // invoice.tax = round2((poriva/100) * invoice.subTotal);
+          invoice.tax = round2(
+            invoice.orderItems.reduce((a, c) => a + c.quantity * c.price * c.porIva, 0)
+          );
           invoice.total =
             invoice.subTotal + invoice.shippingPrice + invoice.tax;
           invoice.totalBuy = 0;
@@ -542,7 +562,8 @@ function AppRem() {
                             placeholder="Customer Code"
                             value={codCust}
                             onChange={(e) => setCodCust(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && buscarPorCodCus(codCust)}
+                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCus(codCust)}
+                            onKeyDown={(e) => ayudaCus(e)}
                             required
                             />
                         </Form.Group>
@@ -808,7 +829,7 @@ function AppRem() {
                           <ListGroup.Item>
                             <h3>
                               Total: $
-                              {amountval}
+                              {amountval.toFixed(2)}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -830,6 +851,8 @@ function AppRem() {
                     setQuantity={setQuantity}
                     price={price}
                     setPrice={setPrice}
+                    porIva={porIva}
+                    setPorIva={setPorIva}
                     amount={amount}
                     setAmount={setAmount}
                     list={list}
@@ -847,6 +870,7 @@ function AppRem() {
 
 
                 <Modal
+                  // input21Ref={input21Ref}
                   size="md"
                   show={showCus}
                   onHide={() => setShowCus(false)}
@@ -858,11 +882,13 @@ function AppRem() {
                     </Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                  <Col md={8}>
+                  <Col md={12}>
                     <Card.Body>
                       <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Customer Name</Form.Label>
+                      <Form onSubmit={submitHandlerCus}>
+                            <Form.Group className="mb-3" controlId="name">
+                            {/* <Form.Group className="input" controlId="name"> */}
+                          <Form.Label>Clientes</Form.Label>
                           <Form.Select
                             className="input"
                             onClick={(e) => handleChange(e)}
@@ -874,6 +900,22 @@ function AppRem() {
                             ))}
                           </Form.Select>
                         </Form.Group>
+                        <Form.Group className="mb-3" controlId="name">
+                              <Form.Control
+                                placeholder="Cliente"
+                                value={name}
+                                disabled={true}
+                                required
+                                />
+                            </Form.Group>
+                              <div className="mb-3">
+                                <Button type="submit"
+                                  // ref={input21Ref}
+                                  disabled={name ? false : true}
+                                  >Continuar</Button>
+                              </div>
+                              </Form>
+
                       </Card.Title>
                     </Card.Body>
                   </Col>
@@ -955,8 +997,8 @@ function AppRem() {
                       <td className="text-end">{item.quantity}</td>
                       <td className="text-end">${item.price.toFixed(2)}</td>
                       <td className="text-end">${(item.quantity * item.price).toFixed(2)}</td>
-                      <td className="text-end">%{poriva}</td>
-                      <td className="text-end">${(item.quantity * item.price*(1+(poriva/100))).toFixed(2)}</td>
+                      <td className="text-end">%{item.porIva}</td>
+                      <td className="text-end">${(item.quantity * item.price*(1+(item.porIva/100))).toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>

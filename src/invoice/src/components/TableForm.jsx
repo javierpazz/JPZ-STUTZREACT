@@ -45,6 +45,8 @@ export default function TableForm({
   setQuantity,
   price,
   setPrice,
+  porIva,
+  setPorIva,
   amount,
   setAmount,
   list,
@@ -78,6 +80,7 @@ export default function TableForm({
   const input9Ref = useRef(null);
   const input10Ref = useRef(null);
   const input11Ref = useRef(null);
+  const input22Ref = useRef(null);
 
   const [isEditing, setIsEditing] = useState(false);
   const [productss, setProductss] = useState([]);
@@ -121,7 +124,7 @@ export default function TableForm({
       input8Ref.current.focus()
       ctxDispatch({
         type: 'INVOICE_ADD_ITEM',
-        payload: { ...itemInv, quantity, amount, price },
+        payload: { ...itemInv, quantity, amount, price, porIva},
       });
     }
   };
@@ -132,6 +135,12 @@ export default function TableForm({
   };
 
   // Edit function
+  const submitHandlerPro = async (e) => {
+    e.preventDefault();
+    setShowPro(false)
+    input8Ref.current.focus()
+  };
+
 
   const searchProduct = (codPro) => {
     const productRow = productss.find((row) => row._id === codPro);
@@ -141,10 +150,18 @@ export default function TableForm({
     setDesPro(productRow.title);
     setQuantity(1);
     setPrice(productRow.price);
+    setPorIva(productRow.porIva);
     setAmount(productRow.price);
     setStock(productRow.inStock);
     setMiStock(productRow.minStock);
   };
+
+
+  const ayudaPro = (e) => {
+    e.key === "Enter" && buscarPorCodPro(codProd);
+    e.key === "F2" && handleShowPro(codPro);
+  };
+  
 
   const buscarPorCodPro = (codProd) => {
     if (codProd==='') {
@@ -158,6 +175,7 @@ export default function TableForm({
         setDesPro('Elija un Producto');
         setQuantity(0);
         setPrice(0);
+        setPorIva(0);
         setAmount(0);
         setStock(0);
         setProductR({});
@@ -169,6 +187,7 @@ export default function TableForm({
         setDesPro(productRow.title);
         setQuantity(1);
         setPrice(productRow.price);
+        setPorIva(productRow.porIva);
         setAmount(productRow.price);
         setStock(productRow.inStock);
         setMiStock(productRow.minStock);
@@ -184,6 +203,7 @@ export default function TableForm({
     if (e.target.value <= stock) {
       setQuantity(e.target.value);
     } else {
+      setQuantity(e.target.value);
       toast.error('This Product does not have stock enough');
     }
     if (stock-e.target.value <= miStock) {
@@ -198,6 +218,7 @@ export default function TableForm({
 
   const handleShowPro = () => {
     setShowPro(true);
+    input22Ref.current.focus();
   };
 
   return (
@@ -218,7 +239,8 @@ export default function TableForm({
                       placeholder="Codigo Producto"
                       value={codProd}
                       onChange={(e) => setCodProd(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && buscarPorCodPro(codProd)}
+                      // onKeyDown={(e) => e.key === "Enter" && buscarPorCodPro(codProd)}
+                      onKeyDown={(e) => ayudaPro(e)}
                       disabled={isPaying}
                       required
                     />
@@ -278,7 +300,7 @@ export default function TableForm({
                       ref={input10Ref}
                       placeholder="Price"
                       value={price}
-                      onChange={(e) => setPrice(e.target.value)}
+                      onChange={(e) => setPrice(+e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && input11Ref.current.focus()}
                       disabled={isPaying}
                       required
@@ -318,6 +340,7 @@ export default function TableForm({
           </Row>
         </form>
           <Modal
+            // input22Ref={input22Ref}
             size="md"
             show={showPro}
             onHide={() => setShowPro(false)}
@@ -329,12 +352,16 @@ export default function TableForm({
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            <Col md={4}>
+            <Col md={12}>
               <Card.Body>
                 <Card.Title>
                   <Card.Title>
-                    <Form.Group className="input" controlId="name">
-                      <Form.Label>Product Description</Form.Label>
+                      <Form onSubmit={submitHandlerPro}>
+                        <Form.Group className="mb-3" controlId="name">
+                        {/* <Form.Group className="input" controlId="name"> */}
+                        <Form.Label>Productos</Form.Label>
+
+
                       <Form.Select
                         className="input"
                         onClick={(e) => handleChange(e)}
@@ -347,6 +374,23 @@ export default function TableForm({
                         ))}
                       </Form.Select>
                     </Form.Group>
+                    <Form.Group className="mb-3" controlId="name">
+                              <Form.Control
+                                placeholder="Producto"
+                                value={desPro}
+                                disabled={true}
+                                required
+                                />
+                            </Form.Group>
+                              <div className="mb-3">
+                                <Button type="submit"
+                                  // ref={input22Ref}
+                                  disabled={desPro ? false : true}
+                                  >Continuar</Button>
+                              </div>
+                              </Form>
+
+
                   </Card.Title>
                 </Card.Title>
               </Card.Body>

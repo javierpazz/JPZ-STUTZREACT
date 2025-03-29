@@ -93,9 +93,10 @@ function App() {
   const input7Ref = useRef(null);
   const input8Ref = useRef(null);
   const input0Ref = useRef(null);
+  
+  const input20Ref = useRef(null);
+  const input21Ref = useRef(null);
 
-
-  const [poriva, setPorIva] = useState(userInfo.configurationObj.poriva);
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
   const [noDisc, setNoDisc] = useState(false);
   const [toDisc, setToDisc] = useState(true);
@@ -138,8 +139,9 @@ function App() {
   const [dueDat, setDueDat] = useState('');
   const [notes, setNotes] = useState('');
   const [desPro, setDesPro] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [price, setPrice] = useState('');
+  const [quantity, setQuantity] = useState(0);
+  const [price, setPrice] = useState(0);
+  const [porIva, setPorIva] = useState(0);
   const [amount, setAmount] = useState('');
   const [amountval, setAmountval] = useState(0);
   const [list, setList] = useState([]);
@@ -170,7 +172,7 @@ function App() {
   useEffect(() => {
     const calculateAmountval = (amountval) => {
       setAmountval(
-        orderItems?.reduce((a, c) => a + c.quantity * c.price, 0) * (1+(poriva/100))
+        orderItems?.reduce((a, c) => a + (c.quantity * c.price * (1+(c.porIva/100))), 0)
       );
     };
     if (numval === '') {
@@ -236,7 +238,7 @@ function App() {
   };
 
   const getIVA = () => {
-    return orderItems.reduce((acc, item) => acc + (item.quantity * item.price * poriva) / 100, 0).toFixed(2);
+    return orderItems.reduce((acc, item) => acc + (item.quantity * item.price * item.porIva) / 100, 0).toFixed(2);
   };
 
   const getTotalWithIVA = () => {
@@ -245,10 +247,12 @@ function App() {
 
   const handleShowCom = () => {
     setShowCom(true);
+    input20Ref.current.focus();
   };
 
   const handleShowCus = () => {
     setShowCus(true);
+    input21Ref.current.focus();
   };
 
 
@@ -260,6 +264,13 @@ function App() {
     setName(usersRow.nameCus);
   };
 
+  
+  const ayudaCus = (e) => {
+    e.key === "Enter" && buscarPorCodCus(codCust);
+    e.key === "F2" && handleShowCus(codCus);
+  };
+  
+
   const buscarPorCodCus = (codCust) => {
     const usersRow = customers.find((row) => row.codCus === codCust);
     if (!usersRow) {
@@ -269,7 +280,7 @@ function App() {
         setName('Elija Cliente');
     }else{
       setCodCus(usersRow._id);
-      setCodCust(usersRow.codCust);
+      setCodCust(usersRow.codCus);
       setUserObj(usersRow);
       setName(usersRow.nameCus);
       input3Ref.current.focus();
@@ -281,9 +292,19 @@ function App() {
     searchUser(e.target.value);
   };
 
+  const submitHandlerCom = async (e) => {
+    e.preventDefault();
+    setShowCom(false)
+  };
+  const submitHandlerCus = async (e) => {
+    e.preventDefault();
+    setShowCus(false)
+  };
+
   const handleChangeCom = (e) => {
     searchComprobante(e.target.value);
   };
+  
   const searchComprobante = (codComp) => {
     const comprobantesRow = comprobantes.find((row) => row._id === codComp);
     setCodCom(comprobantesRow._id);
@@ -293,6 +314,13 @@ function App() {
     setToDisc(comprobantesRow.toDisc);
     setItDisc(comprobantesRow.itDisc);
   };
+
+  const ayudaCom = (e) => {
+    e.key === "Enter" && buscarPorCodCom(codComp);
+    e.key === "F2" && handleShowCom(codCom);
+  };
+  
+
   const buscarPorCodCom = (codComp) => {
     const comprobantesRow = comprobantes.find((row) => row.codCom === codComp);
     if (!comprobantesRow) {
@@ -328,7 +356,7 @@ function App() {
   const placeCancelInvoiceHandler = async () => {};
 
   const placeInvoiceHandler = async () => {
-    if (window.confirm('Are you sure to create?')) {
+    if (window.confirm('Esta seguro de Grabar?')) {
       if (isPaying && (!recNum || !recDat || !desVal)) {
         unloadpayment();
       } else {
@@ -342,7 +370,11 @@ function App() {
 
           //        invoice.shippingPrice =
           //        invoice.subTotal > 100 ? round2(0) : round2(10);
-          invoice.tax = round2((poriva/100) * invoice.subTotal);
+          // invoice.tax = round2((poriva/100) * invoice.subTotal);
+          invoice.tax = round2(
+            invoice.orderItems.reduce((a, c) => a + c.quantity * c.price * c.porIva, 0)
+          );
+
           invoice.total =
             invoice.subTotal + invoice.shippingPrice + invoice.tax;
           invoice.totalBuy = 0;
@@ -576,7 +608,8 @@ function App() {
                             placeholder="Tipo Comprobante"
                             value={codComp}
                             onChange={(e) => setCodComp(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && buscarPorCodCom(codComp)}
+                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCom(codComp)}
+                            onKeyDown={(e) => ayudaCom(e)}
                             required
                           />
                         </Form.Group>
@@ -622,7 +655,8 @@ function App() {
                             placeholder="Customer Code"
                             value={codCust}
                             onChange={(e) => setCodCust(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && buscarPorCodCus(codCust)}
+                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCus(codCust)}
+                            onKeyDown={(e) => ayudaCus(e)}
                             required
                             />
                         </Form.Group>
@@ -928,6 +962,8 @@ function App() {
                     setQuantity={setQuantity}
                     price={price}
                     setPrice={setPrice}
+                    porIva={porIva}
+                    setPorIva={setPorIva}
                     amount={amount}
                     setAmount={setAmount}
                     list={list}
@@ -943,6 +979,7 @@ function App() {
                   />
                 </article>
                 <Modal
+                  // input20Ref={input20Ref}
                   size="md"
                   show={showCom}
                   onHide={() => setShowCom(false)}
@@ -954,15 +991,17 @@ function App() {
                     </Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                  <Col md={8}>
+                  <Col md={12}>
                           <Card.Body>
                             <Card.Title>
-                              <Form.Group className="input" controlId="name">
+                            <Form onSubmit={submitHandlerCom}>
+                            <Form.Group className="mb-3" controlId="name">
+                            {/* <Form.Group className="input" controlId="name"> */}
                                 <Form.Label>Tipo Comprobante</Form.Label>
                                 <Form.Select
                                   className="input"
                                   onClick={(e) => handleChangeCom(e)}
-                                >
+                                  >
                                   {comprobantes.map((elemento) => (
                                     <option key={elemento._id} value={elemento._id}>
                                       {elemento.nameCom}
@@ -970,6 +1009,21 @@ function App() {
                                   ))}
                                 </Form.Select>
                               </Form.Group>
+                              <Form.Group className="mb-3" controlId="name">
+                              <Form.Control
+                                placeholder="Tipo Comprobante"
+                                value={nameCom}
+                                disabled={true}
+                                required
+                                />
+                            </Form.Group>
+                              <div className="mb-3">
+                                <Button type="submit"
+                                  // ref={input20Ref}
+                                  disabled={nameCom ? false : true}
+                                  >Continuar</Button>
+                              </div>
+                              </Form>
                             </Card.Title>
                           </Card.Body>
                         </Col>
@@ -977,6 +1031,7 @@ function App() {
                 </Modal>
 
                 <Modal
+                  // input21Ref={input21Ref}
                   size="md"
                   show={showCus}
                   onHide={() => setShowCus(false)}
@@ -988,11 +1043,13 @@ function App() {
                     </Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                  <Col md={8}>
+                  <Col md={12}>
                     <Card.Body>
                       <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Customer Name</Form.Label>
+                      <Form onSubmit={submitHandlerCus}>
+                            <Form.Group className="mb-3" controlId="name">
+                            {/* <Form.Group className="input" controlId="name"> */}
+                          <Form.Label>Clientes</Form.Label>
                           <Form.Select
                             className="input"
                             onClick={(e) => handleChange(e)}
@@ -1004,6 +1061,22 @@ function App() {
                             ))}
                           </Form.Select>
                         </Form.Group>
+                        <Form.Group className="mb-3" controlId="name">
+                              <Form.Control
+                                placeholder="Cliente"
+                                value={name}
+                                disabled={true}
+                                required
+                                />
+                            </Form.Group>
+                              <div className="mb-3">
+                                <Button type="submit"
+                                  // ref={input21Ref}
+                                  disabled={name ? false : true}
+                                  >Continuar</Button>
+                              </div>
+                              </Form>
+
                       </Card.Title>
                     </Card.Body>
                   </Col>
@@ -1084,8 +1157,8 @@ function App() {
                       <td className="text-end">{item.quantity}</td>
                       <td className="text-end">${item.price.toFixed(2)}</td>
                       <td className="text-end">${(item.quantity * item.price).toFixed(2)}</td>
-                      <td className="text-end">%{poriva}</td>
-                      <td className="text-end">${(item.quantity * item.price*(1+(poriva/100))).toFixed(2)}</td>
+                      <td className="text-end">%{item.porIva}</td>
+                      <td className="text-end">${(item.quantity * item.price*(1+(item.porIva/100))).toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -1120,9 +1193,9 @@ function App() {
                       <td>{item.title}</td>
                       <td className="text-end">{item.quantity}</td>
                       <td className="text-end">${item.price.toFixed(2)}</td>
-                      <td className="text-end">%{poriva}</td>
-                      <td className="text-end">${(item.price*(poriva/100)).toFixed(2)}</td>
-                      <td className="text-end">${(item.quantity * item.price*(1+(poriva/100))).toFixed(2)}</td>
+                      <td className="text-end">%{item.porIva}</td>
+                      <td className="text-end">${(item.price*(item.porIva/100)).toFixed(2)}</td>
+                      <td className="text-end">${(item.quantity * item.price*(1+(item.porIva/100))).toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -1153,10 +1226,10 @@ function App() {
                       <td>{index + 1}</td>
                       <td>{item.title}</td>
                       <td className="text-end">{item.quantity}</td>
-                      <td className="text-end">${(item.price*(1+(poriva/100))).toFixed(2)}</td>
+                      <td className="text-end">${(item.price*(1+(item.porIva/100))).toFixed(2)}</td>
                       <td className="text-end">$0.00</td>
                       
-                      <td className="text-end">${(item.quantity * item.price * (1+(poriva/100))).toFixed(2)}</td>
+                      <td className="text-end">${(item.quantity * item.price * (1+(item.porIva/100))).toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -100,7 +100,6 @@ export default function ConfigurationListScreen() {
   }, [page, userInfo, successDelete]);
 
   const createHandler = async () => {
-    if (window.confirm('Are you sure to create?')) {
       try {
         dispatch({ type: 'CREATE_REQUEST' });
         const { data } = await axios.post(
@@ -119,7 +118,6 @@ export default function ConfigurationListScreen() {
           type: 'CREATE_FAIL',
         });
       }
-    }
   };
 
   const deleteHandler = async (configuration) => {
@@ -170,7 +168,6 @@ export default function ConfigurationListScreen() {
                 <th>DIRECCION COMERCIAL</th>
                 <th>CUIT</th>
                 <th>COND. FRENTE AL IVA</th>
-                <th>IVA %</th>
                 {/* <th>INGRESOS BRUTOS</th>
                 <th>FECHA INIC.ACT</th> */}
                 <th>ACTIONS</th>
@@ -184,7 +181,6 @@ export default function ConfigurationListScreen() {
                   <td>{configuration.domcomer}</td>
                   <td>{configuration.cuit}</td>
                   <td>{configuration.coniva}</td>
-                  <td>{configuration.poriva}</td>
                   {/* <td>{configuration.ib}</td>
                   <td>{configuration.feciniact}</td> */}
                   <td>

@@ -101,12 +101,12 @@ export default function SalePointScreen() {
     return (
       <Container className="small-container">
       <Helmet>
-        <title>Sale Point</title>
+        <title>Puntos de Venta</title>
       </Helmet>
-      <h1 className="my-3">Choose Sale Point</h1>
+      <h1 className="my-3">Elija Punto de Venta</h1>
       <Form onSubmit={submitHandler}>
       <Form.Group className="mb-3" controlId="name">
-          <Form.Label>Sale Point</Form.Label>
+          <Form.Label>Punto de Venta</Form.Label>
           <Form.Select
                         className="input"
                         onClick={(e) => handleChange(e)}
@@ -122,7 +122,7 @@ export default function SalePointScreen() {
 
                   <Form.Group className="mb-3" controlId="name">
                     <Form.Control
-                      placeholder="Sale Point Choosed"
+                      placeholder="Punto de Venta"
                       value={name}
                       disabled={true}
                       required
@@ -135,7 +135,7 @@ export default function SalePointScreen() {
         <div className="mb-3">
           <Button type="submit"
             disabled={name ? false : true}
-            >Continue</Button>
+            >Continuar</Button>
         </div>
       </Form>
     </Container>

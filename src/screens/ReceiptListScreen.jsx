@@ -164,25 +164,23 @@ const prodeleteReceipt = (receipt) => {
   };
 
   const createHandler = async () => {
-    if (window.confirm('Are you sure to create?')) {
       navigate(`/admin/invoicerRec`);
-    }
   };
 
   return (
     <div>
       <Helmet>
-        <title>Sale Receipts</title>
+        <title>Recibos</title>
       </Helmet>
       <Row>
         <Col>
-          <h1>Sale Receipts</h1>
+          <h1>Recibos</h1>
         </Col>
 
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Sale Receipt
+              Create Recibo
             </Button>
           </div>
         </Col>

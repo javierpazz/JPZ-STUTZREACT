@@ -59,7 +59,6 @@ export default function ConfigurationEditScreen() {
   const [cuit, setCuit] = useState('');
   const [domcomer, setDomcomer] = useState('');
   const [coniva, setConiva] = useState('');
-  const [poriva, setPoriva] = useState('');
   const [ib, setIb] = useState('');
   const [feciniact, setFeciniact] = useState('');
 
@@ -105,7 +104,6 @@ export default function ConfigurationEditScreen() {
           cuit,
           domcomer,
           coniva,
-          poriva,
           ib,
           feciniact,
         },
@@ -174,14 +172,6 @@ export default function ConfigurationEditScreen() {
             <Form.Control
               value={coniva}
               onChange={(e) => setConiva(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="name">
-            <Form.Label>IVA % </Form.Label>
-            <Form.Control
-              value={poriva}
-              onChange={(e) => setPoriva(e.target.value)}
               required
             />
           </Form.Group>

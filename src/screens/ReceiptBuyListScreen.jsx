@@ -167,9 +167,7 @@ const prodeleteReceipt = (receipt) => {
     };
 
   const createHandler = async () => {
-    if (window.confirm('Are you sure to create?')) {
       navigate(`/admin/invoicerBuyRec`);
-    }
   };
 
   return (

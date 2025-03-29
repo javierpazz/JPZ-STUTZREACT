@@ -97,7 +97,6 @@ export default function ComprobanteListScreen() {
   }, [page, userInfo, successDelete]);
 
   const createHandler = async () => {
-    if (window.confirm('Are you sure to create?')) {
       try {
         dispatch({ type: 'CREATE_REQUEST' });
         const { data } = await axios.post(
@@ -116,7 +115,6 @@ export default function ComprobanteListScreen() {
           type: 'CREATE_FAIL',
         });
       }
-    }
   };
 
   const deleteHandler = async (comprobante) => {
