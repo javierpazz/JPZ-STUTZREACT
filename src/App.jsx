@@ -51,6 +51,8 @@ import StateOrdListScreen from './screens/StateOrdListScreen';
 import StateOrdEditScreen from './screens/StateOrdEditScreen';
 import UserListScreen from './screens/UserListScreen';
 import UserEditScreen from './screens/UserEditScreen';
+import EncargadoListScreen from './screens/EncargadoListScreen';
+import EncargadoEditScreen from './screens/EncargadoEditScreen';
 import ValueeListScreen from './screens/ValueeListScreen';
 import ValueeEditScreen from './screens/ValueeEditScreen';
 import ConfigurationListScreen from './screens/ConfigurationListScreen';
@@ -62,6 +64,8 @@ import Invoices from './invoice/src/Invoices';
 import Remits from './invoice/src/Remits';
 import InvoicesRec from './invoice/src/InvoicesRec';
 import InvoicesBuy from './invoice/src/InvoicesBuy';
+import InvoicesCajIng from './invoice/src/InvoicesCajIng';
+import InvoicesCajEgr from './invoice/src/InvoicesCajEgr';
 import RemitsBuy from './invoice/src/RemitsBuy';
 import InvoicesBuyRec from './invoice/src/InvoicesBuyRec';
 import MapScreen from './screens/MapScreen';
@@ -219,6 +223,22 @@ function App() {
                     </NavDropdown>
                   )}
 
+                  {userInfo && (
+                    <NavDropdown title="Caja" id="buys-nav-dropdown">
+                      <LinkContainer to="/admin/invoicerCajIng">
+                        <NavDropdown.Item>Ingresos de Caja</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/invoicerCajEgr">
+                        <NavDropdown.Item>Retiros de Caja</NavDropdown.Item>
+                      </LinkContainer>
+                      {userInfo && userInfo.role=="admin" && (
+                        <LinkContainer to="/admin/infosupp">
+                          <NavDropdown.Item>Informes</NavDropdown.Item>
+                        </LinkContainer>
+                        )}
+                    </NavDropdown>
+                  )}
+
 
                   {userInfo && userInfo.role=="admin" && (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
@@ -257,6 +277,9 @@ function App() {
                       </LinkContainer>
                       <LinkContainer to="/admin/users">
                         <NavDropdown.Item>Usuarios</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/encargados">
+                        <NavDropdown.Item>Encargados</NavDropdown.Item>
                       </LinkContainer>
                       {/* <LinkContainer to="/admin/support">
                         <NavDropdown.Item>Chat Support</NavDropdown.Item>
@@ -495,6 +518,15 @@ function App() {
                 element={
                   <AdminRoute>
                     <UserListScreen />
+                    <EncargadoListScreen />
+             Encargado </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/encargados"
+                element={
+                  <AdminRoute>
+                    <EncargadoListScreen />
                   </AdminRoute>
                 }
               ></Route>
@@ -571,6 +603,14 @@ function App() {
                 }
               ></Route>
               <Route
+                path="/admin/invoicerCajIng"
+                element={
+                  <ProtectedRoute>
+                    <InvoicesCajIng />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
                 path="/admin/invoicerBuy"
                 element={
                   <ProtectedRoute>
@@ -595,6 +635,14 @@ function App() {
                 }
               ></Route>
               <Route
+                path="/admin/invoicerCajEgr"
+                element={
+                  <ProtectedRoute>
+                    <InvoicesCajEgr />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
                 path="/admin/product/:id"
                 element={
                   <AdminRoute>
@@ -607,6 +655,14 @@ function App() {
                 element={
                   <AdminRoute>
                     <UserEditScreen />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/encargado/:id"
+                element={
+                  <AdminRoute>
+                    <EncargadoEditScreen />
                   </AdminRoute>
                 }
               ></Route>

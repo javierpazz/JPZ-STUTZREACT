@@ -120,7 +120,8 @@ function AppBuyRem() {
   const [name, setName] = useState('');
   const [suppObj, setSuppObj] = useState({});
   const [remNum, setRemNum] = useState('');
-  const [remDat, setRemDat] = useState('');
+  const today = new Date().toISOString().split("T")[0];
+  const [remDat, setRemDat] = useState(today);
   const [invNum, setInvNum] = useState('');
   const [invDat, setInvDat] = useState('');
   const [recNum, setRecNum] = useState('');
@@ -145,7 +146,7 @@ function AppBuyRem() {
   const [website, setWebsite] = useState('');
   const [clientName, setClientName] = useState('');
   const [clientAddress, setClientAddress] = useState('');
-  const [dueDat, setDueDat] = useState('');
+  const [dueDat, setDueDat] = useState(today);
   const [notes, setNotes] = useState('');
   const [desPro, setDesPro] = useState('');
   const [quantity, setQuantity] = useState('');
@@ -459,7 +460,7 @@ function AppBuyRem() {
     try {
       dispatch({ type: 'CREATE_REQUEST' });
       const { data } = await axios.post(
-        `${API}/api/invoices`,
+        `${API}/api/invoices/rem`,
 
         {
           orderItems: invoice.orderItems,
@@ -537,7 +538,7 @@ function AppBuyRem() {
   return (
     <>
       <Helmet>
-        <title>Buy Invoice</title>
+        <title>Remito de Ingreso</title>
       </Helmet>
 
       <main>
@@ -984,8 +985,8 @@ function AppBuyRem() {
             <div className="col-md-6 ">
               <p><strong>FACTURA</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
-              <strong>     Comp. Nro:</strong> {invNum}</p>
-              <p><strong>Fecha de Emision:</strong> {invDat}</p>
+              <strong>     Comp. Nro:</strong> {remNum}</p>
+              <p><strong>Fecha de Emision:</strong> {remDat}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>

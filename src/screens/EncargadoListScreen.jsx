@@ -18,7 +18,7 @@ const reducer = (state, action) => {
     case 'FETCH_SUCCESS':
       return {
         ...state,
-        comprobantes: action.payload.comprobantes,
+        encargados: action.payload.encargados,
         page: action.payload.page,
         pages: action.payload.pages,
         loading: false,
@@ -53,12 +53,12 @@ const reducer = (state, action) => {
   }
 };
 
-export default function ComprobanteListScreen() {
+export default function EncargadoListScreen() {
   const [
     {
       loading,
       error,
-      comprobantes,
+      encargados,
       pages,
       loadingCreate,
       loadingDelete,
@@ -81,7 +81,7 @@ export default function ComprobanteListScreen() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${API}/api/comprobantes/admin?page=${page} `, {
+        const { data } = await axios.get(`${API}/api/encargados/admin?page=${page} `, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
 
@@ -97,33 +97,35 @@ export default function ComprobanteListScreen() {
   }, [page, userInfo, successDelete]);
 
   const createHandler = async () => {
+    if (window.confirm('Are you sure to create?')) {
       try {
         dispatch({ type: 'CREATE_REQUEST' });
         const { data } = await axios.post(
-          `${API}/api/comprobantes`,
+          `${API}/api/encargados`,
           {},
           {
             headers: { Authorization: `Bearer ${userInfo.token}` },
           }
         );
-        toast.success('comprobante created successfully');
+        toast.success('encargado created successfully');
         dispatch({ type: 'CREATE_SUCCESS' });
-        navigate(`/admin/comprobante/${data.comprobante._id}`);
+        navigate(`/admin/encargado/${data.encargado._id}`);
       } catch (err) {
         toast.error(getError(error));
         dispatch({
           type: 'CREATE_FAIL',
         });
       }
+    }
   };
 
-  const deleteHandler = async (comprobante) => {
+  const deleteHandler = async (encargado) => {
     if (window.confirm('Are you sure to delete?')) {
       try {
-        await axios.delete(`${API}/api/comprobantes/${comprobante._id}`, {
+        await axios.delete(`${API}/api/encargados/${encargado._id}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        toast.success('comprobante deleted successfully');
+        toast.success('encargado deleted successfully');
         dispatch({ type: 'DELETE_SUCCESS' });
       } catch (err) {
         toast.error(getError(error));
@@ -138,12 +140,12 @@ export default function ComprobanteListScreen() {
     <div>
       <Row>
         <Col>
-          <h1>Comprobantes</h1>
+          <h1>Encargado</h1>
         </Col>
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Comprobante
+              Create Encargado
             </Button>
           </div>
         </Col>
@@ -160,28 +162,24 @@ export default function ComprobanteListScreen() {
           <table className="table">
             <thead>
               <tr>
-                <th>CODIGO COMPROBANTE</th>
-                <th>DESCRIPCION</th>
-                <th>IMPUTA EN CUENTA</th>
-                <th>TIPO</th>
-                <th>NUMERACION</th>
+                <th>CODIGO</th>
+                <th>ENCARGADO</th>
+                <th>EMAIL</th>
                 <th>ACTIONS</th>
               </tr>
             </thead>
             <tbody>
-              {comprobantes.map((comprobante) => (
-                <tr key={comprobante._id}>
-                  <td>{comprobante.codCom}</td>
-                  <td>{comprobante.nameCom}</td>
-                  <td>{comprobante.isHaber == true ? 'HABER' : 'DEBE'}</td>
-                  <td>{comprobante.interno == false ? 'REMOTO' : 'INTERNO'}</td>
-                  <td>{comprobante.numInt}</td>
+              {encargados.map((encargado) => (
+                <tr key={encargado._id}>
+                  <td>{encargado.codEnc}</td>
+                  <td>{encargado.name}</td>
+                  <td>{encargado.email}</td>
                   <td>
                     <Button
                       type="button"
                       title="Edit"
                       onClick={() =>
-                        navigate(`/admin/comprobante/${comprobante._id}`)
+                        navigate(`/admin/encargado/${encargado._id}`)
                       }
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
@@ -189,8 +187,18 @@ export default function ComprobanteListScreen() {
                     &nbsp;
                     <Button
                       type="button"
+                      title="Account"
+                      onClick={() => {
+                        navigate(`/admin/suppli/${encargado._id}`);
+                      }}
+                    >
+                      <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
+                    </Button>
+                    &nbsp;
+                    <Button
+                      type="button"
                       title="Delete"
-                      onClick={() => deleteHandler(comprobante)}
+                      onClick={() => deleteHandler(encargado)}
                     >
                       <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                     </Button>
@@ -204,7 +212,7 @@ export default function ComprobanteListScreen() {
               <Link
                 className={x + 1 === Number(page) ? 'btn text-bold' : 'btn'}
                 key={x + 1}
-                to={`/admin/comprobantes?page=${x + 1}`}
+                to={`/admin/encargados?page=${x + 1}`}
               >
                 {x + 1}
               </Link>

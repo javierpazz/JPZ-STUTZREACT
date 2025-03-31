@@ -60,6 +60,8 @@ export default function ComprobanteEditScreen() {
   const [noDisc, setNoDisc] = useState(true);
   const [toDisc, setToDisc] = useState(false);
   const [itDisc, setItDisc] = useState(false);
+  const [interno, setInterno] = useState(false);
+  const [numInt, setNumInt] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,6 +76,8 @@ export default function ComprobanteEditScreen() {
         setNoDisc(data.noDisc);
         setToDisc(data.toDisc);
         setItDisc(data.itDisc);
+        setInterno(data.interno);
+        setNumInt(data.numInt);
         dispatch({ type: 'FETCH_SUCCESS' });
       } catch (err) {
         dispatch({
@@ -100,6 +104,8 @@ export default function ComprobanteEditScreen() {
           toDisc,
           itDisc,
           claCom,
+          interno,
+          numInt,
         },
         {
           headers: { Authorization: `Bearer ${userInfo.token}` },
@@ -177,6 +183,23 @@ export default function ComprobanteEditScreen() {
             checked={toDisc}
             onChange={(e) => setToDisc(e.target.checked)}
           />
+          <Form.Check
+            className="mb-3"
+            type="checkbox"
+            id="interno"
+            label="Comprobante Interno"
+            checked={interno}
+            onChange={(e) => setInterno(e.target.checked)}
+          />
+          <Form.Group className="mb-3" controlId="name">
+            <Form.Label>Nro. Ultimo Conprobante</Form.Label>
+            <Form.Control
+            className="mb-3"
+            label="Nro. Ultimo Conprobante"
+            value={numInt}
+            onChange={(e) => setNumInt(e.target.value)}
+            />
+          </Form.Group>
 
           {/* <Form.Group className="mb-3" controlId="name">
             <Form.Label>Clave Comprobante</Form.Label>

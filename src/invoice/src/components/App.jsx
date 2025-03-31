@@ -114,7 +114,9 @@ function App() {
   const [userObj, setUserObj] = useState({});
   const [remNum, setRemNum] = useState('');
   const [invNum, setInvNum] = useState('');
-  const [invDat, setInvDat] = useState('');
+  const [invNumImp, setInvNumImp] = useState('');
+  const today = new Date().toISOString().split("T")[0];
+  const [invDat, setInvDat] = useState(today);
   const [recNum, setRecNum] = useState('');
   const [recDat, setRecDat] = useState('');
   const [codVal, setCodVal] = useState('');
@@ -136,7 +138,7 @@ function App() {
   const [website, setWebsite] = useState('');
   const [clientName, setClientName] = useState('');
   const [clientAddress, setClientAddress] = useState('');
-  const [dueDat, setDueDat] = useState('');
+  const [dueDat, setDueDat] = useState(today);
   const [notes, setNotes] = useState('');
   const [desPro, setDesPro] = useState('');
   const [quantity, setQuantity] = useState(0);
@@ -360,7 +362,7 @@ function App() {
       if (isPaying && (!recNum || !recDat || !desVal)) {
         unloadpayment();
       } else {
-        if (invNum && invDat && codCus) {
+        if (invDat && codCus) {
           orderItems.map((item) => stockHandler({ item }));
           const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
           invoice.subTotal = round2(
@@ -545,6 +547,7 @@ function App() {
       //      dispatch({ type: 'CREATE_SUCCESS' });
       //      localStorage.removeItem('orderItems');
       setIsPaying(false);
+      setInvNumImp(data.invoice.invNum);
       setDesval('');
       setDesVal('');
       setRecNum('');
@@ -587,7 +590,7 @@ function App() {
   return (
     <>
       <Helmet>
-        <title>Sale Invoice</title>
+        <title>Facturas de Venta</title>
       </Helmet>
 
       <main>
@@ -904,11 +907,10 @@ function App() {
                           onClick={placeCancelInvoiceHandler}
                           disabled={
                             orderItems.length === 0 ||
-                            !invNum ||
                             !invDat ||
                             !codCus
                           }
-                        >
+                          >
                           CANCELA
                         </Button>
                       </div>
@@ -923,11 +925,10 @@ function App() {
                           onClick={placeInvoiceHandler}
                           disabled={
                             orderItems.length === 0 ||
-                            !invNum ||
                             !invDat ||
                             !codCus
                           }
-                        >
+                          >
                           GRABA FACTURA
                         </Button>
                       </div>
@@ -1116,7 +1117,7 @@ function App() {
             <div className="col-md-6 ">
               <p><strong>FACTURA</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
-              <strong>     Comp. Nro:</strong> {invNum}</p>
+              <strong>     Comp. Nro:</strong> {invNumImp}</p>
               <p><strong>Fecha de Emision:</strong> {invDat}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>

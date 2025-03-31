@@ -107,7 +107,9 @@ function AppRem() {
   const [name, setName] = useState('');
   const [userObj, setUserObj] = useState({});
   const [remNum, setRemNum] = useState('');
-  const [remDat, setRemDat] = useState('');
+  const [remNumImp, setRemNumImp] = useState('');
+  const today = new Date().toISOString().split("T")[0];
+  const [remDat, setRemDat] = useState(today);
   const [invNum, setInvNum] = useState('');
   const [invDat, setInvDat] = useState('');
   const [recNum, setRecNum] = useState('');
@@ -130,7 +132,7 @@ function AppRem() {
   const [website, setWebsite] = useState('');
   const [clientName, setClientName] = useState('');
   const [clientAddress, setClientAddress] = useState('');
-  const [dueDat, setDueDat] = useState('');
+  const [dueDat, setDueDat] = useState(today);
   const [notes, setNotes] = useState('');
   const [desPro, setDesPro] = useState('');
   const [quantity, setQuantity] = useState(0);
@@ -288,7 +290,7 @@ function AppRem() {
       if (isPaying && (!recNum || !recDat || !desVal)) {
         unloadpayment();
       } else {
-        if (remNum && remDat && codCus) {
+        if (remDat && codCus) {
           orderItems.map((item) => stockHandler({ item }));
           const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
           invoice.subTotal = round2(
@@ -432,7 +434,7 @@ function AppRem() {
     try {
       dispatch({ type: 'CREATE_REQUEST' });
       const { data } = await axios.post(
-        `${API}/api/invoices`,
+        `${API}/api/invoices/rem`,
 
         {
           orderItems: invoice.orderItems,
@@ -472,6 +474,7 @@ function AppRem() {
       setIsPaying(false);
       setDesval('');
       setDesVal('');
+      setRemNumImp(data.invoice.remNum);
       setRecNum('');
       setRecDat('');
       setNumval(' ');
@@ -512,7 +515,7 @@ function AppRem() {
   return (
     <>
       <Helmet>
-        <title>Sale Remit</title>
+        <title>Remitos de Egreso</title>
       </Helmet>
 
       <main>
@@ -793,7 +796,6 @@ function AppRem() {
                           onClick={placeCancelInvoiceHandler}
                           disabled={
                             orderItems.length === 0 ||
-                            !remNum ||
                             !remDat ||
                             !codCus
                           }
@@ -812,7 +814,6 @@ function AppRem() {
                           onClick={placeInvoiceHandler}
                           disabled={
                             orderItems.length === 0 ||
-                            !remNum ||
                             !remDat ||
                             !codCus
                           }
@@ -954,8 +955,8 @@ function AppRem() {
             <div className="col-md-6 ">
               <p><strong>FACTURA</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
-              <strong>     Comp. Nro:</strong> {invNum}</p>
-              <p><strong>Fecha de Emision:</strong> {invDat}</p>
+              <strong>     Comp. Nro:</strong> {remNumImp}</p>
+              <p><strong>Fecha de Emision:</strong> {remDat}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>

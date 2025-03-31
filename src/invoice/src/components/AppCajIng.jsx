@@ -58,7 +58,7 @@ case 'TOTAL_FETCH_REC_FAIL':
   }
 };
 
-function AppRec() {
+function AppCajIng() {
   const [
     {
       loading,
@@ -102,25 +102,25 @@ function AppRec() {
   const [poriva, setPorIva] = useState(21);
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
 
-  const [showCus, setShowCus] = useState(false);
+  const [showEnc, setShowEnc] = useState(false);
 
   // const [codUse, setCodUse] = useState('');
-  const [codCus, setCodCus] = useState('');
-  const [codCust, setCodCust] = useState('');
+  const [codEnc, setCodEnc] = useState('');
+  const [codEncp, setCodEncp] = useState('');
   const [name, setName] = useState('');
   const [userObj, setUserObj] = useState({});
   const [remNum, setRemNum] = useState('');
   const [invNum, setInvNum] = useState('');
   const [invDat, setInvDat] = useState('');
-  const [recNum, setRecNum] = useState('');
-  const [recNumImp, setRecNumImp] = useState('');
+  const [cajNum, setCajNum] = useState('');
+  const [cajNumImp, setCajNumImp] = useState('');
   const today = new Date().toISOString().split("T")[0];
-  const [recDat, setRecDat] = useState(today);
+  const [cajDat, setCajDat] = useState(today);
   const [codVal, setCodVal] = useState('');
   const [desval, setDesval] = useState('');
   const [receiptss, setReceiptss] = useState([]);
   // const [userss, setUserss] = useState([]);
-  const [customers, setCustomers] = useState([]);
+  const [encargados, setEncargados] = useState([]);
   const [valuess, setValuess] = useState([]);
   const [codPro, setCodPro] = useState('');
   const [codPro1, setCodPro1] = useState('');
@@ -190,10 +190,10 @@ useEffect(() => {
     input2Ref.current.focus()
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${API}/api/customers/`, {
+        const { data } = await axios.get(`${API}/api/encargados/`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        setCustomers(data);
+        setEncargados(data);
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (err) {}
     };
@@ -224,39 +224,36 @@ useEffect(() => {
   };
 
 
-  const handleShowCus = () => {
-    setShowCus(true);
+  const handleShowEnc = () => {
+    setShowEnc(true);
     input21Ref.current.focus();
   };
 
 
-  const searchUser = (codCus) => {
-    const customersRow = customers.find((row) => row._id === codCus);
-    setCodCus(customersRow._id);
-    setCodCust(customersRow.codCus);
-    setName(customersRow.nameCus);
+  const searchEnc = (codEnc) => {
+    const encargadoRow = encargados.find((row) => row._id === codEnc);
+    setCodEnc(encargadoRow._id);
+    setCodEncp(encargadoRow.codEnc);
+    setName(encargadoRow.name);
   };
 
-    
-  const ayudaCus = (e) => {
-    e.key === "Enter" && buscarPorCodCus(codCust);
-    e.key === "F2" && handleShowCus(codCus);
+
+  const ayudaEnc = (e) => {
+    e.key === "Enter" && buscarPorCodEnc(codEncp);
+    e.key === "F2" && handleShowEnc(codEnc);
   };
- 
+  
 
-
-  const buscarPorCodCus = (codCust) => {
-    const usersRow = customers.find((row) => row.codCus === codCust);
-    if (!usersRow) {
-        setUserObj({});
-        setCodCus('');
-        setCodCust('');
-        setName('Elija Cliente');
+  const buscarPorCodEnc = (codEncp) => {
+    const encargadoRow = encargados.find((row) => row.codEnc === codEncp);
+    if (!encargadoRow) {
+        setCodEnc('');
+        setCodEncp('');
+        setName('Elija Encargado');
     }else{
-      setCodCus(usersRow._id);
-      setCodCust(usersRow.codCust);
-      setUserObj(usersRow);
-      setName(usersRow.nameCus);
+      setCodEnc(encargadoRow._id);
+      setCodEncp(encargadoRow.codEnc);
+      setName(encargadoRow.name);
       input3Ref.current.focus();
       };
   };
@@ -265,28 +262,30 @@ useEffect(() => {
 //cr/
 //
 const RecControl = (e) => {
-  // const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum));
+  // const oldRecipt = receiptss.filter((row) => row.cajNum === Number(cajNum));
   // if (oldRecipt.length > 0) {
   if (false) {
-      toast.error(`This N° ${(recNum)} Receipt Exist, use other Number Please!`);
-      setRecNum(e.target.value)
+      toast.error(`This N° ${(cajNum)} Receipt Exist, use other Number Please!`);
+      setCajNum(e.target.value)
     } else {
-      setRecNum(e.target.value)}
+      setCajNum(e.target.value)}
     }
 
 //
 //cr/
 
 
-  const handleChange = (e) => {
-    searchUser(e.target.value);
-  };
 
-  const submitHandlerCus = async (e) => {
+  const submitHandlerEnc = async (e) => {
     e.preventDefault();
-    setShowCus(false)
+    setShowEnc(false)
   };
 
+  const handleChange = (e) => {
+    searchEnc(e.target.value);
+  };
+
+  
   const searchValue = (codVal) => {
     const valuesRow = valuess.find((row) => row._id === codVal);
     setCodVal(valuesRow.codVal);
@@ -302,11 +301,11 @@ const RecControl = (e) => {
   const placeReceiptHandler = async () => {
 //cr/
 //
-// const oldRecipt = receiptss.filter((row) => row.recNum === recNum && row.user._id === codCus );
+// const oldRecipt = receiptss.filter((row) => row.cajNum === cajNum && row.user._id === codEnc );
   if (window.confirm('Esta seguro de Grabar?')) {
   // if (oldRecipt.length > 0) {
   if (false) {
-      toast.error(`This N° ${(recNum)} Receipt Exist, use other Number Please!`);
+      toast.error(`This N° ${(cajNum)} Receipt Exist, use other Number Please!`);
       return;
       } else {
 
@@ -314,7 +313,7 @@ const RecControl = (e) => {
   //cr/
 
 
-      if (recDat && codCus) {
+      if (cajDat && codEnc) {
         const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
         receipt.subTotal = round2(
           receipt.receiptItems.reduce((a, c) => a + c.amountval * 1, 0)
@@ -323,15 +322,15 @@ const RecControl = (e) => {
         receipt.tax = round2(0.15 * 0);
         receipt.total = receipt.subTotal;
         receipt.totalBuy = 0;
-        receipt.codCus = codCus;
+        receipt.codEnc = codEnc;
         receipt.codCon = userInfo.codCon;
         receipt.codConNum = codConNum;
         receipt.codSup = 0;
         receipt.remNum = remNum;
         receipt.invNum = invNum;
         receipt.invDat = invDat;
-        receipt.recNum = recNum;
-        receipt.recDat = recDat;
+        receipt.cajNum = cajNum;
+        receipt.cajDat = cajDat;
         receipt.desval = desval;
         receipt.notes = notes;
 
@@ -349,7 +348,7 @@ const RecControl = (e) => {
     try {
       dispatch({ type: 'CREATE_REQUEST' });
       const { data } = await axios.post(
-        `${API}/api/receipts`,
+        `${API}/api/receipts/caja`,
         {
           receiptItems: receipt.receiptItems,
           shippingAddress: receipt.shippingAddress,
@@ -360,7 +359,7 @@ const RecControl = (e) => {
           total: receipt.total,
           totalBuy: receipt.totalBuy,
 
-          codCus: receipt.codCus,
+          codEnc: receipt.codEnc,
           codCon: receipt.codCon,
           codConNum: receipt.codConNum,
 
@@ -369,8 +368,8 @@ const RecControl = (e) => {
           remNum: receipt.remNum,
           invNum: receipt.invNum,
           invDat: receipt.invDat,
-          recNum: receipt.recNum,
-          recDat: receipt.recDat,
+          cajNum: receipt.cajNum,
+          cajDat: receipt.cajDat,
           desval: receipt.desval,
           notes: receipt.notes,
           salbuy: 'SALE',
@@ -385,7 +384,7 @@ const RecControl = (e) => {
       //    dispatch({ type: 'CREATE_SUCCESS' });
       //  localStorage.removeItem('receiptItems');
       //navigate(`/order/${data.order._id}`);
-      setRecNumImp(data.receipt.recNum);
+      setCajNumImp(data.receipt.cajNum);
     } catch (err) {
       dispatch({ type: 'CREATE_FAIL' });
       toast.error(getError(err));
@@ -404,7 +403,7 @@ const RecControl = (e) => {
   return (
     <>
       <Helmet>
-        <title>Recibos</title>
+        <title>Ingresos de Caja</title>
       </Helmet>
 
       <main>
@@ -414,7 +413,7 @@ const RecControl = (e) => {
             <div>
               <div className="bordeTable">
               <Row>
-                  <Col md={5}>
+                  <Col md={4}>
                     <Card.Body>
                       <Card.Title>
                       <ListGroup.Item>
@@ -427,12 +426,12 @@ const RecControl = (e) => {
                     </Card.Body>
                   </Col>
 
-                  <Col md={7} className="mt-1 text-black py-1 px-1 rounded ">
+                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
                       <Card.Body>
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              RECIBO
+                              INGRESO DE CAJA
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -446,15 +445,15 @@ const RecControl = (e) => {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Customer Code</Form.Label>
+                          <Form.Label>Codigo Encargado</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input2Ref}
-                            placeholder="Customer Code"
-                            value={codCust}
-                            onChange={(e) => setCodCust(e.target.value)}
-                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCus(codCust)}
-                            onKeyDown={(e) => ayudaCus(e)}
+                            placeholder="Codigo Encargado"
+                            value={codEncp}
+                            onChange={(e) => setCodEncp(e.target.value)}
+                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodEnc(codEncp)}
+                            onKeyDown={(e) => ayudaEnc(e)}
                             required
                             />
                         </Form.Group>
@@ -466,7 +465,7 @@ const RecControl = (e) => {
                       className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                       type="button"
                       title="Buscador"
-                      onClick={() => handleShowCus()}
+                      onClick={() => handleShowEnc()}
                       >
                       <BiFileFind className="text-blue-500 font-bold text-xl" />
                     </Button>
@@ -496,10 +495,10 @@ const RecControl = (e) => {
                             className="input"
                             ref={input3Ref}
                             placeholder="Receipt Number"
-                            value={recNum}
+                            value={cajNum}
                             onChange={(e) => RecControl(e)}
                             onKeyDown={(e) => e.key === "Enter" && input4Ref.current.focus()}
-                            // onChange={(e) => setRecNum(e.target.value)}
+                            // onChange={(e) => setCajNum(e.target.value)}
                             required
                           />
                         </Form.Group>
@@ -516,8 +515,8 @@ const RecControl = (e) => {
                             ref={input4Ref}
                             type="date"
                             placeholder="Receipt Date"
-                            value={recDat}
-                            onChange={(e) => setRecDat(e.target.value)}
+                            value={cajDat}
+                            onChange={(e) => setCajDat(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
                             required
                           />
@@ -554,10 +553,10 @@ const RecControl = (e) => {
                           onClick={placeCancelReceiptHandler}
                           disabled={
                             receiptItems.length === 0 ||
-                            !recDat ||
-                            !codCus
+                            !cajDat ||
+                            !codEnc
                           }
-                          >
+                        >
                           CANCELA
                         </Button>
                       </div>
@@ -572,10 +571,10 @@ const RecControl = (e) => {
                           onClick={placeReceiptHandler}
                           disabled={
                             receiptItems.length === 0 ||
-                            !recDat ||
-                            !codCus
+                            !cajDat ||
+                            !codEnc
                           }
-                          >
+                        >
                           GRABA RECIBO
                         </Button>
                       </div>
@@ -622,39 +621,38 @@ const RecControl = (e) => {
                   />
                 </article>
                 <Modal
-                  // input21Ref={input21Ref}
                   size="md"
-                  show={showCus}
-                  onHide={() => setShowCus(false)}
+                  show={showEnc}
+                  onHide={() => setShowEnc(false)}
                   aria-labelledby="example-modal-sizes-title-lg"
                 >
                   <Modal.Header closeButton>
                     <Modal.Title id="example-modal-sizes-title-lg">
-                    Elija un Cliente
+                    Elija un Encargado
                     </Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
                   <Col md={12}>
                     <Card.Body>
                       <Card.Title>
-                      <Form onSubmit={submitHandlerCus}>
-                            <Form.Group className="mb-3" controlId="name">
-                            {/* <Form.Group className="input" controlId="name"> */}
-                          <Form.Label>Clientes</Form.Label>
+                      <Form onSubmit={submitHandlerEnc}>
+                          <Form.Group className="mb-3" controlId="name">
+                          {/* <Form.Group className="input" controlId="name"> */}
+                          <Form.Label>Proveedor</Form.Label>
                           <Form.Select
                             className="input"
                             onClick={(e) => handleChange(e)}
                           >
-                            {customers.map((elemento) => (
+                            {encargados.map((elemento) => (
                               <option key={elemento._id} value={elemento._id}>
-                                {elemento.nameCus}
+                                {elemento.name}
                               </option>
                             ))}
                           </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="name">
                               <Form.Control
-                                placeholder="Cliente"
+                                placeholder="Encargado"
                                 value={name}
                                 disabled={true}
                                 required
@@ -667,12 +665,12 @@ const RecControl = (e) => {
                                   >Continuar</Button>
                               </div>
                               </Form>
-
                       </Card.Title>
                     </Card.Body>
                   </Col>
                   </Modal.Body>
                 </Modal>
+
               </div>
             </div>
           </>
@@ -705,8 +703,8 @@ const RecControl = (e) => {
             <div className="col-md-6 ">
               <p><strong>RECIBO</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
-              <strong>     Comp. Nro:</strong> {recNumImp}</p>
-              <p><strong>Fecha de Emision:</strong> {recDat}</p>
+              <strong>     Comp. Nro:</strong> {cajNumImp}</p>
+              <p><strong>Fecha de Emision:</strong> {cajDat}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>
@@ -719,7 +717,7 @@ const RecControl = (e) => {
                 <p><strong>Condición IVA:</strong> {userObj.coniva}</p>
               </div>
               <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {userObj.nameCus}</p>
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {userObj.nameEnc}</p>
                 <p><strong>Dirección:</strong> {userObj.domcomer}</p>
               </div>
           </div>
@@ -772,4 +770,4 @@ const RecControl = (e) => {
   );
 }
 
-export default AppRec;
+export default AppCajIng;

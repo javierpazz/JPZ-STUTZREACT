@@ -127,7 +127,8 @@ function AppBuy() {
   const [suppObj, setSuppObj] = useState({});
   const [remNum, setRemNum] = useState('');
   const [invNum, setInvNum] = useState('');
-  const [invDat, setInvDat] = useState('');
+  const today = new Date().toISOString().split("T")[0];
+  const [invDat, setInvDat] = useState(today);
   const [recNum, setRecNum] = useState('');
   const [recDat, setRecDat] = useState('');
   const [codVal, setCodVal] = useState('');
@@ -151,7 +152,7 @@ function AppBuy() {
   const [website, setWebsite] = useState('');
   const [clientName, setClientName] = useState('');
   const [clientAddress, setClientAddress] = useState('');
-  const [dueDat, setDueDat] = useState('');
+  const [dueDat, setDueDat] = useState(today);
   const [notes, setNotes] = useState('');
   const [desPro, setDesPro] = useState('');
   const [quantity, setQuantity] = useState('');
@@ -610,7 +611,7 @@ function AppBuy() {
   return (
     <>
       <Helmet>
-        <title>Buy Invoice</title>
+        <title>Factura de Compra</title>
       </Helmet>
 
       <main>

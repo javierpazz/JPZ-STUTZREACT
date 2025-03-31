@@ -111,7 +111,8 @@ function AppBuyRec() {
   const [invNum, setInvNum] = useState('');
   const [invDat, setInvDat] = useState('');
   const [recNum, setRecNum] = useState('');
-  const [recDat, setRecDat] = useState('');
+  const today = new Date().toISOString().split("T")[0];
+  const [recDat, setRecDat] = useState(today);
   const [codVal, setCodVal] = useState('');
   const [desval, setDesval] = useState('');
   const [receiptss, setReceiptss] = useState([]);
@@ -318,7 +319,8 @@ const submitHandlerSup = async (e) => {
       //
       //cr/
 
-      if (recNum && recDat && codSup) {
+      // if (recNum && recDat && codSup) {
+      if (recDat && codSup) {
         const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
         receipt.subTotal = round2(
           receipt.receiptItems.reduce((a, c) => a + c.amountval * 1, 0)
@@ -397,7 +399,7 @@ const submitHandlerSup = async (e) => {
   return (
     <>
       <Helmet>
-        <title>Receipt Buy Invoices</title>
+        <title>Orden de Pago</title>
       </Helmet>
 
       <main>
@@ -548,7 +550,6 @@ const submitHandlerSup = async (e) => {
                           onClick={placeCancelReceiptHandler}
                           disabled={
                             receiptItems.length === 0 ||
-                            !recNum ||
                             !recDat ||
                             !codSup
                           }
@@ -567,7 +568,6 @@ const submitHandlerSup = async (e) => {
                           onClick={placeReceiptHandler}
                           disabled={
                             receiptItems.length === 0 ||
-                            !recNum ||
                             !recDat ||
                             !codSup
                           }
@@ -699,8 +699,8 @@ const submitHandlerSup = async (e) => {
             <div className="col-md-6 ">
               <p><strong>FACTURA</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
-              <strong>     Comp. Nro:</strong> {invNum}</p>
-              <p><strong>Fecha de Emision:</strong> {invDat}</p>
+              <strong>     Comp. Nro:</strong> {recNum}</p>
+              <p><strong>Fecha de Emision:</strong> {recDat}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>
