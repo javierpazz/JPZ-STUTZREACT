@@ -76,6 +76,7 @@ export default function TableFormBuy({
     error: '',
   });
 
+  const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
   const input9Ref = useRef(null);
   const input10Ref = useRef(null);
   const input11Ref = useRef(null);
@@ -118,6 +119,11 @@ export default function TableFormBuy({
   };
 
   const addToCartHandler = async (itemInv) => {
+    quantity = round2(quantity);
+    amount = round2(amount);
+    price = round2(price);
+    porIva = round2(porIva);
+
     if (codPro && quantity > 0) {
       input8Ref.current.focus()
       ctxDispatch({
@@ -289,7 +295,7 @@ export default function TableFormBuy({
                       ref={input10Ref}
                       placeholder="Price"
                       value={price}
-                      onChange={(e) => setPrice(+e.target.value)}
+                      onChange={(e) => setPrice(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && input11Ref.current.focus()}
                       disabled={isPaying}
                       required
@@ -304,7 +310,7 @@ export default function TableFormBuy({
                 <Card.Title>
                   <Form.Group className="input">
                     <Form.Label>Amount</Form.Label>
-                    <p>{amount}</p>
+                    <p>{amount.toFixed(2)}</p>
                   </Form.Group>
                 </Card.Title>
               </Card.Body>

@@ -71,7 +71,7 @@ export default function TableFormRec({
     error: '',
   });
 
-
+  const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
   const input9Ref = useRef(null);
   const input10Ref = useRef(null);
   const input11Ref = useRef(null);
@@ -120,9 +120,11 @@ export default function TableFormRec({
   };
 
   const addToCartHandler = async (itemVal) => {
+    amountval = round2(amountval);
+
     if (codVal && amountval > 0) {
       setCodValo('');
-      setAmountval('');
+      setAmountval(0);
       setNumval('');
         input8Ref.current.focus()
       ctxDispatch({
@@ -147,7 +149,7 @@ export default function TableFormRec({
 
   const searchValuee = (codVal) => {
     const valueeR = valuees.find((row) => row._id === codVal);
-    setAmountval('');
+    setAmountval(0);
     setNumval('');
     setValueeR(valueeR);
     setCodVal(valueeR._id);
@@ -173,7 +175,7 @@ export default function TableFormRec({
         setCodValo('');
         setDesval('Elija un Valor');
       }else{
-        setAmountval('');
+        setAmountval(0);
         setNumval('');
         setValueeR(valueeR);
         setCodVal(valueeR._id);
@@ -274,7 +276,7 @@ export default function TableFormRec({
                       ref={input10Ref}
                       placeholder="Amount"
                       value={amountval}
-                      onChange={(e) => setAmountval(+e.target.value)}
+                      onChange={(e) => setAmountval(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && input11Ref.current.focus()}
                       required
                     />

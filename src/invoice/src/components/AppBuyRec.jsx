@@ -250,6 +250,7 @@ function AppBuyRec() {
   const ayudaSup = (e) => {
     e.key === "Enter" && buscarPorCodSup(codSupp);
     e.key === "F2" && handleShowSup(codSup);
+    e.key === "Tab" && buscarPorCodSup(codSupp);
   };
   
 

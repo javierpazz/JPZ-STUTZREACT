@@ -113,7 +113,7 @@ function AppRem() {
   const [invNum, setInvNum] = useState('');
   const [invDat, setInvDat] = useState('');
   const [recNum, setRecNum] = useState('');
-  const [recDat, setRecDat] = useState('');
+  const [recDat, setRecDat] = useState(today);
   const [codVal, setCodVal] = useState('');
   const [codval, setCodval] = useState('');
   const [desval, setDesval] = useState('');
@@ -138,7 +138,7 @@ function AppRem() {
   const [quantity, setQuantity] = useState(0);
   const [price, setPrice] = useState(0);
   const [porIva, setPorIva] = useState(0);
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState(0);
   const [amountval, setAmountval] = useState(0);
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(0);
@@ -245,6 +245,7 @@ function AppRem() {
   const ayudaCus = (e) => {
     e.key === "Enter" && buscarPorCodCus(codCust);
     e.key === "F2" && handleShowCus(codCus);
+    e.key === "Tab" && buscarPorCodCus(codCust);
   };
   
 
@@ -302,10 +303,11 @@ function AppRem() {
           //        invoice.subTotal > 100 ? round2(0) : round2(10);
           // invoice.tax = round2((poriva/100) * invoice.subTotal);
           invoice.tax = round2(
-            invoice.orderItems.reduce((a, c) => a + c.quantity * c.price * c.porIva, 0)
+            invoice.orderItems.reduce((a, c) => a + c.quantity * c.price * (c.porIva/100), 0)
           );
-          invoice.total =
-            invoice.subTotal + invoice.shippingPrice + invoice.tax;
+          invoice.total = round2(
+            invoice.subTotal + invoice.shippingPrice + invoice.tax
+          );
           invoice.totalBuy = 0;
           invoice.codCus = codCus;
           invoice.codCon = userInfo.codCon;
@@ -996,7 +998,7 @@ function AppRem() {
                       <td>{index + 1}</td>
                       <td>{item.title}</td>
                       <td className="text-end">{item.quantity}</td>
-                      <td className="text-end">${item.price.toFixed(2)}</td>
+                      <td className="text-end">${item.price}</td>
                       <td className="text-end">${(item.quantity * item.price).toFixed(2)}</td>
                       <td className="text-end">%{item.porIva}</td>
                       <td className="text-end">${(item.quantity * item.price*(1+(item.porIva/100))).toFixed(2)}</td>

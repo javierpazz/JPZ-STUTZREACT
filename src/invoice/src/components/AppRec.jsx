@@ -137,7 +137,7 @@ function AppRec() {
   const [desPro, setDesPro] = useState('');
   const [quantity, setQuantity] = useState(0);
   const [price, setPrice] = useState('');
-  const [amountval, setAmountval] = useState('');
+  const [amountval, setAmountval] = useState(0);
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(0);
   const [width] = useState(641);
@@ -241,6 +241,7 @@ useEffect(() => {
   const ayudaCus = (e) => {
     e.key === "Enter" && buscarPorCodCus(codCust);
     e.key === "F2" && handleShowCus(codCus);
+    e.key === "Tab" && buscarPorCodCus(codCust);
   };
  
 

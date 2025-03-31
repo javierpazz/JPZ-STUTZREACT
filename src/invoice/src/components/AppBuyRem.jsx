@@ -125,7 +125,7 @@ function AppBuyRem() {
   const [invNum, setInvNum] = useState('');
   const [invDat, setInvDat] = useState('');
   const [recNum, setRecNum] = useState('');
-  const [recDat, setRecDat] = useState('');
+  const [recDat, setRecDat] = useState(today);
   const [codVal, setCodVal] = useState('');
   const [desval, setDesval] = useState('');
   const [valueeR, setValueeR] = useState('');
@@ -152,7 +152,7 @@ function AppBuyRem() {
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
   const [porIva, setPorIva] = useState(0);
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState(0);
   const [amountval, setAmountval] = useState(0);
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(0);
@@ -272,6 +272,7 @@ function AppBuyRem() {
   const ayudaSup = (e) => {
     e.key === "Enter" && buscarPorCodSup(codSupp);
     e.key === "F2" && handleShowSup(codSup);
+    e.key === "Tab" && buscarPorCodSup(codSupp);
   };
 
   const buscarPorCodSup = (codSupp) => {
@@ -331,10 +332,11 @@ function AppBuyRem() {
         //        invoice.subTotal > 100 ? round2(0) : round2(10);
         // invoice.tax = round2((poriva/100) * invoice.subTotal);
         invoice.tax = round2(
-          invoice.orderItems.reduce((a, c) => a + c.quantity * c.price * c.porIva, 0)
+          invoice.orderItems.reduce((a, c) => a + c.quantity * c.price * (c.porIva/100), 0)
         );
-        invoice.totalBuy =
-          invoice.subTotal + invoice.shippingPrice + invoice.tax;
+        invoice.totalBuy = round2(
+          invoice.subTotal + invoice.shippingPrice + invoice.tax
+        );
         invoice.total = 0;
 
         invoice.codSup = codSup;

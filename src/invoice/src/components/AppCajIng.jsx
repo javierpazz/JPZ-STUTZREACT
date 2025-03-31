@@ -241,6 +241,7 @@ useEffect(() => {
   const ayudaEnc = (e) => {
     e.key === "Enter" && buscarPorCodEnc(codEncp);
     e.key === "F2" && handleShowEnc(codEnc);
+    e.key === "Tab" && buscarPorCodEnc(codEncp);
   };
   
 
@@ -692,7 +693,7 @@ const RecControl = (e) => {
         <div className="card-header bg-dark text-white text-center"></div>
         <div className="card-body">
           
-        <div className="text-black text-center">RECIBO</div>
+        <div className="text-black text-center">INGRESO DE CAJA</div>
           <div className="row">
             <div className="col-md-6">
               <p><strong>{userInfo.nameCon}</strong></p>
@@ -701,7 +702,7 @@ const RecControl = (e) => {
               <p><strong>Condición frente al IVA:</strong> {config.ivaCondition}</p>
             </div>
             <div className="col-md-6 ">
-              <p><strong>RECIBO</strong></p>
+              <p><strong>INGRESO DE CAJA</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
               <strong>     Comp. Nro:</strong> {cajNumImp}</p>
               <p><strong>Fecha de Emision:</strong> {cajDat}</p>
