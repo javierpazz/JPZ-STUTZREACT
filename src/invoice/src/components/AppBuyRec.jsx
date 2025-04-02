@@ -677,7 +677,7 @@ const submitHandlerSup = async (e) => {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
-            <Button onClick={() => clearitems()}>New Receipt</Button>
+            <Button onClick={() => clearitems()}>Nueva Orden</Button>
 
             {/* receipt Preview */}
 
@@ -698,7 +698,7 @@ const submitHandlerSup = async (e) => {
               <p><strong>Condición frente al IVA:</strong> {config.ivaCondition}</p>
             </div>
             <div className="col-md-6 ">
-              <p><strong>FACTURA</strong></p>
+              <p><strong>ORDEN DE PAGO</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
               <strong>     Comp. Nro:</strong> {recNum}</p>
               <p><strong>Fecha de Emision:</strong> {recDat}</p>
@@ -707,17 +707,16 @@ const submitHandlerSup = async (e) => {
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>
             </div>
           </div>
-                    {/* <hr />
+                    <hr />
             <div className="row">
               <div className="col-md-6">
-                <p><strong>CUIT:</strong> {userObj.cuit}</p>
-                <p><strong>Condición IVA:</strong> {userObj.coniva}</p>
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {name}</p>
               </div>
               <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {userObj.nameCus}</p>
-                <p><strong>Dirección:</strong> {userObj.domcomer}</p>
+                <p><strong>CUIT:</strong> </p>
+                <p><strong>Condición IVA:</strong> </p>
               </div>
-          </div> */}
+          </div>
 
 { true &&
           (

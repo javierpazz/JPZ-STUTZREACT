@@ -681,7 +681,7 @@ const RecControl = (e) => {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
-            <Button onClick={() => clearitems()}>New Receipt</Button>
+            <Button onClick={() => clearitems()}>Nuevo Ingreso de Caja</Button>
 
             {/* receipt Preview */}
 
@@ -711,15 +711,14 @@ const RecControl = (e) => {
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>
             </div>
           </div>
-                    <hr />
+            <hr />
             <div className="row">
               <div className="col-md-6">
-                <p><strong>CUIT:</strong> {userObj.cuit}</p>
-                <p><strong>Condición IVA:</strong> {userObj.coniva}</p>
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {name}</p>
               </div>
               <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {userObj.nameEnc}</p>
-                <p><strong>Dirección:</strong> {userObj.domcomer}</p>
+                <p><strong>CUIT:</strong> </p>
+                <p><strong>Condición IVA:</strong> </p>
               </div>
           </div>
 

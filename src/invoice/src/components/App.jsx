@@ -1097,7 +1097,7 @@ function App() {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
-            <Button onClick={() => clearitems()}>New Invoice</Button>
+            <Button onClick={() => clearitems()}>Nueva Factura</Button>
 
             {/* Invoice Preview */}
 
@@ -1118,7 +1118,7 @@ function App() {
               <p><strong>Condición frente al IVA:</strong> {config.ivaCondition}</p>
             </div>
             <div className="col-md-6 ">
-              <p><strong>FACTURA</strong></p>
+              <p><strong>{nameCom}</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
               <strong>     Comp. Nro:</strong> {invNumImp}</p>
               <p><strong>Fecha de Emision:</strong> {invDat}</p>

@@ -957,7 +957,7 @@ function AppBuyRem() {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
-            <Button onClick={() => clearitems()}>New Remit</Button>
+            <Button onClick={() => clearitems()}>Nuevo Remito</Button>
 
             {/* Invoice Preview */}
 
@@ -971,11 +971,16 @@ function AppBuyRem() {
           
         <div className="card-header text-black text-center">REMITO</div>
         <div className="row">
+            <div className="row">
               <div className="col-md-6">
-                <p><strong>Remito de:</strong> {suppObj.name}</p>
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {name}</p>
+              </div>
+              <div className="col-md-6">
+                <p><strong>CUIT:</strong> </p>
+                <p><strong>Condición IVA:</strong> </p>
               </div>
           </div>
-
+          </div>
                     <hr />
                     <div className="row">
             <div className="col-md-6">
@@ -985,7 +990,7 @@ function AppBuyRem() {
               <p><strong>Condición frente al IVA:</strong> {config.ivaCondition}</p>
             </div>
             <div className="col-md-6 ">
-              <p><strong>FACTURA</strong></p>
+              <p><strong>REMITO</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
               <strong>     Comp. Nro:</strong> {remNum}</p>
               <p><strong>Fecha de Emision:</strong> {remDat}</p>

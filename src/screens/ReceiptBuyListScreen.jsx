@@ -211,7 +211,8 @@ const prodeleteReceipt = (receipt) => {
               {receipts?.map((receipt) => (
                 <tr key={receipt._id}>
                   <td>{receipt.recNum}</td>
-                  <td>{receipt.recDat.substring(0, 10)}</td>
+                  {/* <td>{receipt.recDat.substring(0, 10)}</td> */}
+                  <td>{receipt.recDat ? receipt.recDat.substring(0, 10): ''}</td>
                   <td>
                     {receipt.supplier
                       ? receipt.supplier.name

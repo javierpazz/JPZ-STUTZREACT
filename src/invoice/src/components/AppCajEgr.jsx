@@ -681,7 +681,7 @@ const submitHandlerEnc = async (e) => {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
-            <Button onClick={() => clearitems()}>New Receipt</Button>
+            <Button onClick={() => clearitems()}>Nuevo Retiro de Caja</Button>
 
             {/* receipt Preview */}
 
@@ -693,7 +693,7 @@ const submitHandlerEnc = async (e) => {
         <div className="card-header bg-dark text-white text-center"></div>
         <div className="card-body">
           
-        <div className="text-black text-center">EGRESO DE CAJA</div>
+        <div className="text-black text-center">RETIRO DE CAJA</div>
           <div className="row">
             <div className="col-md-6">
               <p><strong>{userInfo.nameCon}</strong></p>
@@ -702,7 +702,7 @@ const submitHandlerEnc = async (e) => {
               <p><strong>Condición frente al IVA:</strong> {config.ivaCondition}</p>
             </div>
             <div className="col-md-6 ">
-              <p><strong>EGRESO DE CAJA</strong></p>
+              <p><strong>RETIRO DE CAJA</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
               <strong>     Comp. Nro:</strong> {cajNumImp}</p>
               <p><strong>Fecha de Emision:</strong> {cajDat}</p>
@@ -711,17 +711,16 @@ const submitHandlerEnc = async (e) => {
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>
             </div>
           </div>
-                    {/* <hr />
+          <hr />
             <div className="row">
               <div className="col-md-6">
-                <p><strong>CUIT:</strong> {userObj.cuit}</p>
-                <p><strong>Condición IVA:</strong> {userObj.coniva}</p>
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {name}</p>
               </div>
               <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {userObj.nameCus}</p>
-                <p><strong>Dirección:</strong> {userObj.domcomer}</p>
+                <p><strong>CUIT:</strong> </p>
+                <p><strong>Condición IVA:</strong> </p>
               </div>
-          </div> */}
+          </div>
 
 { true &&
           (

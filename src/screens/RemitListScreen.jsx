@@ -227,11 +227,11 @@ try {
   return (
     <div>
       <Helmet>
-        <title>Remitos de Ingreso</title>
+        <title>Remitos de Egresos</title>
       </Helmet>
       <Row>
         <Col>
-          <h1>Remitos de Ingreso</h1>
+          <h1>Remitos de Egresos</h1>
         </Col>
 
         <Col className="col text-end">

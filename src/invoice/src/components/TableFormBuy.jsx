@@ -414,7 +414,7 @@ export default function TableFormBuy({
                 <td>{itemInv.title}</td>
                 <td>{itemInv.quantity}</td>
                 <td>{itemInv.price}</td>
-                <td className="amount">{itemInv.quantity * itemInv.price}</td>
+                <td className="amount">{(itemInv.quantity * itemInv.price).toFixed(2)}</td>
                 <td>
                   <Button
                     className="mt-0 mb-0 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"

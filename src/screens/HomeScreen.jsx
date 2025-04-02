@@ -29,7 +29,11 @@ function HomeScreen() {
     loading: true,
     error: '',
   });
+{/* /////////////////  borrar ecomerce  ////////////////////// */}
   // const [products, setProducts] = useState([]);
+{/* /////////////////  borrar ecomerce  ////////////////////// */}
+
+
   // useEffect(() => {
   //   const fetchData = async () => {
   //     dispatch({ type: 'FETCH_REQUEST' });
@@ -44,13 +48,16 @@ function HomeScreen() {
   //   };
   //   fetchData();
   // }, []);
+
+
   return (
     <div>
       <Helmet>
         <title>Invoicer</title>
       </Helmet>
-      {/* <h1>Featured Products</h1> */}
-      {/* <div className="products">
+{/* /////////////////  borrar ecomerce  ////////////////////// */}
+      {/* <h1>Featured Products</h1>
+      <div className="products">
         {loading ? (
           <LoadingBox />
         ) : error ? (
@@ -72,7 +79,8 @@ function HomeScreen() {
           </Row>
         )}
       </div> */}
-    </div>
+{/* /////////////////  borrar ecomerce  ////////////////////// */}
+</div>
   );
 }
 export default HomeScreen;

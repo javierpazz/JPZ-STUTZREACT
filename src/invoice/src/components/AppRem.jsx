@@ -934,7 +934,7 @@ function AppRem() {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
-            <Button onClick={() => clearitems()}>New Remit</Button>
+            <Button onClick={() => clearitems()}>Nuev Remito</Button>
 
             {/* Invoice Preview */}
 
@@ -955,7 +955,7 @@ function AppRem() {
               <p><strong>Condición frente al IVA:</strong> {config.ivaCondition}</p>
             </div>
             <div className="col-md-6 ">
-              <p><strong>FACTURA</strong></p>
+              <p><strong>REMITO</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
               <strong>     Comp. Nro:</strong> {remNumImp}</p>
               <p><strong>Fecha de Emision:</strong> {remDat}</p>

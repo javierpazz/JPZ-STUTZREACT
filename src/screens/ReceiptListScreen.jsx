@@ -208,7 +208,8 @@ const prodeleteReceipt = (receipt) => {
               {receipts?.map((receipt) => (
                 <tr key={receipt._id}>
                   <td>{receipt.recNum}</td>
-                  <td>{receipt.recDat.substring(0, 10)}</td>
+                  {/* <td>{receipt.recDat.substring(0, 10)}</td> */}
+                  <td>{receipt.recDat ? receipt.recDat.substring(0, 10): ''}</td>
                   <td>{receipt.id_client ? receipt.id_client.nameCus : 'DELETED CLIENT'}</td>
                   <td>{receipt.desval}</td>
                   <td>{receipt.total.toFixed(2)}</td>

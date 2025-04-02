@@ -122,6 +122,9 @@ export default function InvoiceListScreen() {
     setInvoice(invoice);
     setShow(true);
   };
+  const handleConsulta = (invoiceId) => {
+    navigate(`/admin/invoicerCon/${invoiceId}`);
+  };
 
 //do
 const controlStockHandler = async (invoice) => {
@@ -301,11 +304,19 @@ try {
                     &nbsp;
                     <Button
                       type="button"
+                      title="Consulta Factura"
+                      onClick={() => handleConsulta(invoice._id)}
+                    >
+                      <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
+                    </Button>
+                    {/* &nbsp;
+                    <Button
+                      type="button"
                       title="Add or Change Invoice or Remit Number"
                       onClick={() => handleShow(invoice)}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
-                    </Button>
+                    </Button> */}
                     &nbsp;
                     <Button
                       type="button"

@@ -60,6 +60,7 @@ import ConfigurationEditScreen from './screens/ConfigurationEditScreen';
 import ComprobanteListScreen from './screens/ComprobanteListScreen';
 import ComprobanteEditScreen from './screens/ComprobanteEditScreen';
 import InvoicesOrd from './invoice/src/InvoicesOrd';
+import InvoicesCon from './invoice/src/InvoicesCon';
 import Invoices from './invoice/src/Invoices';
 import Remits from './invoice/src/Remits';
 import InvoicesRec from './invoice/src/InvoicesRec';
@@ -119,12 +120,14 @@ function App() {
         <header>
           <Navbar bg="dark" variant="dark" expand="lg">
             <Container>
+{/* /////////////////  borrar ecomerce  ////////////////////// */}
               {/* <Button
                 variant="dark"
                 onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
               >
                 <i className="fas fa-bars"></i>
               </Button> */}
+{/* /////////////////  borrar ecomerce  ////////////////////// */}
 
               <LinkContainer to="/salepoint">
                 <Navbar.Brand>Punto.: {userInfo && userInfo.salePoint || ""}</Navbar.Brand>
@@ -137,8 +140,11 @@ function App() {
               </LinkContainer>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
+{/* /////////////////  borrar ecomerce  ////////////////////// */}
                 {/* <SearchBox /> */}
+{/* /////////////////  borrar ecomerce  ////////////////////// */}
                 <Nav className="me-auto  w-100  justify-content-end">
+{/* /////////////////  borrar ecomerce  ////////////////////// */}
                   {/* <Link to="/cart" className="nav-link">
                     Cart
                     {cart.cartItems.length > 0 && (
@@ -146,8 +152,8 @@ function App() {
                         {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
                       </Badge>
                     )}
-                  </Link> */}
-                  {/* {userInfo ? (
+                  </Link>
+                  {userInfo ? (
                     <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
                       <LinkContainer to="/profile">
                         <NavDropdown.Item>User Profile</NavDropdown.Item>
@@ -172,6 +178,7 @@ function App() {
                       Sign In
                     </Link>
                   )} */}
+{/* /////////////////  borrar ecomerce  ////////////////////// */}
                   {/* {userInfo && userInfo.role=="admin" && ( */}
                   {userInfo && (
                     <NavDropdown title="Ventas" id="sales-nav-dropdown">
@@ -185,9 +192,9 @@ function App() {
                       <LinkContainer to="/admin/remits">
                         <NavDropdown.Item>Remitos de Egresos</NavDropdown.Item>
                       </LinkContainer>
-                      {/* <LinkContainer to="/admin/orders">
+                      <LinkContainer to="/admin/orders">
                         <NavDropdown.Item>Ordenes de Comprars</NavDropdown.Item>
-                      </LinkContainer> */}
+                      </LinkContainer>
                       {/* <LinkContainer to="/admin/stateOrds">
                         <NavDropdown.Item>States Order</NavDropdown.Item>
                       </LinkContainer> */}
@@ -318,6 +325,7 @@ function App() {
             <Nav.Item>
               <strong>Categories</strong>
             </Nav.Item>
+{/* /////////////////  borrar ecomerce  ////////////////////// */}
             {/* {categories.map((type) => (
               <Nav.Item key={type}>
                 <LinkContainer
@@ -328,7 +336,8 @@ function App() {
                 </LinkContainer>
               </Nav.Item>
             ))} */}
-          </Nav>
+{/* /////////////////  borrar ecomerce  ////////////////////// */}
+</Nav>
         </div>
         <main>
           <Container className="mt-3">
@@ -591,6 +600,14 @@ function App() {
                 element={
                   <AdminRoute>
                     <InvoicesOrd />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/invoicerCon/:id"
+                element={
+                  <AdminRoute>
+                    <InvoicesCon />
                   </AdminRoute>
                 }
               ></Route>

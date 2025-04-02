@@ -695,7 +695,7 @@ const RecControl = (e) => {
                 trigger={() => <Button type="button">Print / Download</Button>}
                 content={() => componentRef.current}
               />
-              <Button onClick={() => clearitems()}>New Invoice</Button>
+              <Button onClick={() => clearitems()}>Nueva Factura</Button>
 
               {/* Invoice Preview */}
 

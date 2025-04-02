@@ -683,7 +683,7 @@ const RecControl = (e) => {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
-            <Button onClick={() => clearitems()}>New Receipt</Button>
+            <Button onClick={() => clearitems()}>Nuevo Recibo</Button>
 
             {/* receipt Preview */}
 
