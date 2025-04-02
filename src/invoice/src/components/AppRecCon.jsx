@@ -7,9 +7,9 @@ import Footer from './Footer';
 import Header from './Header';
 import MainDetails from './MainDetails';
 import Notes from './Notes';
-import Table from './Table';
+import TableRec from './TableRec';
 import { toast } from 'react-toastify';
-import TableForm from './TableForm';
+import TableFormRec from './TableFormRec';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
@@ -26,37 +26,39 @@ import { getError, API } from '../../../utils';
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'FETCH_REQUEST':
-      return { ...state, loading: true };
-    case 'FETCH_SUCCESS':
-      return {
-        ...state,
-        products: action.payload.products,
-        page: action.payload.page,
-        pages: action.payload.pages,
-        loading: false,
-      };
-    case 'FETCH_FAIL':
-      return { ...state, loading: false, error: action.payload };
-
     case 'VALUE_FETCH_REQUEST':
-      return { ...state, loadingVal: true };
+      return { ...state, loading: true };
     case 'VALUE_FETCH_SUCCESS':
       return {
         ...state,
         values: action.payload.values,
         pageVal: action.payload.page,
         pagesVal: action.payload.pages,
-        loadingVal: false,
+        loading: false,
       };
     case 'VALUE_FETCH_FAIL':
-      return { ...state, loadingVal: false, error: action.payload };
-    default:
+      return { ...state, loading: false, error: action.payload };
+//cr/
+//
+case 'TOTAL_FETCH_REC_REQUEST':
+  return { ...state, loading: true };
+case 'TOTAL_FETCH_REC_SUCCESS':
+  return {
+    ...state,
+    receiptss: action.payload,
+    loading: false,
+  };
+case 'TOTAL_FETCH_REC_FAIL':
+  return { ...state, loading: false, error: action.payload };
+
+//
+//cr/
+      default:
       return state;
   }
 };
 
-function AppRem() {
+function AppRec() {
   const [
     {
       loading,
@@ -78,12 +80,10 @@ function AppRem() {
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const {
-    invoice: { orderItems },
     receipt: { receiptItems },
   } = state;
 
-  const { invoice, receipt, userInfo, values } = state;
-
+  const { receipt, userInfo, values } = state;
   const input1Ref = useRef(null);
   const input2Ref = useRef(null);
   const input3Ref = useRef(null);
@@ -92,13 +92,16 @@ function AppRem() {
   const input6Ref = useRef(null);
   const input7Ref = useRef(null);
   const input8Ref = useRef(null);
-  const input9Ref = useRef(null);
   const input0Ref = useRef(null);
 
+  
   const input20Ref = useRef(null);
   const input21Ref = useRef(null);
 
+  // const [poriva, setPorIva] = useState(userInfo.configurationObj.poriva);
+  const [poriva, setPorIva] = useState(21);
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
+
   const [showCus, setShowCus] = useState(false);
 
   // const [codUse, setCodUse] = useState('');
@@ -107,23 +110,20 @@ function AppRem() {
   const [name, setName] = useState('');
   const [userObj, setUserObj] = useState({});
   const [remNum, setRemNum] = useState('');
-  const [remNumImp, setRemNumImp] = useState('');
-  const today = new Date().toISOString().split("T")[0];
-  const [remDat, setRemDat] = useState(today);
   const [invNum, setInvNum] = useState('');
   const [invDat, setInvDat] = useState('');
   const [recNum, setRecNum] = useState('');
+  const [recNumImp, setRecNumImp] = useState('');
+  const today = new Date().toISOString().split("T")[0];
   const [recDat, setRecDat] = useState(today);
   const [codVal, setCodVal] = useState('');
-  const [codval, setCodval] = useState('');
   const [desval, setDesval] = useState('');
-  const [valueeR, setValueeR] = useState('');
-  const [desVal, setDesVal] = useState('');
-  const [numval, setNumval] = useState(' ');
+  const [receiptss, setReceiptss] = useState([]);
   // const [userss, setUserss] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [valuess, setValuess] = useState([]);
   const [codPro, setCodPro] = useState('');
+  const [codPro1, setCodPro1] = useState('');
   const [address, setAddress] = useState('Direccion Usuario');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -132,20 +132,17 @@ function AppRem() {
   const [website, setWebsite] = useState('');
   const [clientName, setClientName] = useState('');
   const [clientAddress, setClientAddress] = useState('');
-  const [dueDat, setDueDat] = useState(today);
+  const [dueDat, setDueDat] = useState('');
   const [notes, setNotes] = useState('');
   const [desPro, setDesPro] = useState('');
   const [quantity, setQuantity] = useState(0);
-  const [price, setPrice] = useState(0);
-  const [porIva, setPorIva] = useState(0);
-  const [amount, setAmount] = useState(0);
+  const [price, setPrice] = useState('');
   const [amountval, setAmountval] = useState(0);
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(0);
   const [width] = useState(641);
-  const [showInvoice, setShowInvoice] = useState(false);
+  const [showReceipt, setShowReceipt] = useState(false);
 
-  const [isPaying, setIsPaying] = useState(false);
 
   const config = {
     salePoint: userInfo.configurationObj.codCon,
@@ -166,20 +163,27 @@ function AppRem() {
     window.print();
   };
 
-  useEffect(() => {
-    const calculateAmountval = (amountval) => {
-      setAmountval(
-        orderItems?.reduce((a, c) => a + (c.quantity * c.price * (1+(c.porIva/100))), 0)
-      );
-    };
-    if (numval === '') {
-      setNumval(' ');
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      dispatch({ type: 'TOTAL_FETCH_REC_REQUEST' });
+      const { data } = await axios.get(`${API}/api/receipts/S`, {
+        headers: { Authorization: `Bearer ${userInfo.token}` },
+      });
+      dispatch({ type: 'TOTAL_FETCH_REC_SUCCESS', payload: data });
+      setReceiptss(data);
+    } catch (err) {
+      dispatch({
+        type: 'TOTAL_FETCH_REC_FAIL',
+        payload: getError(err),
+      });
     }
-    setCodCus(codCus);
-    setDesVal(desVal);
-    calculateAmountval(amountval);
-    addToCartHandler(valueeR);
-  }, [orderItems, numval, desval, recNum, recDat]);
+  };
+  fetchData();
+}, []);
+//
+//cr/
+
 
   useEffect(() => {
     clearitems();
@@ -216,16 +220,9 @@ function AppRem() {
   }, [width]);
 
   const getTotal = () => {
-    return orderItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
+    return receiptItems.reduce((acc, item) => acc + item.amountval, 0);
   };
 
-  const getIVA = () => {
-    return orderItems.reduce((acc, item) => acc + (item.quantity * item.price * item.porIva) / 100, 0).toFixed(2);
-  };
-
-  const getTotalWithIVA = () => {
-    return (parseFloat(getTotal()) + parseFloat(getIVA())).toFixed(2);
-  };
 
   const handleShowCus = () => {
     setShowCus(true);
@@ -234,24 +231,25 @@ function AppRem() {
 
 
   const searchUser = (codCus) => {
-    const usersRow = customers.find((row) => row._id === codCus);
-    setUserObj(usersRow);
-    setCodCus(usersRow._id);
-    setCodCust(usersRow.codCus);
-    setName(usersRow.nameCus);
+    const customersRow = customers.find((row) => row._id === codCus);
+    setCodCus(customersRow._id);
+    setCodCust(customersRow.codCus);
+    setName(customersRow.nameCus);
   };
 
-  
+    
   const ayudaCus = (e) => {
     e.key === "Enter" && buscarPorCodCus(codCust);
     e.key === "F2" && handleShowCus(codCus);
     e.key === "Tab" && buscarPorCodCus(codCust);
   };
-  
+ 
+
 
   const buscarPorCodCus = (codCust) => {
     const usersRow = customers.find((row) => row.codCus === codCust);
     if (!usersRow) {
+        setUserObj({});
         setCodCus('');
         setCodCust('');
         setName('Elija Cliente');
@@ -260,108 +258,95 @@ function AppRem() {
       setCodCust(usersRow.codCust);
       setUserObj(usersRow);
       setName(usersRow.nameCus);
-      input6Ref.current.focus();
+      input3Ref.current.focus();
       };
   };
+
+
+//cr/
+//
+const RecControl = (e) => {
+  // const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum));
+  // if (oldRecipt.length > 0) {
+  if (false) {
+      toast.error(`This N° ${(recNum)} Receipt Exist, use other Number Please!`);
+      setRecNum(e.target.value)
+    } else {
+      setRecNum(e.target.value)}
+    }
+
+//
+//cr/
+
 
   const handleChange = (e) => {
     searchUser(e.target.value);
   };
+
   const submitHandlerCus = async (e) => {
     e.preventDefault();
     setShowCus(false)
   };
 
-
   const searchValue = (codVal) => {
     const valuesRow = valuess.find((row) => row._id === codVal);
-    setValueeR(valuesRow);
     setCodVal(valuesRow.codVal);
-    setDesVal(valuesRow.desVal);
+    setDesval(valuesRow.desVal);
   };
 
   const handleValueChange = (e) => {
     searchValue(e.target.value);
   };
 
-  const placeCancelInvoiceHandler = async () => {};
+  const placeCancelReceiptHandler = async () => {};
 
-  const placeInvoiceHandler = async () => {
-      if (window.confirm('Esta seguro de Grabar?')) {
-      if (isPaying && (!recNum || !recDat || !desVal)) {
-        unloadpayment();
+  const placeReceiptHandler = async () => {
+//cr/
+//
+// const oldRecipt = receiptss.filter((row) => row.recNum === recNum && row.user._id === codCus );
+  if (window.confirm('Esta seguro de Grabar?')) {
+  // if (oldRecipt.length > 0) {
+  if (false) {
+      toast.error(`This N° ${(recNum)} Receipt Exist, use other Number Please!`);
+      return;
       } else {
-        if (remDat && codCus) {
-          orderItems.map((item) => stockHandler({ item }));
-          const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
-          invoice.subTotal = round2(
-            invoice.orderItems.reduce((a, c) => a + c.quantity * c.price, 0)
-          );
-          invoice.shippingPrice = 0;
 
-          //        invoice.shippingPrice =
-          //        invoice.subTotal > 100 ? round2(0) : round2(10);
-          // invoice.tax = round2((poriva/100) * invoice.subTotal);
-          invoice.tax = round2(
-            invoice.orderItems.reduce((a, c) => a + c.quantity * c.price * (c.porIva/100), 0)
-          );
-          invoice.total = round2(
-            invoice.subTotal + invoice.shippingPrice + invoice.tax
-          );
-          invoice.totalBuy = 0;
-          invoice.codCus = codCus;
-          invoice.codCon = userInfo.codCon;
-          invoice.codConNum = codConNum;
+  //
+  //cr/
 
-          invoice.codSup = '0';
-          invoice.remNum = remNum;
-          invoice.remDat = remDat;
-          invoice.invNum = 0 ;
-          invoice.invDat = invDat;
-          invoice.recNum = recNum;
-          invoice.recDat = recDat;
-          invoice.desVal = desVal;
-          invoice.notes = notes;
 
-          if (recNum && recDat && desVal) {
-            receipt.subTotal = invoice.subTotal;
-            receipt.total = invoice.total;
-            receipt.totalBuy = invoice.totalBuy;
-            receipt.codCus = invoice.codCus;
-            receipt.codCon = invoice.codCon;
-            receipt.codConNum = invoice.codConNum;
-            receipt.codSup = '0';
-            receipt.recNum = invoice.recNum;
-            receipt.recDat = invoice.recDat;
-            receipt.desVal = invoice.desVal;
-            receipt.notes = invoice.notes;
+      if (recDat && codCus) {
+        const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
+        receipt.subTotal = round2(
+          receipt.receiptItems.reduce((a, c) => a + c.amountval * 1, 0)
+        );
+        receipt.shippingPrice = receipt.subTotal > 100 ? round2(0) : round2(10);
+        receipt.tax = round2(0.15 * 0);
+        receipt.total = receipt.subTotal;
+        receipt.totalBuy = 0;
+        receipt.codCus = codCus;
+        receipt.codCon = userInfo.codCon;
+        receipt.codConNum = codConNum;
+        receipt.codSup = 0;
+        receipt.remNum = remNum;
+        receipt.invNum = invNum;
+        receipt.invDat = invDat;
+        receipt.recNum = recNum;
+        receipt.recDat = recDat;
+        receipt.desval = desval;
+        receipt.notes = notes;
 
-            receiptHandler();
-          }
-          orderHandler();
-          setShowInvoice(true);
-          //      handlePrint();
-        }
+        orderHandler();
+        setShowReceipt(true);
+        //      handlePrint();
       }
+    }
     };
   };
 
   /////////////////////////////////////////////
 
-  const addToCartHandler = async (itemVal) => {
-    ctxDispatch({
-      type: 'RECEIPT_CLEAR',
-    });
-    localStorage.removeItem('receiptItems');
-    ctxDispatch({
-      type: 'RECEIPT_ADD_ITEM',
-      payload: { ...itemVal, desval, amountval, numval },
-    });
-  };
-
-  /////////////////////////////////////////////
-
-  const receiptHandler = async () => {
+  const orderHandler = async () => {
     try {
       dispatch({ type: 'CREATE_REQUEST' });
       const { data } = await axios.post(
@@ -380,7 +365,7 @@ function AppRem() {
           codCon: receipt.codCon,
           codConNum: receipt.codConNum,
 
-          //          codSup: receipt.codSup,
+          //          supplier: receipt.codSup,
 
           remNum: receipt.remNum,
           invNum: receipt.invNum,
@@ -397,137 +382,40 @@ function AppRem() {
           },
         }
       );
-      ctxDispatch({ type: 'RECEIPT_CLEAR' });
-      dispatch({ type: 'CREATE_SUCCESS' });
-      localStorage.removeItem('receiptItems');
+      //      ctxDispatch({ type: 'RECEIPT_CLEAR' });
+      //    dispatch({ type: 'CREATE_SUCCESS' });
+      //  localStorage.removeItem('receiptItems');
       //navigate(`/order/${data.order._id}`);
+      setRecNumImp(data.receipt.recNum);
     } catch (err) {
       dispatch({ type: 'CREATE_FAIL' });
       toast.error(getError(err));
-    }
-  };
-
-  /////////////////////////////////////////////
-
-  const stockHandler = async (item) => {
-    // console.log(item.item._id);
-
-    try {
-      dispatch({ type: 'CREATE_REQUEST' });
-      await axios.put(
-        `${API}/api/products/downstock/${item.item._id}`,
-        {
-          quantitys: item.item.quantity,
-        },
-        {
-          headers: {
-            authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
-      dispatch({ type: 'CREATE_SUCCESS' });
-    } catch (err) {
-      dispatch({ type: 'CREATE_FAIL' });
-      toast.error(getError(err));
-    }
-  };
-
-  const orderHandler = async () => {
-    try {
-      dispatch({ type: 'CREATE_REQUEST' });
-      const { data } = await axios.post(
-        `${API}/api/invoices/rem`,
-
-        {
-          orderItems: invoice.orderItems,
-          shippingAddress: invoice.shippingAddress,
-          paymentMethod: invoice.paymentMethod,
-          subTotal: invoice.subTotal,
-          shippingPrice: invoice.shippingPrice,
-          tax: invoice.tax,
-          total: invoice.total,
-          totalBuy: invoice.totalBuy,
-
-          codCus: invoice.codCus,
-          codCon: invoice.codCon,
-          codConNum: invoice.codConNum,
-
-          //        codSup: invoice.codSup,
-
-          remNum: invoice.remNum,
-          remDat: invoice.remDat,
-          invNum: invoice.invNum,
-          invDat: invoice.invDat,
-          recNum: invoice.recNum,
-          recDat: invoice.recDat,
-          desVal: invoice.desVal,
-          notes: invoice.notes,
-          salbuy: 'SALE',
-        },
-        {
-          headers: {
-            authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
-      //ctxDispatch({ type: 'INVOICE_CLEAR' });
-      //      dispatch({ type: 'CREATE_SUCCESS' });
-      //      localStorage.removeItem('orderItems');
-      setIsPaying(false);
-      setDesval('');
-      setDesVal('');
-      setRemNumImp(data.invoice.remNum);
-      setRecNum('');
-      setRecDat('');
-      setNumval(' ');
-      setAmountval(0);
-      //navigate(`/order/${data.order._id}`);
-    } catch (err) {
-      dispatch({ type: 'CREATE_FAIL' });
-      toast.error(getError(err));
-    }
-  };
-
-  /////////////////////////////////////////////
-  const Paying = () => {
-    setIsPaying(!isPaying);
-    if (isPaying) {
-      setDesval('');
-      setDesVal('');
-      setRecNum('');
-      setRecDat('');
-      setNumval(' ');
-      setAmountval(0);
-    }
-  };
-
-  const unloadpayment = async () => {
-    if (window.confirm('Are you fill all Dates?')) {
     }
   };
 
   const clearitems = () => {
-    ctxDispatch({ type: 'INVOICE_CLEAR' });
+    ctxDispatch({ type: 'RECEIPT_CLEAR' });
     dispatch({ type: 'CREATE_SUCCESS' });
-    localStorage.removeItem('orderItems');
     localStorage.removeItem('receiptItems');
-    setShowInvoice(false);
+    setShowReceipt(false);
   };
+
+  /////////////////////////////////////////////
 
   return (
     <>
       <Helmet>
-        <title>Remitos de Egreso</title>
+        <title>Recibos</title>
       </Helmet>
 
       <main>
-        {!showInvoice ? (
+        {!showReceipt ? (
           <>
-            {/* name, address, email, phone, bank name, bank account number, website client name, client address, invoice number, invoice date, due date, notes */}
+            {/* name, address, email, phone, bank name, bank account number, website client name, client address, receipt number, receipt date, due date, notes */}
             <div>
               <div className="bordeTable">
               <Row>
-                  <Col md={4}>
+                  <Col md={5}>
                     <Card.Body>
                       <Card.Title>
                       <ListGroup.Item>
@@ -540,12 +428,12 @@ function AppRem() {
                     </Card.Body>
                   </Col>
 
-                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                  <Col md={7} className="mt-1 text-black py-1 px-1 rounded ">
                       <Card.Body>
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              REMITO DE EGRESO
+                              RECIBO
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -554,8 +442,7 @@ function AppRem() {
 
 
                 </Row>
-
-              <Row>
+                <Row>
                   <Col md={2}>
                     <Card.Body>
                       <Card.Title>
@@ -601,37 +488,37 @@ function AppRem() {
                 </Row>
 
                 <Row>
-                <Col md={1}>
+                  <Col md={2}>
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Remit N°</Form.Label>
+                          <Form.Label>Receipt Number</Form.Label>
                           <Form.Control
                             className="input"
-                            ref={input6Ref}
-                            placeholder="Remit N°"
-                            value={remNum}
-                            onChange={(e) => setRemNum(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && input9Ref.current.focus()}
+                            ref={input3Ref}
+                            placeholder="Receipt Number"
+                            value={recNum}
+                            onChange={(e) => RecControl(e)}
+                            onKeyDown={(e) => e.key === "Enter" && input4Ref.current.focus()}
+                            // onChange={(e) => setRecNum(e.target.value)}
                             required
                           />
                         </Form.Group>
                       </Card.Title>
                     </Card.Body>
                   </Col>
-
                   <Col md={2}>
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Remit Date</Form.Label>
+                          <Form.Label>Receipt Date</Form.Label>
                           <Form.Control
                             className="input"
-                            ref={input9Ref}
+                            ref={input4Ref}
                             type="date"
-                            placeholder="Remit Date"
-                            value={remDat}
-                            onChange={(e) => setRemDat(e.target.value)}
+                            placeholder="Receipt Date"
+                            value={recDat}
+                            onChange={(e) => setRecDat(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
                             required
                           />
@@ -639,33 +526,14 @@ function AppRem() {
                       </Card.Title>
                     </Card.Body>
                   </Col>
-                  <Col md={2}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Due Date</Form.Label>
-                          <Form.Control
-                            className="input"
-                            ref={input5Ref}
-                            type="date"
-                            placeholder="Due Date"
-                            value={dueDat}
-                            onChange={(e) => setDueDat(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && input7Ref.current.focus()}
-                            required
-                          />
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-                  <Col md={6}>
+                  <Col md={8}>
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
                           <Form.Label>Additional Notes</Form.Label>
                           <textarea
                             className="input"
-                            ref={input7Ref}
+                            ref={input5Ref}
                             placeholder="Additional notes to the client"
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
@@ -676,117 +544,6 @@ function AppRem() {
                     </Card.Body>
                   </Col>
                 </Row>
-
-                <div className="bordeTable">
-                  <Row>
-                    <Col md={2}>
-                      <Card.Body>
-                        <Card.Title>
-                          <Form.Group className="input" controlId="name">
-                            <Form.Label>Values</Form.Label>
-                            <Form.Select
-                              className="input"
-                              onClick={(e) => handleValueChange(e)}
-                              disabled={!isPaying}
-                            >
-                              {valuess.map((elementoV) => (
-                                <option
-                                  key={elementoV._id}
-                                  value={elementoV._id}
-                                >
-                                  {elementoV.desVal}
-                                </option>
-                              ))}
-                            </Form.Select>
-                          </Form.Group>
-                        </Card.Title>
-                      </Card.Body>
-                    </Col>
-
-                    <Col md={2}>
-                      <Card.Body>
-                        <Card.Title>
-                          <Form.Group className="input" controlId="name">
-                            <Form.Label>Value N°</Form.Label>
-                            <Form.Control
-                              className="input"
-                              placeholder="Value N°"
-                              value={numval}
-                              onChange={(e) => setNumval(e.target.value)}
-                              disabled={!isPaying}
-                              required
-                            />
-                          </Form.Group>
-                        </Card.Title>
-                      </Card.Body>
-                    </Col>
-                    <Col md={3}>
-                      <Card.Body>
-                        <Card.Title>
-                          <Form.Group className="input" controlId="name">
-                            <Form.Label>Receipt Date</Form.Label>
-                            <Form.Control
-                              className="input"
-                              type="date"
-                              placeholder="Receipt Date"
-                              value={recDat}
-                              onChange={(e) => setRecDat(e.target.value)}
-                              disabled={!isPaying}
-                              required
-                            />
-                          </Form.Group>
-                        </Card.Title>
-                      </Card.Body>
-                    </Col>
-
-                    <Col md={2}>
-                      <Card.Body>
-                        <Card.Title>
-                          <Form.Group className="input" controlId="name">
-                            <Form.Label>Receipt N°</Form.Label>
-                            <Form.Control
-                              className="input"
-                              placeholder="Receipt N°"
-                              value={recNum}
-                              onChange={(e) => setRecNum(e.target.value)}
-                              disabled={!isPaying}
-                              required
-                            />
-                          </Form.Group>
-                        </Card.Title>
-                      </Card.Body>
-                    </Col>
-                    <Col md={2}>
-                      <div className="d-grid">
-                        <Button
-                          type="button"
-                          onClick={Paying}
-                          className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
-                          disabled={
-                            orderItems.length === 0 ||
-                            !remNum ||
-                            !remDat ||
-                            !codCus
-                          }
-                        >
-                          {isPaying ? 'Not Payment' : 'Load Payment'}
-                        </Button>
-                      </div>
-                      {loading && <LoadingBox></LoadingBox>}
-                    </Col>
-                    <Col md={1}>
-                      <div
-                        className="d-grid mt-3 mb-1 py-1 px-1 transition-all
-                        duration-300"
-                      >
-                        {isPaying && desval && recNum && recDat
-                          ? 'Loaded'
-                          : 'Not Loaded '}
-                      </div>
-                      {loading && <LoadingBox></LoadingBox>}
-                    </Col>
-                  </Row>
-                </div>
               </div>
               <div className="bordeTable">
                 <div className="bordeTableinput">
@@ -795,13 +552,13 @@ function AppRem() {
                       <div className="d-grid">
                         <Button
                           type="button"
-                          onClick={placeCancelInvoiceHandler}
+                          onClick={placeCancelReceiptHandler}
                           disabled={
-                            orderItems.length === 0 ||
-                            !remDat ||
+                            receiptItems.length === 0 ||
+                            !recDat ||
                             !codCus
                           }
-                        >
+                          >
                           CANCELA
                         </Button>
                       </div>
@@ -813,14 +570,14 @@ function AppRem() {
                         <Button
                           type="button"
                           ref={input0Ref}
-                          onClick={placeInvoiceHandler}
+                          onClick={placeReceiptHandler}
                           disabled={
-                            orderItems.length === 0 ||
-                            !remDat ||
+                            receiptItems.length === 0 ||
+                            !recDat ||
                             !codCus
                           }
-                        >
-                          GRABA REMITO
+                          >
+                          GRABA RECIBO
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -832,7 +589,10 @@ function AppRem() {
                           <ListGroup.Item>
                             <h3>
                               Total: $
-                              {amountval.toFixed(2)}
+                              {(receiptItems.reduce(
+                                (a, c) => a + c.amountval * 1,
+                                0
+                              )).toFixed(2)}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -843,35 +603,25 @@ function AppRem() {
 
                 {/* This is our table form */}
                 <article>
-                  <TableForm
+                  <TableFormRec
                     input0Ref={input0Ref}
                     input8Ref={input8Ref}
-                    codPro={codPro}
-                    setCodPro={setCodPro}
-                    desPro={desPro}
-                    setDesPro={setDesPro}
+                    codVal={codVal}
+                    setCodVal={setCodVal}
+                    desval={desval}
+                    setDesval={setDesval}
                     quantity={quantity}
                     setQuantity={setQuantity}
                     price={price}
                     setPrice={setPrice}
-                    porIva={porIva}
-                    setPorIva={setPorIva}
-                    amount={amount}
-                    setAmount={setAmount}
+                    amountval={amountval}
+                    setAmountval={setAmountval}
                     list={list}
                     setList={setList}
                     total={total}
                     setTotal={setTotal}
-                    valueeR={valueeR}
-                    desval={desval}
-                    numval={numval}
-                    isPaying={isPaying}
-                    //                    totInvwithTax={totInvwithTax}
-                    //                    setTotInvwithTax={setTotInvwithTax}
                   />
                 </article>
-
-
                 <Modal
                   // input21Ref={input21Ref}
                   size="md"
@@ -924,7 +674,6 @@ function AppRem() {
                   </Col>
                   </Modal.Body>
                 </Modal>
-
               </div>
             </div>
           </>
@@ -934,9 +683,9 @@ function AppRem() {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
-            <Button onClick={() => clearitems()}>Nuevo Remito</Button>
+            <Button onClick={() => clearitems()}>Nuevo Recibo</Button>
 
-            {/* Invoice Preview */}
+            {/* receipt Preview */}
 
             <div ref={componentRef} className="p-5">
               <Header handlePrint={handlePrint} />
@@ -946,8 +695,8 @@ function AppRem() {
         <div className="card-header bg-dark text-white text-center"></div>
         <div className="card-body">
           
-        <div className="card-header text-black text-center">REMITO</div>
-        <div className="row">
+        <div className="text-black text-center">RECIBO</div>
+          <div className="row">
             <div className="col-md-6">
               <p><strong>{userInfo.nameCon}</strong></p>
               <p><strong>Razon Social:</strong> {userInfo.nameCon}</p>
@@ -955,10 +704,10 @@ function AppRem() {
               <p><strong>Condición frente al IVA:</strong> {config.ivaCondition}</p>
             </div>
             <div className="col-md-6 ">
-              <p><strong>REMITO</strong></p>
+              <p><strong>RECIBO</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
-              <strong>     Comp. Nro:</strong> {remNumImp}</p>
-              <p><strong>Fecha de Emision:</strong> {remDat}</p>
+              <strong>     Comp. Nro:</strong> {recNumImp}</p>
+              <p><strong>Fecha de Emision:</strong> {recDat}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>
@@ -976,7 +725,6 @@ function AppRem() {
               </div>
           </div>
 
-          </div>
           { true &&
           (
             <div>
@@ -984,40 +732,36 @@ function AppRem() {
                 <thead className="table-dark text-white">
                   <tr>
                     <th>#</th>
-                    <th>Descripción</th>
-                    <th className="text-end">Cantidad</th>
-                    <th className="text-end">Precio</th>
-                    <th className="text-end">Subtotal</th>
-                    <th className="text-end">IVA (%)</th>
-                    <th className="text-end">Subtotal c/IVA</th>
+                    <th>Valor</th>
+                    <th className="text-end">Numero</th>
+                    <th className="text-end">Importe</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {orderItems.map((item, index) => (
+                  {receiptItems.map((item, index) => (
                     <tr key={item.id}>
                       <td>{index + 1}</td>
-                      <td>{item.title}</td>
-                      <td className="text-end">{item.quantity}</td>
-                      <td className="text-end">${item.price}</td>
-                      <td className="text-end">${(item.quantity * item.price).toFixed(2)}</td>
-                      <td className="text-end">%{item.porIva}</td>
-                      <td className="text-end">${(item.quantity * item.price*(1+(item.porIva/100))).toFixed(2)}</td>
+                      <td>{item.desval}</td>
+                      <td className="text-end">{item.numval}</td>
+                      <td className="text-end">${item.amountval.toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               <div className="text-end">
-                <p><strong>Subtotal:</strong> ${getTotal()}</p>
-                <p><strong>IVA:</strong> ${getIVA()}</p>
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
+                <h5><strong>Total:</strong> ${getTotal().toFixed(2)}</h5>
               </div>
             </div>
           )}
 
 
+        </div>
+
+        
+
+
       </div>
     </div>
-
 
 
 
@@ -1029,4 +773,4 @@ function AppRem() {
   );
 }
 
-export default AppRem;
+export default AppRec;

@@ -1,5 +1,5 @@
 import { useContext, useState, useRef, useEffect, useReducer } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams  } from 'react-router-dom';
 import axios from 'axios';
 import ClientDetails from './ClientDetails';
 import Dates from './Dates';
@@ -9,7 +9,7 @@ import MainDetails from './MainDetails';
 import Notes from './Notes';
 import Table from './Table';
 import { toast } from 'react-toastify';
-import TableForm from './TableForm';
+import TableFormCon from './TableFormCon';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
@@ -26,6 +26,14 @@ import { getError, API } from '../../../utils';
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case 'ORDER_FETCH_REQUEST':
+        return { ...state, loading: true, error: '' };
+    case 'ORDER_FETCH_SUCCESS':
+        return { ...state, loading: false, invoice: action.payload, error: '' };
+    case 'ORDER_FETCH_FAIL':
+        return { ...state, loading: false, error: action.payload };
+
+
     case 'FETCH_REQUEST':
       return { ...state, loading: true };
     case 'FETCH_SUCCESS':
@@ -56,31 +64,29 @@ const reducer = (state, action) => {
   }
 };
 
-function App() {
-  const [
-    {
-      loading,
-      error,
-      products,
-      pages,
-      loadingVal,
-      loadingDelete,
-      successDelete,
-    },
-    dispatch,
-  ] = useReducer(reducer, {
-    loading: true,
-    loadingVal: true,
-    error: '',
-  });
+function AppRemCon() {
+    const [
+        { loading, error, invoice, values, pages, loadingDelete, successDelete },
+        dispatch,
+      ] = useReducer(reducer, {
+        loading: true,
+        invoice: {},
+        loadingVal: true,
+        error: '',
+      });
+    
+  const navigate = useNavigate();
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const {
-    invoice: { orderItems },
     receipt: { receiptItems },
   } = state;
 
-  const { invoice, receipt, userInfo, values } = state;
+  const { receipt, userInfo } = state;
+
+  const params = useParams();
+  const { id: invoiceId } = params;
+
 
   const input1Ref = useRef(null);
   const input2Ref = useRef(null);
@@ -90,31 +96,26 @@ function App() {
   const input6Ref = useRef(null);
   const input7Ref = useRef(null);
   const input8Ref = useRef(null);
+  const input9Ref = useRef(null);
   const input0Ref = useRef(null);
-  
+
   const input20Ref = useRef(null);
   const input21Ref = useRef(null);
 
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
-  const [noDisc, setNoDisc] = useState(false);
-  const [toDisc, setToDisc] = useState(true);
-  const [itDisc, setItDisc] = useState(false);
   const [showCus, setShowCus] = useState(false);
-  const [showCom, setShowCom] = useState(false);
 
-  // const [codUse, setomdUse] = useState('');
+  const [codUse, setCodUse] = useState('');
   const [codCus, setCodCus] = useState('');
   const [codCust, setCodCust] = useState('');
-  const [codCom, setCodCom] = useState('');
-  const [codComp, setCodComp] = useState();
-  const [nameCom, setNameCom] = useState('');
   const [name, setName] = useState('');
   const [userObj, setUserObj] = useState({});
   const [remNum, setRemNum] = useState('');
-  const [invNum, setInvNum] = useState('');
-  const [invNumImp, setInvNumImp] = useState('');
+  const [remNumImp, setRemNumImp] = useState('');
   const today = new Date().toISOString().split("T")[0];
-  const [invDat, setInvDat] = useState(today);
+  const [remDat, setRemDat] = useState(today);
+  const [invNum, setInvNum] = useState('');
+  const [invDat, setInvDat] = useState('');
   const [recNum, setRecNum] = useState('');
   const [recDat, setRecDat] = useState(today);
   const [codVal, setCodVal] = useState('');
@@ -126,7 +127,6 @@ function App() {
   // const [userss, setUserss] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [valuess, setValuess] = useState([]);
-  const [comprobantes, setComprobantes] = useState([]);
   const [codPro, setCodPro] = useState('');
   const [address, setAddress] = useState('Direccion Usuario');
   const [email, setEmail] = useState('');
@@ -164,6 +164,7 @@ function App() {
 
   };
 
+
   const componentRef = useRef();
   const handlePrint = () => {
     window.print();
@@ -172,7 +173,7 @@ function App() {
   useEffect(() => {
     const calculateAmountval = (amountval) => {
       setAmountval(
-        orderItems?.reduce((a, c) => a + (c.quantity * c.price * (1+(c.porIva/100))), 0)
+        invoice.total
       );
     };
     if (numval === '') {
@@ -182,11 +183,11 @@ function App() {
     setDesVal(desVal);
     calculateAmountval(amountval);
     addToCartHandler(valueeR);
-  }, [orderItems, numval, desval, recNum, recDat]);
+  }, [numval, desval, recNum, recDat]);
 
   useEffect(() => {
     clearitems();
-    input1Ref.current.focus()
+    input2Ref.current.focus()
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`${API}/api/customers/`, {
@@ -198,6 +199,29 @@ function App() {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        dispatch({ type: 'ORDER_FETCH_REQUEST' });
+        const { data } = await axios.get(`${API}/api/invoices/${invoiceId}`, {
+          headers: { authorization: `Bearer ${userInfo.token}` },
+        });
+        dispatch({ type: 'ORDER_FETCH_SUCCESS', payload: data });
+        setCodUse(data.user);
+        // setCodComp(invoice.codCom);
+        // setCodCust(invoice.codCus);
+        // setName(invoice.supplier.name);
+  
+        setRemNum(invoice.remNum);
+      } catch (err) {
+        dispatch({ type: 'ORDER_FETCH_FAIL', payload: getError(err) });
+      }
+    };
+    fetchOrder();
+  }, []);
+
+
 
   useEffect(() => {
     const fetchDataVal = async () => {
@@ -213,41 +237,21 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(`${API}/api/comprobantes`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
-        setComprobantes(data);
-        dispatch({ type: 'FETCH_SUCCESS', payload: data });
-      } catch (err) {}
-    };
-    fetchData();
-  }, []);
-
-
-  useEffect(() => {
     if (window.innerWidth < width) {
       alert('Place your phone in landscape mode for the best experience');
     }
   }, [width]);
 
-
   const getTotal = () => {
-    return orderItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
+    return invoice.orderItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
   };
 
   const getIVA = () => {
-    return orderItems.reduce((acc, item) => acc + (item.quantity * item.price * item.porIva) / 100, 0).toFixed(2);
+    return invoice.orderItems.reduce((acc, item) => acc + (item.quantity * item.price * item.porIva) / 100, 0).toFixed(2);
   };
 
   const getTotalWithIVA = () => {
     return (parseFloat(getTotal()) + parseFloat(getIVA())).toFixed(2);
-  };
-
-  const handleShowCom = () => {
-    setShowCom(true);
-    input20Ref.current.focus();
   };
 
   const handleShowCus = () => {
@@ -275,70 +279,24 @@ function App() {
   const buscarPorCodCus = (codCust) => {
     const usersRow = customers.find((row) => row.codCus === codCust);
     if (!usersRow) {
-        setUserObj({});
         setCodCus('');
         setCodCust('');
         setName('Elija Cliente');
     }else{
       setCodCus(usersRow._id);
-      setCodCust(usersRow.codCus);
+      setCodCust(usersRow.codCust);
       setUserObj(usersRow);
       setName(usersRow.nameCus);
-      input3Ref.current.focus();
+      input6Ref.current.focus();
       };
   };
-
 
   const handleChange = (e) => {
     searchUser(e.target.value);
   };
-
-  const submitHandlerCom = async (e) => {
-    e.preventDefault();
-    setShowCom(false)
-  };
   const submitHandlerCus = async (e) => {
     e.preventDefault();
     setShowCus(false)
-  };
-
-  const handleChangeCom = (e) => {
-    searchComprobante(e.target.value);
-  };
-  
-  const searchComprobante = (codComp) => {
-    const comprobantesRow = comprobantes.find((row) => row._id === codComp);
-    setCodCom(comprobantesRow._id);
-    setCodComp(comprobantesRow.codCom);
-    setNameCom(comprobantesRow.nameCom);
-    setNoDisc(comprobantesRow.noDisc);
-    setToDisc(comprobantesRow.toDisc);
-    setItDisc(comprobantesRow.itDisc);
-  };
-
-  const ayudaCom = (e) => {
-    e.key === "Enter" && buscarPorCodCom(codComp);
-    e.key === "F2" && handleShowCom(codCom);
-    e.key === "Tab" && buscarPorCodCom(codComp);
-  };
-  
-
-  const buscarPorCodCom = (codComp) => {
-    const comprobantesRow = comprobantes.find((row) => row.codCom === codComp);
-    if (!comprobantesRow) {
-        setCodCom('');
-        setCodComp('');
-        setNameCom('Elija Documento');
-    }else{
-      setCodCom(comprobantesRow._id);
-      setCodComp(comprobantesRow.codCom);
-      setNameCom(comprobantesRow.nameCom);
-      setNoDisc(comprobantesRow.noDisc);
-      setToDisc(comprobantesRow.toDisc);
-      setItDisc(comprobantesRow.itDisc);
-      input2Ref.current.focus();
-
-    };
   };
 
 
@@ -346,9 +304,7 @@ function App() {
     const valuesRow = valuess.find((row) => row._id === codVal);
     setValueeR(valuesRow);
     setCodVal(valuesRow.codVal);
-    setCodval(valuesRow.codVal);
     setDesVal(valuesRow.desVal);
-    setDesval(valuesRow.desVal);
   };
 
   const handleValueChange = (e) => {
@@ -358,65 +314,7 @@ function App() {
   const placeCancelInvoiceHandler = async () => {};
 
   const placeInvoiceHandler = async () => {
-    if (window.confirm('Esta seguro de Grabar?')) {
-      if (isPaying && (!recNum || !recDat || !desVal)) {
-        unloadpayment();
-      } else {
-        if (invDat && codCus) {
-          orderItems.map((item) => stockHandler({ item }));
-          const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
-          invoice.subTotal = round2(
-            invoice.orderItems.reduce((a, c) => a + c.quantity * c.price, 0)
-          );
-          invoice.shippingPrice = 0;
-
-          //        invoice.shippingPrice =
-          //        invoice.subTotal > 100 ? round2(0) : round2(10);
-          // invoice.tax = round2((poriva/100) * invoice.subTotal);
-          invoice.tax = round2(
-            invoice.orderItems.reduce((a, c) => a + c.quantity * c.price * (c.porIva/100), 0)
-          );
-
-          invoice.total = round2(
-            invoice.subTotal + invoice.shippingPrice + invoice.tax
-          );
-          invoice.totalBuy = 0;
-          invoice.codCus = codCus;
-          invoice.codCon = userInfo.codCon;
-          invoice.codConNum = codConNum;
-          invoice.codCom = codCom;
-
-          invoice.codSup = '0';
-          invoice.remNum = remNum;
-          invoice.remDat = invDat;
-          invoice.invNum = invNum;
-          invoice.invDat = invDat;
-          invoice.recNum = recNum;
-          invoice.recDat = recDat;
-          invoice.desVal = desVal;
-          invoice.notes = notes;
-
-          if (recNum && recDat && desVal) {
-            receipt.subTotal = invoice.subTotal;
-            receipt.total = invoice.total;
-            receipt.totalBuy = invoice.totalBuy;
-            receipt.codCus = invoice.codCus;
-            receipt.codCon = invoice.codCon;
-            receipt.codConNum = invoice.codConNum;
-            receipt.codSup = '0';
-            receipt.recNum = invoice.recNum;
-            receipt.recDat = invoice.recDat;
-            receipt.desVal = invoice.desVal;
-            receipt.notes = invoice.notes;
-
-            receiptHandler();
-          }
-          orderHandler();
-          setShowInvoice(true);
-          //      handlePrint();
-        }
-      }
-    };  
+    setShowInvoice(true);
   };
 
   /////////////////////////////////////////////
@@ -509,7 +407,7 @@ function App() {
     try {
       dispatch({ type: 'CREATE_REQUEST' });
       const { data } = await axios.post(
-        `${API}/api/invoices`,
+        `${API}/api/invoices/rem`,
 
         {
           orderItems: invoice.orderItems,
@@ -524,7 +422,6 @@ function App() {
           codCus: invoice.codCus,
           codCon: invoice.codCon,
           codConNum: invoice.codConNum,
-          codCom: invoice.codCom,
 
           //        codSup: invoice.codSup,
 
@@ -548,9 +445,9 @@ function App() {
       //      dispatch({ type: 'CREATE_SUCCESS' });
       //      localStorage.removeItem('orderItems');
       setIsPaying(false);
-      setInvNumImp(data.invoice.invNum);
       setDesval('');
       setDesVal('');
+      setRemNumImp(data.invoice.remNum);
       setRecNum('');
       setRecDat('');
       setNumval(' ');
@@ -591,7 +488,7 @@ function App() {
   return (
     <>
       <Helmet>
-        <title>Facturas de Venta</title>
+        <title>Remitos de Egreso</title>
       </Helmet>
 
       <main>
@@ -601,34 +498,17 @@ function App() {
             <div>
               <div className="bordeTable">
               <Row>
-                  <Col md={2}>
+                  <Col md={3}>
                     <Card.Body>
                       <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Tipo Comprobante</Form.Label>
-                          <Form.Control
-                            className="input"
-                            ref={input1Ref}
-                            placeholder="Tipo Comprobante"
-                            value={codComp}
-                            onChange={(e) => setCodComp(e.target.value)}
-                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCom(codComp)}
-                            onKeyDown={(e) => ayudaCom(e)}
-                            required
-                          />
-                        </Form.Group>
+                      <ListGroup.Item>
+                            <h3>
+                              
+                            </h3>
+                          </ListGroup.Item>
+
                       </Card.Title>
                     </Card.Body>
-                  </Col>
-                  <Col md={1}>
-                    <Button
-                      className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
-                      type="button"
-                      title="Buscador"
-                      onClick={() => handleShowCom()}
-                      >
-                      <BiFileFind className="text-blue-500 font-bold text-xl" />
-                    </Button>
                   </Col>
 
                   <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
@@ -636,7 +516,7 @@ function App() {
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              {nameCom}
+                              REMITO DE EGRESO Nro.: {invoice.codConNum +'-'+invoice.remNum}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -646,8 +526,7 @@ function App() {
 
                 </Row>
 
-
-                <Row>
+              <Row>
                   <Col md={2}>
                     <Card.Body>
                       <Card.Title>
@@ -693,18 +572,18 @@ function App() {
                 </Row>
 
                 <Row>
-                  <Col md={1}>
+                <Col md={1}>
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Invoice N°</Form.Label>
+                          <Form.Label>Remit N°</Form.Label>
                           <Form.Control
                             className="input"
-                            ref={input3Ref}
-                            placeholder="Invoice N°"
-                            value={invNum}
-                            onChange={(e) => setInvNum(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && input4Ref.current.focus()}
+                            ref={input6Ref}
+                            placeholder="Remit N°"
+                            value={remNum}
+                            onChange={(e) => setRemNum(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && input9Ref.current.focus()}
                             required
                           />
                         </Form.Group>
@@ -716,14 +595,14 @@ function App() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Invoice Date</Form.Label>
+                          <Form.Label>Remit Date</Form.Label>
                           <Form.Control
                             className="input"
-                            ref={input4Ref}
+                            ref={input9Ref}
                             type="date"
-                            placeholder="Invoice Date"
-                            value={invDat}
-                            onChange={(e) => setInvDat(e.target.value)}
+                            placeholder="Remit Date"
+                            value={remDat}
+                            onChange={(e) => setRemDat(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
                             required
                           />
@@ -743,24 +622,6 @@ function App() {
                             placeholder="Due Date"
                             value={dueDat}
                             onChange={(e) => setDueDat(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && input6Ref.current.focus()}
-                            required
-                          />
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-                  <Col md={1}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Remit N°</Form.Label>
-                          <Form.Control
-                            className="input"
-                            ref={input6Ref}
-                            placeholder="Remit N°"
-                            value={remNum}
-                            onChange={(e) => setRemNum(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input7Ref.current.focus()}
                             required
                           />
@@ -830,7 +691,7 @@ function App() {
                         </Card.Title>
                       </Card.Body>
                     </Col>
-                    <Col md={2}>
+                    <Col md={3}>
                       <Card.Body>
                         <Card.Title>
                           <Form.Group className="input" controlId="name">
@@ -872,12 +733,7 @@ function App() {
                           type="button"
                           onClick={Paying}
                           className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
-                          disabled={
-                            orderItems.length === 0 ||
-                            !invNum ||
-                            !invDat ||
-                            !codCus
-                          }
+                          disabled={true}
                         >
                           {isPaying ? 'Not Payment' : 'Load Payment'}
                         </Button>
@@ -906,12 +762,12 @@ function App() {
                         <Button
                           type="button"
                           onClick={placeCancelInvoiceHandler}
-                          disabled={
-                            orderItems.length === 0 ||
-                            !invDat ||
-                            !codCus
-                          }
-                          >
+                        //   disabled={
+                        //     orderItems.length === 0 ||
+                        //     !remDat ||
+                        //     !codCus
+                        //   }
+                        >
                           CANCELA
                         </Button>
                       </div>
@@ -924,13 +780,13 @@ function App() {
                           type="button"
                           ref={input0Ref}
                           onClick={placeInvoiceHandler}
-                          disabled={
-                            orderItems.length === 0 ||
-                            !invDat ||
-                            !codCus
-                          }
-                          >
-                          GRABA FACTURA
+                        //   disabled={
+                        //     orderItems.length === 0 ||
+                        //     !remDat ||
+                        //     !codCus
+                        //   }
+                        >
+                          IMPRIME
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -941,8 +797,7 @@ function App() {
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              Total: $
-                              {amountval.toFixed(2)}
+                            {(+invoice.total).toFixed(2)}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -953,7 +808,7 @@ function App() {
 
                 {/* This is our table form */}
                 <article>
-                  <TableForm
+                  <TableFormCon
                     input0Ref={input0Ref}
                     input8Ref={input8Ref}
                     codPro={codPro}
@@ -976,61 +831,12 @@ function App() {
                     desval={desval}
                     numval={numval}
                     isPaying={isPaying}
+                    orderItems={invoice.orderItems}
                     //                    totInvwithTax={totInvwithTax}
                     //                    setTotInvwithTax={setTotInvwithTax}
                   />
                 </article>
-                <Modal
-                  // input20Ref={input20Ref}
-                  size="md"
-                  show={showCom}
-                  onHide={() => setShowCom(false)}
-                  aria-labelledby="example-modal-sizes-title-lg"
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title id="example-modal-sizes-title-lg">
-                    Elija un Comprobante
-                    </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                  <Col md={12}>
-                          <Card.Body>
-                            <Card.Title>
-                            <Form onSubmit={submitHandlerCom}>
-                            <Form.Group className="mb-3" controlId="name">
-                            {/* <Form.Group className="input" controlId="name"> */}
-                                <Form.Label>Tipo Comprobante</Form.Label>
-                                <Form.Select
-                                  className="input"
-                                  onClick={(e) => handleChangeCom(e)}
-                                  >
-                                  {comprobantes.map((elemento) => (
-                                    <option key={elemento._id} value={elemento._id}>
-                                      {elemento.nameCom}
-                                    </option>
-                                  ))}
-                                </Form.Select>
-                              </Form.Group>
-                              <Form.Group className="mb-3" controlId="name">
-                              <Form.Control
-                                placeholder="Tipo Comprobante"
-                                value={nameCom}
-                                disabled={true}
-                                required
-                                />
-                            </Form.Group>
-                              <div className="mb-3">
-                                <Button type="submit"
-                                  // ref={input20Ref}
-                                  disabled={nameCom ? false : true}
-                                  >Continuar</Button>
-                              </div>
-                              </Form>
-                            </Card.Title>
-                          </Card.Body>
-                        </Col>
-                  </Modal.Body>
-                </Modal>
+
 
                 <Modal
                   // input21Ref={input21Ref}
@@ -1085,7 +891,6 @@ function App() {
                   </Modal.Body>
                 </Modal>
 
-
               </div>
             </div>
           </>
@@ -1095,7 +900,7 @@ function App() {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
-            <Button onClick={() => clearitems()}>Nueva Factura</Button>
+            <Button onClick={() => clearitems()}>CANCELA</Button>
 
             {/* Invoice Preview */}
 
@@ -1107,8 +912,8 @@ function App() {
         <div className="card-header bg-dark text-white text-center"></div>
         <div className="card-body">
           
-        <div className="text-black text-center">{nameCom}</div>
-          <div className="row">
+        <div className="card-header text-black text-center">REMITO</div>
+        <div className="row">
             <div className="col-md-6">
               <p><strong>{userInfo.nameCon}</strong></p>
               <p><strong>Razon Social:</strong> {userInfo.nameCon}</p>
@@ -1116,10 +921,10 @@ function App() {
               <p><strong>Condición frente al IVA:</strong> {config.ivaCondition}</p>
             </div>
             <div className="col-md-6 ">
-              <p><strong>{nameCom}</strong></p>
+              <p><strong>REMITO</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
-              <strong>     Comp. Nro:</strong> {invNumImp}</p>
-              <p><strong>Fecha de Emision:</strong> {invDat}</p>
+              <strong>     Comp. Nro:</strong> {invoice.remNum}</p>
+              <p><strong>Fecha de Emision:</strong> {remDat}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>
@@ -1136,7 +941,9 @@ function App() {
                 <p><strong>Dirección:</strong> {userObj.domcomer}</p>
               </div>
           </div>
-          { toDisc &&
+
+          </div>
+          { true &&
           (
             <div>
               <table className="table table-bordered mt-3">
@@ -1152,7 +959,7 @@ function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {orderItems.map((item, index) => (
+                  {invoice.orderItems.map((item, index) => (
                     <tr key={item.id}>
                       <td>{index + 1}</td>
                       <td>{item.title}</td>
@@ -1173,83 +980,11 @@ function App() {
             </div>
           )}
 
-          { itDisc &&
-          (
-            <div>
-              <table className="table table-bordered mt-3">
-                <thead className="table-dark text-white">
-                  <tr>
-                    <th>#</th>
-                    <th>Descripción</th>
-                    <th className="text-end">Cantidad</th>
-                    <th className="text-end">Precio</th>
-                    <th className="text-end">IVA (%)</th>
-                    <th className="text-end">Imp. IVA</th>
-                    <th className="text-end">Subtotal</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orderItems.map((item, index) => (
-                    <tr key={item.id}>
-                      <td>{index + 1}</td>
-                      <td>{item.title}</td>
-                      <td className="text-end">{item.quantity}</td>
-                      <td className="text-end">${item.price.toFixed(2)}</td>
-                      <td className="text-end">%{item.porIva}</td>
-                      <td className="text-end">${(item.price*(item.porIva/100)).toFixed(2)}</td>
-                      <td className="text-end">${(item.quantity * item.price*(1+(item.porIva/100))).toFixed(2)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className="text-end">
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
-              </div>
-            </div>
-          )}
-
-          { noDisc &&
-          (
-            <div>
-              <table className="table table-bordered mt-3">
-                <thead className="table-dark text-white">
-                  <tr>
-                    <th>#</th>
-                    <th>Descripción</th>
-                    <th className="text-end">Cantidad</th>
-                    <th className="text-end">Precio</th>
-                    <th className="text-end">IVA (%)</th>
-                    <th className="text-end">Subtotal</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orderItems.map((item, index) => (
-                    <tr key={item.id}>
-                      <td>{index + 1}</td>
-                      <td>{item.title}</td>
-                      <td className="text-end">{item.quantity}</td>
-                      <td className="text-end">${(item.price*(1+(item.porIva/100))).toFixed(2)}</td>
-                      <td className="text-end">$0.00</td>
-                      
-                      <td className="text-end">${(item.quantity * item.price * (1+(item.porIva/100))).toFixed(2)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className="text-end">
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
-              </div>
-            </div>
-          )}
-
-
-        </div>
-
-        
-
 
       </div>
     </div>
+
+
 
 
             </div>
@@ -1260,4 +995,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppRemCon;

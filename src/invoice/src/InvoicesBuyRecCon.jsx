@@ -1,5 +1,5 @@
 import React from 'react';
-import AppBuyRec from './components/AppBuyRec';
+import AppBuyRecCon from './components/AppBuyRecCon';
 //import AuthContext from "./context/auth"
 
 export default function InvoicesBuyRecCon() {
@@ -7,7 +7,7 @@ export default function InvoicesBuyRecCon() {
 
   return (
     <>
-      <AppBuyRec />
+      <AppBuyRecCon />
     </>
   );
 }

@@ -1,13 +1,13 @@
 import React from 'react';
-import AppBuyRec from './components/AppBuyRec';
+import AppBuyCon from './components/AppBuyCon';
 //import AuthContext from "./context/auth"
 
-export default function InvoicesBuyRecCon() {
+export default function InvoicesBuyCon() {
   //  const { user } = useContext(AuthContext)
 
   return (
     <>
-      <AppBuyRec />
+      <AppBuyCon />
     </>
   );
 }

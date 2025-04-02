@@ -87,8 +87,6 @@ function AppCon() {
     const params = useParams();
     const { id: invoiceId } = params;
   
-  const navigate = useNavigate();
-
   const input1Ref = useRef(null);
   const input2Ref = useRef(null);
   const input3Ref = useRef(null);
@@ -203,7 +201,7 @@ function AppCon() {
         // setCodComp(invoice.codCom);
         // setCodCust(invoice.codCus);
         // setName(invoice.supplier.name);
-        setNameCom(invoice.nameCom);
+        // setNameCom(invoice.nameCom);
   
         setInvNum(invoice.invNum);
       } catch (err) {
@@ -444,11 +442,34 @@ true
               <div className="bordeTable">
 
               <Row>
-                  <Col md={4}></Col>
-                  <Col md={8}>
-                    Factura Numero: <h3>{invoice.codConNum +'-'+invoice.invNum}</h3>
+                  <Col md={3}>
+                    <Card.Body>
+                      <Card.Title>
+                      <ListGroup.Item>
+                            <h3>
+                              
+                            </h3>
+                          </ListGroup.Item>
+
+                      </Card.Title>
+                    </Card.Body>
                   </Col>
+
+                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                      <Card.Body>
+                        <Card.Title>
+                          <ListGroup.Item>
+                            <h3>
+                              COMPROBANTE Nro.: {invoice.codConNum +'-'+invoice.invNum}
+                            </h3>
+                          </ListGroup.Item>
+                        </Card.Title>
+                      </Card.Body>
+                    </Col>
+
+
                 </Row>
+
 
               <Row>
                   <Col md={2}>
@@ -775,7 +796,7 @@ true
                           //   !codCus
                           // }
                           >
-                          IMPRIME FACTURA
+                          IMPRIME
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -857,9 +878,9 @@ true
               <p><strong>Condición frente al IVA:</strong> {config.ivaCondition}</p>
             </div>
             <div className="col-md-6 ">
-              <p><strong>FACTURA</strong></p>
+              <p><strong>ARREGLAR</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
-              <strong>     Comp. Nro:</strong> {invNumImp}</p>
+              <strong>     Comp. Nro:</strong> {invoice.invNum}</p>
               <p><strong>Fecha de Emision:</strong> {invDat}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>

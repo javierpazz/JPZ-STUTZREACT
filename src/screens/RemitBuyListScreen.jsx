@@ -108,6 +108,10 @@ export default function RemitBuyListScreen() {
     setShow(true);
   };
 
+  const handleConsulta = (invoiceId) => {
+    navigate(`/admin/invoicerBuyRemCon/${invoiceId}`);
+  };
+
 //do
 const controlStockHandler = async (invoice) => {
   invoice.orderItems.map((item) => stockHandler({ item }));
@@ -223,7 +227,7 @@ try {
                   <td>{invoice.totalBuy.toFixed(2)}</td>
 
                   <td>
-                    <Button
+                    {/* <Button
                       type="button"
                       title="Imprimir"
                       onClick={() => {
@@ -241,20 +245,29 @@ try {
                       }}
                     >
                       <AiOutlineMail className="text-black-500 font-bold text-xl" />
-                    </Button>
+                    </Button> */}
                     &nbsp;
+                    <Button
+                      type="button"
+                      title="Consulta Factura"
+                      onClick={() => handleConsulta(invoice._id)}
+                    >
+                      <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
+                    </Button>
+                    {/* &nbsp;
                     <Button
                       type="button"
                       title="Add or Change Invoice or Remit Number"
                       onClick={() => handleShow(invoice._id)}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
-                    </Button>
+                    </Button> */}
                     &nbsp;
                     <Button
                       type="button"
                       title="Delete"
                       onClick={() => deleteHandler(invoice)}
+                      disabled={true}
                     >
                       <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                     </Button>

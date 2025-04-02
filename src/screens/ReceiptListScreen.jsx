@@ -109,6 +109,11 @@ export default function ReceiptListScreen() {
     setShow(true);
   };
 
+  const handleConsulta = (receiptId) => {
+    navigate(`/admin/invoicerRecCon/${receiptId}`);
+  };
+
+
 //dr
 
 
@@ -215,7 +220,7 @@ const prodeleteReceipt = (receipt) => {
                   <td>{receipt.total.toFixed(2)}</td>
 
                   <td>
-                    <Button
+                    {/* <Button
                       type="button"
                       title="Imprimir"
                       onClick={() => {
@@ -234,19 +239,27 @@ const prodeleteReceipt = (receipt) => {
                     >
                       <AiOutlineMail className="text-black-500 font-bold text-xl" />
                     </Button>
-                    &nbsp;
+                    &nbsp; */}
                     <Button
+                      type="button"
+                      title="Consulta Recibo"
+                      onClick={() => handleConsulta(receipt._id)}
+                    >
+                      <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
+                    </Button>
+                    {/* <Button
                       type="button"
                       title="Apply Receipt to Invoice"
                       onClick={() => handleShow(receipt)}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
-                    </Button>
+                    </Button> */}
                     &nbsp;
                     <Button
                       type="button"
                       title="Delete"
                       onClick={() => prodeleteReceipt(receipt)}
+                      disabled={true}
                     >
                       <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                     </Button>

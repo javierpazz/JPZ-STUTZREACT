@@ -282,7 +282,7 @@ try {
                   <td>{invoice.total.toFixed(2)}</td>
 
                   <td>
-                    <Button
+                    {/* <Button
                       type="button"
                       title="Imprimir"
                       onClick={() => {
@@ -301,7 +301,7 @@ try {
                     >
                       <AiOutlineMail className="text-black-500 font-bold text-xl" />
                     </Button>
-                    &nbsp;
+                    &nbsp; */}
                     <Button
                       type="button"
                       title="Consulta Factura"
@@ -322,6 +322,7 @@ try {
                       type="button"
                       title="Delete"
                       onClick={() => deleteHandler(invoice)}
+                      disabled={true}
                     >
                       <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                     </Button>

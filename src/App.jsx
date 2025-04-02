@@ -61,6 +61,11 @@ import ComprobanteListScreen from './screens/ComprobanteListScreen';
 import ComprobanteEditScreen from './screens/ComprobanteEditScreen';
 import InvoicesOrd from './invoice/src/InvoicesOrd';
 import InvoicesCon from './invoice/src/InvoicesCon';
+import InvoicesBuyCon from './invoice/src/InvoicesBuyCon';
+import InvoicesRemCon from './invoice/src/InvoicesRemCon';
+import InvoicesRecCon from './invoice/src/InvoicesRecCon';
+import InvoicesBuyRecCon from './invoice/src/InvoicesBuyRecCon';
+import InvoicesBuyRemCon from './invoice/src/InvoicesBuyRemCon';
 import Invoices from './invoice/src/Invoices';
 import Remits from './invoice/src/Remits';
 import InvoicesRec from './invoice/src/InvoicesRec';
@@ -608,6 +613,46 @@ function App() {
                 element={
                   <AdminRoute>
                     <InvoicesCon />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/invoicerBuyCon/:id"
+                element={
+                  <AdminRoute>
+                    <InvoicesBuyCon />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/invoicerRemCon/:id"
+                element={
+                  <AdminRoute>
+                    <InvoicesRemCon />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/invoicerRecCon/:id"
+                element={
+                  <AdminRoute>
+                    <InvoicesRecCon />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/invoicerBuyRecCon/:id"
+                element={
+                  <AdminRoute>
+                    <InvoicesBuyRecCon />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/invoicerBuyRemCon/:id"
+                element={
+                  <AdminRoute>
+                    <InvoicesBuyRemCon />
                   </AdminRoute>
                 }
               ></Route>
