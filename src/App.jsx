@@ -41,6 +41,8 @@ import RemitListScreen from './screens/RemitListScreen';
 import InvoiceBuyListScreen from './screens/InvoiceBuyListScreen';
 import RemitBuyListScreen from './screens/RemitBuyListScreen';
 import ReceiptListScreen from './screens/ReceiptListScreen';
+import CajaIngListScreen from './screens/CajaIngListScreen';
+import CajaEgrListScreen from './screens/CajaEgrListScreen';
 import ReceiptBuyListScreen from './screens/ReceiptBuyListScreen';
 import OrderListScreen from './screens/OrderListScreen';
 import SupplierListScreen from './screens/SupplierListScreen';
@@ -64,6 +66,8 @@ import InvoicesCon from './invoice/src/InvoicesCon';
 import InvoicesBuyCon from './invoice/src/InvoicesBuyCon';
 import InvoicesRemCon from './invoice/src/InvoicesRemCon';
 import InvoicesRecCon from './invoice/src/InvoicesRecCon';
+import InvoicesCajIngCon from './invoice/src/InvoicesCajIngCon';
+import InvoicesCajEgrCon from './invoice/src/InvoicesCajEgrCon';
 import InvoicesBuyRecCon from './invoice/src/InvoicesBuyRecCon';
 import InvoicesBuyRemCon from './invoice/src/InvoicesBuyRemCon';
 import Invoices from './invoice/src/Invoices';
@@ -237,10 +241,10 @@ function App() {
 
                   {userInfo && (
                     <NavDropdown title="Caja" id="buys-nav-dropdown">
-                      <LinkContainer to="/admin/invoicerCajIng">
+                      <LinkContainer to="/admin/invoicesCajIng">
                         <NavDropdown.Item>Ingresos de Caja</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/admin/invoicerCajEgr">
+                      <LinkContainer to="/admin/invoicesCajEgr">
                         <NavDropdown.Item>Retiros de Caja</NavDropdown.Item>
                       </LinkContainer>
                       {userInfo && userInfo.role=="admin" && (
@@ -464,6 +468,22 @@ function App() {
                 }
               ></Route>
               <Route
+                path="/admin/invoicesCajIng"
+                element={
+                  <AdminRoute>
+                    <CajaIngListScreen />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/invoicesCajEgr"
+                element={
+                  <AdminRoute>
+                    <CajaEgrListScreen />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
                 path="/admin/invoicesBuyRec"
                 element={
                   <AdminRoute>
@@ -637,6 +657,22 @@ function App() {
                 element={
                   <AdminRoute>
                     <InvoicesRecCon />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/invoicerCajEgrCon/:id"
+                element={
+                  <AdminRoute>
+                    <InvoicesCajEgrCon />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/invoicerCajIngCon/:id"
+                element={
+                  <AdminRoute>
+                    <InvoicesCajIngCon />
                   </AdminRoute>
                 }
               ></Route>

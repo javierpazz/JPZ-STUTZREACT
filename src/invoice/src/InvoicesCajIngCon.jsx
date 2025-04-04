@@ -1,13 +1,13 @@
 import React from 'react';
-import AppBuyRemCon from './components/AppBuyRemCon';
+import AppCajIngCon from './components/AppCajIngCon';
 //import AuthContext from "./context/auth"
 
-export default function InvoicesBuyRemCon() {
+export default function InvoicesCajIngCon() {
   //  const { user } = useContext(AuthContext)
 
   return (
     <>
-      <AppBuyRemCon />
+      <AppCajIngCon />
     </>
   );
 }

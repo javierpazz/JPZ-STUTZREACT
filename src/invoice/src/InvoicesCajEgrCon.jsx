@@ -1,13 +1,13 @@
 import React from 'react';
-import AppBuyRemCon from './components/AppBuyRemCon';
+import AppCajEgrCon from './components/AppCajEgrCon';
 //import AuthContext from "./context/auth"
 
-export default function InvoicesBuyRemCon() {
+export default function InvoicesCajEgrCon() {
   //  const { user } = useContext(AuthContext)
 
   return (
     <>
-      <AppBuyRemCon />
+      <AppCajEgrCon />
     </>
   );
 }

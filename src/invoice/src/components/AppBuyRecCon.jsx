@@ -1,5 +1,5 @@
 import { useContext, useState, useRef, useEffect, useReducer } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import ClientDetails from './ClientDetails';
 import Dates from './Dates';
@@ -9,7 +9,7 @@ import MainDetails from './MainDetails';
 import Notes from './Notes';
 import TableRec from './TableRec';
 import { toast } from 'react-toastify';
-import TableFormRec from './TableFormRec';
+import TableFormRecCon from './TableFormRecCon';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
@@ -26,6 +26,14 @@ import { getError, API } from '../../../utils';
 
 const reducer = (state, action) => {
   switch (action.type) {
+
+    case 'RECIBO_FETCH_REQUEST':
+        return { ...state, loading: true, error: '' };
+    case 'RECIBO_FETCH_SUCCESS':
+        return { ...state, loading: false, recibo: action.payload, error: '' };
+    case 'RECIBO_FETCH_FAIL':
+        return { ...state, loading: false, error: action.payload };
+
     case 'VALUE_FETCH_REQUEST':
       return { ...state, loading: true };
     case 'VALUE_FETCH_SUCCESS':
@@ -60,18 +68,11 @@ case 'TOTAL_FETCH_REC_FAIL':
 
 function AppBuyRecCon() {
   const [
-    {
-      loading,
-      error,
-      products,
-      pages,
-      loadingVal,
-      loadingDelete,
-      successDelete,
-    },
+    { loading, error, recibo, values, pages, loadingDelete, successDelete },
     dispatch,
   ] = useReducer(reducer, {
     loading: true,
+    recibo: {},
     loadingVal: true,
     error: '',
   });
@@ -79,11 +80,12 @@ function AppBuyRecCon() {
   const navigate = useNavigate();
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
-  const {
-    receipt: { receiptItems },
-  } = state;
+  const { userInfo } = state;
 
-  const { receipt, userInfo, values } = state;
+  const params = useParams();
+  const { id: reciboId } = params;
+
+
   const input1Ref = useRef(null);
   const input2Ref = useRef(null);
   const input3Ref = useRef(null);
@@ -225,14 +227,46 @@ function AppBuyRecCon() {
   }, []);
 
   useEffect(() => {
+    const calculateAmountval = (amountval) => {
+      setAmountval(
+        recibo.total
+      );
+    };
+    calculateAmountval(amountval);
+  }, [ recNum, recDat]);
+
+
+  useEffect(() => {
     if (window.innerWidth < width) {
       alert('Place your phone in landscape mode for the best experience');
     }
   }, [width]);
 
   const getTotal = () => {
-    return receiptItems.reduce((acc, item) => acc + item.amountval, 0);
+    return recibo.receiptItems.reduce((acc, item) => acc + item.amountval, 0);
   };
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        dispatch({ type: 'RECIBO_FETCH_REQUEST' });
+        const { data } = await axios.get(`${API}/api/receipts/${reciboId}`, {
+          headers: { authorization: `Bearer ${userInfo.token}` },
+        });
+        dispatch({ type: 'RECIBO_FETCH_SUCCESS', payload: data });
+        setCodUse(data.user);
+        // setCodComp(invoice.codCom);
+        // setCodCust(invoice.codCus);
+        // setName(invoice.supplier.name);
+        // setNameCom(invoice.nameCom);
+  
+        setInvNum(recibo.recNum);
+      } catch (err) {
+        dispatch({ type: 'RECIBO_FETCH_FAIL', payload: getError(err) });
+      }
+    };
+    fetchOrder();
+  }, []);
 
   const handleShowSup = () => {
     setShowSup(true);
@@ -308,85 +342,10 @@ const submitHandlerSup = async (e) => {
   const placeCancelReceiptHandler = async () => {};
 
   const placeReceiptHandler = async () => {
-      if (window.confirm('Esta seguro de Grabar?')) {
-      //
-      // const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum) && row.supplier === codSup );
-      // if (oldRecipt.length > 0) {
-      if (false) {
-          toast.error(`This N° ${(recNum)} Receipt Exist, use other Number Please!`);
-          return;
-          } else {
-
-      //
-      //cr/
-
-      // if (recNum && recDat && codSup) {
-      if (recDat && codSup) {
-        const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
-        receipt.subTotal = round2(
-          receipt.receiptItems.reduce((a, c) => a + c.amountval * 1, 0)
-        );
-        receipt.shippingPrice = receipt.subTotal > 100 ? round2(0) : round2(10);
-        receipt.tax = round2(0.15 * 0);
-        receipt.total = 0;
-        receipt.totalBuy = receipt.subTotal;
-        receipt.codSup = codSup;
-        receipt.codCon = userInfo.codCon;
-        receipt.codConNum = codConNum;
-        receipt.remNum = remNum;
-        receipt.invNum = invNum;
-        receipt.invDat = invDat;
-        receipt.recNum = recNum;
-        receipt.recDat = recDat;
-        receipt.desval = desval;
-        receipt.notes = notes;
-
-        orderHandler();
         setShowReceipt(true);
-        //      handlePrint();
-      }
-    }
-    };
   };
 
   /////////////////////////////////////////////
-
-  const orderHandler = async () => {
-    try {
-      dispatch({ type: 'CREATE_REQUEST' });
-      const { data } = await axios.post(
-        `${API}/api/receipts`,
-        {
-          receiptItems: receipt.receiptItems,
-          subTotal: receipt.subTotal,
-          total: receipt.total,
-          totalBuy: receipt.totalBuy,
-
-          codSup: receipt.codSup,
-          codCon: receipt.codCon,
-          codConNum: receipt.codConNum,
-
-          recNum: receipt.recNum,
-          recDat: receipt.recDat,
-          desval: receipt.desval,
-          notes: receipt.notes,
-          salbuy: 'BUY',
-        },
-        {
-          headers: {
-            authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
-      //      ctxDispatch({ type: 'RECEIPT_CLEAR' });
-      //    dispatch({ type: 'CREATE_SUCCESS' });
-      //  localStorage.removeItem('receiptItems');
-      //navigate(`/order/${data.order._id}`);
-    } catch (err) {
-      dispatch({ type: 'CREATE_FAIL' });
-      toast.error(getError(err));
-    }
-  };
 
   const clearitems = () => {
     ctxDispatch({ type: 'RECEIPT_CLEAR' });
@@ -409,6 +368,7 @@ const submitHandlerSup = async (e) => {
             {/* name, address, email, phone, bank name, bank account number, website client name, client address, receipt number, receipt date, due date, notes */}
             <div>
               <div className="bordeTable">
+
               <Row>
                   <Col md={4}>
                     <Card.Body>
@@ -428,15 +388,14 @@ const submitHandlerSup = async (e) => {
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              ORDEN DE PAGO
+                            ORDEN DE PAGO Nro.: {recibo.codConNum +'-'+recibo.recNum}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
                       </Card.Body>
                     </Col>
-
-
                 </Row>
+
 
                 <Row>
                   <Col md={2}>
@@ -549,11 +508,11 @@ const submitHandlerSup = async (e) => {
                         <Button
                           type="button"
                           onClick={placeCancelReceiptHandler}
-                          disabled={
-                            receiptItems.length === 0 ||
-                            !recDat ||
-                            !codSup
-                          }
+                          // disabled={
+                          //   receiptItems.length === 0 ||
+                          //   !recDat ||
+                          //   !codSup
+                          // }
                         >
                           CANCELA
                         </Button>
@@ -567,13 +526,13 @@ const submitHandlerSup = async (e) => {
                           type="button"
                           ref={input0Ref}
                           onClick={placeReceiptHandler}
-                          disabled={
-                            receiptItems.length === 0 ||
-                            !recDat ||
-                            !codSup
-                          }
+                          // disabled={
+                          //   receiptItems.length === 0 ||
+                          //   !recDat ||
+                          //   !codSup
+                          // }
                         >
-                          GRABA ORDEN PAGO
+                          IMPRIME
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -585,10 +544,7 @@ const submitHandlerSup = async (e) => {
                           <ListGroup.Item>
                             <h3>
                               Total: $
-                              {(receiptItems.reduce(
-                                (a, c) => a + c.amountval * 1,
-                                0
-                              )).toFixed(2)}
+                              {(+recibo.totalBuy).toFixed(2)}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -599,7 +555,7 @@ const submitHandlerSup = async (e) => {
 
                 {/* This is our table form */}
                 <article>
-                  <TableFormRec
+                  <TableFormRecCon
                     input0Ref={input0Ref}
                     input8Ref={input8Ref}
                     codVal={codVal}
@@ -616,58 +572,9 @@ const submitHandlerSup = async (e) => {
                     setList={setList}
                     total={total}
                     setTotal={setTotal}
+                    receiptItems={recibo.receiptItems}
                   />
                 </article>
-                <Modal
-                  size="md"
-                  show={showSup}
-                  onHide={() => setShowSup(false)}
-                  aria-labelledby="example-modal-sizes-title-lg"
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title id="example-modal-sizes-title-lg">
-                    Elija un Proovedor
-                    </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                  <Col md={12}>
-                    <Card.Body>
-                      <Card.Title>
-                      <Form onSubmit={submitHandlerSup}>
-                          <Form.Group className="mb-3" controlId="name">
-                          {/* <Form.Group className="input" controlId="name"> */}
-                          <Form.Label>Proveedor</Form.Label>
-                          <Form.Select
-                            className="input"
-                            onClick={(e) => handleChange(e)}
-                          >
-                            {suppliers.map((elemento) => (
-                              <option key={elemento._id} value={elemento._id}>
-                                {elemento.name}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="name">
-                              <Form.Control
-                                placeholder="Proveedor"
-                                value={name}
-                                disabled={true}
-                                required
-                                />
-                            </Form.Group>
-                              <div className="mb-3">
-                                <Button type="submit"
-                                  // ref={input21Ref}
-                                  disabled={name ? false : true}
-                                  >Continuar</Button>
-                              </div>
-                              </Form>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-                  </Modal.Body>
-                </Modal>
               </div>
             </div>
           </>
@@ -677,7 +584,7 @@ const submitHandlerSup = async (e) => {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
-            <Button onClick={() => clearitems()}>Nueva Orden</Button>
+            <Button onClick={() => clearitems()}>CANCELA</Button>
 
             {/* receipt Preview */}
 
@@ -700,7 +607,7 @@ const submitHandlerSup = async (e) => {
             <div className="col-md-6 ">
               <p><strong>ORDEN DE PAGO</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
-              <strong>     Comp. Nro:</strong> {recNum}</p>
+              <strong>     Comp. Nro:</strong> {recibo.recNum}</p>
               <p><strong>Fecha de Emision:</strong> {recDat}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>
@@ -731,7 +638,7 @@ const submitHandlerSup = async (e) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {receiptItems.map((item, index) => (
+                  {recibo.receiptItems.map((item, index) => (
                     <tr key={item.id}>
                       <td>{index + 1}</td>
                       <td>{item.desval}</td>
