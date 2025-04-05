@@ -415,7 +415,7 @@ const RecControl = (e) => {
       <main>
         {!showInvoice ? (
           <>
-            {/* name, address, email, phone, bank name, bank account number, website client name, client address, invoice number, invoice date, due date, notes */}
+            {/* name, address, email, phone, bank name, bank account number, website client name, client address, invoice number, Fecha Factura, Fecha Vencimiento, notes */}
             <div>
               <div className="bordeTable">
                 <Row>
@@ -430,10 +430,10 @@ const RecControl = (e) => {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Invoice N°</Form.Label>
+                          <Form.Label>Factura N°</Form.Label>
                           <Form.Control
                             className="input"
-                            placeholder="Invoice N°"
+                            placeholder="Factura N°"
                             value={invNum}
                             onChange={(e) => setInvNum(e.target.value)}
                             required
@@ -447,11 +447,11 @@ const RecControl = (e) => {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Invoice Date</Form.Label>
+                          <Form.Label>Fecha Factura</Form.Label>
                           <Form.Control
                             className="input"
                             type="date"
-                            placeholder="Invoice Date"
+                            placeholder="Fecha Factura"
                             value={invDat}
                             onChange={(e) => setInvDat(e.target.value)}
                             required
@@ -464,11 +464,11 @@ const RecControl = (e) => {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Due Date</Form.Label>
+                          <Form.Label>Fecha Vencimiento</Form.Label>
                           <Form.Control
                             className="input"
                             type="date"
-                            placeholder="Due Date"
+                            placeholder="Fecha Vencimiento"
                             value={dueDat}
                             onChange={(e) => setDueDat(e.target.value)}
                             required
@@ -481,10 +481,10 @@ const RecControl = (e) => {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Remit N°</Form.Label>
+                          <Form.Label>Remito N°</Form.Label>
                           <Form.Control
                             className="input"
-                            placeholder="Remit N°"
+                            placeholder="Remito N°"
                             value={remNum}
                             onChange={(e) => setRemNum(e.target.value)}
                             required
@@ -497,10 +497,10 @@ const RecControl = (e) => {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Additional Notes</Form.Label>
+                          <Form.Label>Observaciones</Form.Label>
                           <textarea
                             className="input"
-                            placeholder="Additional notes to the client"
+                            placeholder="Observaciones "
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
                           ></textarea>
@@ -540,10 +540,10 @@ const RecControl = (e) => {
                       <Card.Body>
                         <Card.Title>
                           <Form.Group className="input" controlId="name">
-                            <Form.Label>Value N°</Form.Label>
+                            <Form.Label>Valor N°</Form.Label>
                             <Form.Control
                               className="input"
-                              placeholder="Value N°"
+                              placeholder="Valor N°"
                               value={numval}
                               onChange={(e) => setNumval(e.target.value)}
                               disabled={!isPaying}
@@ -557,11 +557,11 @@ const RecControl = (e) => {
                       <Card.Body>
                         <Card.Title>
                           <Form.Group className="input" controlId="name">
-                            <Form.Label>Receipt Date</Form.Label>
+                            <Form.Label>Fecha</Form.Label>
                             <Form.Control
                               className="input"
                               type="date"
-                              placeholder="Receipt Date"
+                              placeholder="Fecha"
                               value={recDat}
                               onChange={(e) => setRecDat(e.target.value)}
                               disabled={!isPaying}
@@ -576,10 +576,10 @@ const RecControl = (e) => {
                       <Card.Body>
                         <Card.Title>
                           <Form.Group className="input" controlId="name">
-                            <Form.Label>Receipt N°</Form.Label>
+                            <Form.Label>Recibo N°</Form.Label>
                             <Form.Control
                               className="input"
-                              placeholder="Receipt N°"
+                              placeholder="Recibo N°"
                               value={recNum}
                               onChange={(e) => RecControl(e)}
                                 // onChange={(e) => setRecNum(e.target.value)}
@@ -598,7 +598,7 @@ const RecControl = (e) => {
                           className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                           disabled={!invNum || !invDat || !codUse}
                         >
-                          {isPaying ? 'Not Payment' : 'Load Payment'}
+                          {isPaying ? 'Not Payment' : 'Carga Pago'}
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -609,8 +609,8 @@ const RecControl = (e) => {
                         duration-300"
                       >
                         {isPaying && desval && recNum && recDat
-                          ? 'Loaded'
-                          : 'Not Loaded '}
+                          ? 'Cargado'
+                          : 'No Cargado '}
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
                     </Col>

@@ -119,7 +119,7 @@ export default function InvoiceListChaNum({ invoice, show, setShow }) {
             <Card.Body>
               <Card.Title>
                 <Form.Group className="input">
-                  <Form.Label>Invoice N°</Form.Label>
+                  <Form.Label>Factura N°</Form.Label>
                   <p>{invNumAux}</p>
                 </Form.Group>
               </Card.Title>
@@ -129,7 +129,7 @@ export default function InvoiceListChaNum({ invoice, show, setShow }) {
             <Card.Body>
               <Card.Title>
                 <Form.Group className="input">
-                  <Form.Label>Invoice Date</Form.Label>
+                  <Form.Label>Fecha Factura</Form.Label>
                   <p>{invDat}</p>
                 </Form.Group>
               </Card.Title>
@@ -139,7 +139,7 @@ export default function InvoiceListChaNum({ invoice, show, setShow }) {
             <Card.Body>
               <Card.Title>
                 <Form.Group className="input">
-                  <Form.Label>Remit N°</Form.Label>
+                  <Form.Label>Remito N°</Form.Label>
                   <p>{remNumAux}</p>
                 </Form.Group>
               </Card.Title>
@@ -183,10 +183,10 @@ export default function InvoiceListChaNum({ invoice, show, setShow }) {
             <Card.Body>
               <Card.Title>
                 <Form.Group className="input" controlId="name">
-                  <Form.Label>Invoice N°</Form.Label>
+                  <Form.Label>Factura N°</Form.Label>
                   <Form.Control
                     className="input"
-                    placeholder="Invoice N°"
+                    placeholder="Factura N°"
                     value={invNum}
                     onChange={(e) => setInvNum(e.target.value)}
                     required
@@ -206,10 +206,10 @@ export default function InvoiceListChaNum({ invoice, show, setShow }) {
             <Card.Body>
               <Card.Title>
                 <Form.Group className="input" controlId="name">
-                  <Form.Label>Remit N°</Form.Label>
+                  <Form.Label>Remito N°</Form.Label>
                   <Form.Control
                     className="input"
-                    placeholder="Remit N°"
+                    placeholder="Remito N°"
                     value={remNum}
                     onChange={(e) => setRemNum(e.target.value)}
                     required

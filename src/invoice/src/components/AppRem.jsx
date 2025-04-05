@@ -523,7 +523,7 @@ function AppRem() {
       <main>
         {!showInvoice ? (
           <>
-            {/* name, address, email, phone, bank name, bank account number, website client name, client address, invoice number, invoice date, due date, notes */}
+            {/* name, address, email, phone, bank name, bank account number, website client name, client address, invoice number, Fecha Factura, Fecha Vencimiento, notes */}
             <div>
               <div className="bordeTable">
               <Row>
@@ -560,11 +560,11 @@ function AppRem() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Customer Code</Form.Label>
+                          <Form.Label>Codigo Cliente</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input2Ref}
-                            placeholder="Customer Code"
+                            placeholder="Codigo Cliente"
                             value={codCust}
                             onChange={(e) => setCodCust(e.target.value)}
                             // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCus(codCust)}
@@ -605,11 +605,11 @@ function AppRem() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Remit N°</Form.Label>
+                          <Form.Label>Remito N°</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input6Ref}
-                            placeholder="Remit N°"
+                            placeholder="Remito N°"
                             value={remNum}
                             onChange={(e) => setRemNum(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input9Ref.current.focus()}
@@ -624,12 +624,12 @@ function AppRem() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Remit Date</Form.Label>
+                          <Form.Label>Fecha Remito</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input9Ref}
                             type="date"
-                            placeholder="Remit Date"
+                            placeholder="Fecha Remito"
                             value={remDat}
                             onChange={(e) => setRemDat(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
@@ -643,12 +643,12 @@ function AppRem() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Due Date</Form.Label>
+                          <Form.Label>Fecha Vencimiento</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input5Ref}
                             type="date"
-                            placeholder="Due Date"
+                            placeholder="Fecha Vencimiento"
                             value={dueDat}
                             onChange={(e) => setDueDat(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input7Ref.current.focus()}
@@ -662,11 +662,11 @@ function AppRem() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Additional Notes</Form.Label>
+                          <Form.Label>Observaciones</Form.Label>
                           <textarea
                             className="input"
                             ref={input7Ref}
-                            placeholder="Additional notes to the client"
+                            placeholder="Observaciones "
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input8Ref.current.focus()}
@@ -707,10 +707,10 @@ function AppRem() {
                       <Card.Body>
                         <Card.Title>
                           <Form.Group className="input" controlId="name">
-                            <Form.Label>Value N°</Form.Label>
+                            <Form.Label>Valor N°</Form.Label>
                             <Form.Control
                               className="input"
-                              placeholder="Value N°"
+                              placeholder="Valor N°"
                               value={numval}
                               onChange={(e) => setNumval(e.target.value)}
                               disabled={!isPaying}
@@ -724,11 +724,11 @@ function AppRem() {
                       <Card.Body>
                         <Card.Title>
                           <Form.Group className="input" controlId="name">
-                            <Form.Label>Receipt Date</Form.Label>
+                            <Form.Label>Fecha</Form.Label>
                             <Form.Control
                               className="input"
                               type="date"
-                              placeholder="Receipt Date"
+                              placeholder="Fecha"
                               value={recDat}
                               onChange={(e) => setRecDat(e.target.value)}
                               disabled={!isPaying}
@@ -743,10 +743,10 @@ function AppRem() {
                       <Card.Body>
                         <Card.Title>
                           <Form.Group className="input" controlId="name">
-                            <Form.Label>Receipt N°</Form.Label>
+                            <Form.Label>Recibo N°</Form.Label>
                             <Form.Control
                               className="input"
-                              placeholder="Receipt N°"
+                              placeholder="Recibo N°"
                               value={recNum}
                               onChange={(e) => setRecNum(e.target.value)}
                               disabled={!isPaying}
@@ -769,7 +769,7 @@ function AppRem() {
                             !codCus
                           }
                         >
-                          {isPaying ? 'Not Payment' : 'Load Payment'}
+                          {isPaying ? 'Not Payment' : 'Carga Pago'}
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -780,8 +780,8 @@ function AppRem() {
                         duration-300"
                       >
                         {isPaying && desval && recNum && recDat
-                          ? 'Loaded'
-                          : 'Not Loaded '}
+                          ? 'Cargado'
+                          : 'No Cargado '}
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
                     </Col>

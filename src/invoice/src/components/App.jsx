@@ -96,6 +96,7 @@ function App() {
   const input21Ref = useRef(null);
 
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
+  const [id_config, setId_config] = useState(userInfo.codCon);
   const [noDisc, setNoDisc] = useState(false);
   const [toDisc, setToDisc] = useState(true);
   const [itDisc, setItDisc] = useState(false);
@@ -215,7 +216,7 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${API}/api/comprobantes`, {
+        const { data } = await axios.get(`${API}/api/comprobantes?id_config=${id_config}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         setComprobantes(data);
@@ -597,7 +598,7 @@ function App() {
       <main>
         {!showInvoice ? (
           <>
-            {/* name, address, email, phone, bank name, bank account number, website client name, client address, invoice number, invoice date, due date, notes */}
+            {/* name, address, email, phone, bank name, bank account number, website client name, client address, invoice number, Fecha Factura, Fecha Vencimiento, notes */}
             <div>
               <div className="bordeTable">
               <Row>
@@ -652,11 +653,11 @@ function App() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Customer Code</Form.Label>
+                          <Form.Label>Codigo Cliente</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input2Ref}
-                            placeholder="Customer Code"
+                            placeholder="Codigo Cliente"
                             value={codCust}
                             onChange={(e) => setCodCust(e.target.value)}
                             // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCus(codCust)}
@@ -697,11 +698,11 @@ function App() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Invoice N°</Form.Label>
+                          <Form.Label>Factura N°</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input3Ref}
-                            placeholder="Invoice N°"
+                            placeholder="Factura N°"
                             value={invNum}
                             onChange={(e) => setInvNum(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input4Ref.current.focus()}
@@ -716,12 +717,12 @@ function App() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Invoice Date</Form.Label>
+                          <Form.Label>Fecha Factura</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input4Ref}
                             type="date"
-                            placeholder="Invoice Date"
+                            placeholder="Fecha Factura"
                             value={invDat}
                             onChange={(e) => setInvDat(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
@@ -735,12 +736,12 @@ function App() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Due Date</Form.Label>
+                          <Form.Label>Fecha Vencimiento</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input5Ref}
                             type="date"
-                            placeholder="Due Date"
+                            placeholder="Fecha Vencimiento"
                             value={dueDat}
                             onChange={(e) => setDueDat(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input6Ref.current.focus()}
@@ -754,11 +755,11 @@ function App() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Remit N°</Form.Label>
+                          <Form.Label>Remito N°</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input6Ref}
-                            placeholder="Remit N°"
+                            placeholder="Remito N°"
                             value={remNum}
                             onChange={(e) => setRemNum(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input7Ref.current.focus()}
@@ -772,11 +773,11 @@ function App() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Additional Notes</Form.Label>
+                          <Form.Label>Observaciones</Form.Label>
                           <textarea
                             className="input"
                             ref={input7Ref}
-                            placeholder="Additional notes to the client"
+                            placeholder="Observaciones "
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input8Ref.current.focus()}
@@ -817,10 +818,10 @@ function App() {
                       <Card.Body>
                         <Card.Title>
                           <Form.Group className="input" controlId="name">
-                            <Form.Label>Value N°</Form.Label>
+                            <Form.Label>Valor N°</Form.Label>
                             <Form.Control
                               className="input"
-                              placeholder="Value N°"
+                              placeholder="Valor N°"
                               value={numval}
                               onChange={(e) => setNumval(e.target.value)}
                               disabled={!isPaying}
@@ -834,11 +835,11 @@ function App() {
                       <Card.Body>
                         <Card.Title>
                           <Form.Group className="input" controlId="name">
-                            <Form.Label>Receipt Date</Form.Label>
+                            <Form.Label>Fecha</Form.Label>
                             <Form.Control
                               className="input"
                               type="date"
-                              placeholder="Receipt Date"
+                              placeholder="Fecha"
                               value={recDat}
                               onChange={(e) => setRecDat(e.target.value)}
                               disabled={!isPaying}
@@ -853,10 +854,10 @@ function App() {
                       <Card.Body>
                         <Card.Title>
                           <Form.Group className="input" controlId="name">
-                            <Form.Label>Receipt N°</Form.Label>
+                            <Form.Label>Recibo N°</Form.Label>
                             <Form.Control
                               className="input"
-                              placeholder="Receipt N°"
+                              placeholder="Recibo N°"
                               value={recNum}
                               onChange={(e) => setRecNum(e.target.value)}
                               disabled={!isPaying}
@@ -879,7 +880,7 @@ function App() {
                             !codCus
                           }
                         >
-                          {isPaying ? 'Not Payment' : 'Load Payment'}
+                          {isPaying ? 'Not Payment' : 'Carga Pago'}
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -890,8 +891,8 @@ function App() {
                         duration-300"
                       >
                         {isPaying && desval && recNum && recDat
-                          ? 'Loaded'
-                          : 'Not Loaded '}
+                          ? 'Cargado'
+                          : 'No Cargado '}
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
                     </Col>

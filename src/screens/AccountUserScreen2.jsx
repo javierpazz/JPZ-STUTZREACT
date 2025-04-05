@@ -181,9 +181,9 @@ export default function AccountUserScreen() {
             <thead>
               <tr>
                 <th>INVOICE</th>
-                <th>INVOICE DATE</th>
+                <th>Fecha Factura</th>
                 <th>RECEIPT</th>
-                <th>RECEIPT DATE</th>
+                <th>Fecha</th>
                 <th>TOTAL</th>
                 <th>ACTIONS</th>
               </tr>

@@ -201,25 +201,24 @@ const prodeleteReceipt = (receipt) => {
           <table className="table">
             <thead>
               <tr>
-                <th>Nro Comp</th>
-                <th>FECHA</th>
-                <th>ENCARGADO</th>
-                <th>VALOR</th>
-                <th>TOTAL</th>
-                <th>ACCIONES</th>
+                <th className="text-center">Nro Comp</th>
+                <th className="text-center">FECHA</th>
+                <th className="text-center">ENCARGADO</th>
+                <th className="text-center">VALOR</th>
+                <th className="text-end">TOTAL</th>
+                <th className="text-end">ACCIONES</th>
               </tr>
             </thead>
             <tbody>
               {receipts?.map((receipt) => (
                 <tr key={receipt._id}>
-                  <td>{receipt.cajNum}</td>
-                  <td>{receipt.recDat ? receipt.recDat.substring(0, 10): ''}</td>
-                  {/* <td>{receipt.id_encarg ? receipt.id_client.nameCus : 'arregalr encarfado'}</td> */}
-                  <td>arregalr encarfado</td>
-                  <td>{receipt.desval}</td>
-                  <td>{receipt.total.toFixed(2)}</td>
+                  <td className="text-end">{receipt.cajNum}</td>
+                  <td className="text-center">{receipt.recDat ? receipt.recDat.substring(0, 10): ''}</td>
+                  <td>{receipt.id_encarg ? receipt.id_encarg.name : ''}</td>
+                  <td >{receipt.desval}</td>
+                  <td className="text-end">{receipt.total.toFixed(2)}</td>
 
-                  <td>
+                  <td className="text-end">
                     {/* <Button
                       type="button"
                       title="Imprimir"
@@ -273,7 +272,7 @@ const prodeleteReceipt = (receipt) => {
               <Link
                 className={x + 1 === Number(page) ? 'btn text-bold' : 'btn'}
                 key={x + 1}
-                to={`/admin/invoicesRec?page=${x + 1}`}
+                to={`/admin/invoicesCajIng?page=${x + 1}`}
               >
                 {x + 1}
               </Link>
@@ -287,7 +286,7 @@ const prodeleteReceipt = (receipt) => {
           >
             <Modal.Header closeButton>
               <Modal.Title id="example-modal-sizes-title-lg">
-                Invoices To Apply Receipt N° {recNum}
+                Invoices To Apply Recibo N° {recNum}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>

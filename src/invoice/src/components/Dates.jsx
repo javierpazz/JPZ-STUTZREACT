@@ -7,10 +7,10 @@ export default function Dates({ invNum, invDat, dueDat }) {
             <span className="font-bold">Invoicer number:</span> {invNum}
           </li>
           <li className="p-1 bg-gray-100">
-            <span className="font-bold">Invoice date:</span> {invDat}
+            <span className="font-bold">Fecha Factura:</span> {invDat}
           </li>
           <li className="p-1 ">
-            <span className="font-bold">Due date:</span> {dueDat}
+            <span className="font-bold">Fecha Vencimiento:</span> {dueDat}
           </li>
         </ul>
       </article>

@@ -257,30 +257,30 @@ try {
           <table className="table">
             <thead>
               <tr>
-                <th>FECHA</th>
-                <th>REMITO</th>
-                <th>PEDIDO</th>
-                <th>RECIBO</th>
-                <th>CLIENTE</th>
-                <th>PAGOS</th>
-                <th>FORMA PAGO</th>
-                <th>TOTAL</th>
-                <th>ACCIONES</th>
+                <th className="text-center">FECHA</th>
+                <th className="text-center">REMITO</th>
+                <th className="text-center">PEDIDO</th>
+                <th className="text-center">RECIBO</th>
+                <th className="text-center">CLIENTE</th>
+                <th className="text-center">PAGOS</th>
+                <th className="text-center">FORMA PAGO</th>
+                <th className="text-end">TOTAL</th>
+                <th className="text-end">ACCIONES</th>
               </tr>
             </thead>
             <tbody>
               {invoices?.map((invoice) => (
                 <tr key={invoice._id}>
-                  <td>{invoice.remDat.substring(0, 10)}</td>
-                  <td>{invoice.remNum}</td>
-                  {invoice.ordYes === 'Y' ? <td>{invoice._id}</td> : <td></td>}
-                  <td>{invoice.recNum}</td>
+                  <td className="text-center">{invoice.remDat.substring(0, 10)}</td>
+                  <td className="text-end">{invoice.remNum}</td>
+                      {invoice.ordYes === 'Y' ? <td className="text-end">{invoice._id}</td> : <td></td>}
+                  <td className="text-end">{invoice.recNum}</td>
                   <td>{invoice.id_client ? invoice.id_client.nameCus : 'DELETED USER'}</td>
-                  <td>{invoice.recNum ? invoice.recDat : 'No'}</td>
+                  <td className="text-end">{invoice.recNum ? invoice.recDat : 'No'}</td>
                   <td>{invoice.desVal}</td>
-                  <td>{invoice.total.toFixed(2)}</td>
+                  <td className="text-end">{invoice.total.toFixed(2)}</td>
 
-                  <td>
+                  <td className="text-end">
                     {/* <Button
                       type="button"
                       title="Imprimir"
@@ -336,7 +336,7 @@ try {
               <Link
                 className={x + 1 === Number(page) ? 'btn text-bold' : 'btn'}
                 key={x + 1}
-                to={`/admin/invoices?page=${x + 1}`}
+                to={`/admin/remits?page=${x + 1}`}
               >
                 {x + 1}
               </Link>

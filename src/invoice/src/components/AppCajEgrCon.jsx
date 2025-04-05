@@ -404,7 +404,7 @@ const submitHandlerEnc = async (e) => {
       <main>
         {!showReceipt ? (
           <>
-            {/* name, address, email, phone, bank name, bank account number, website client name, client address, receipt number, receipt date, due date, notes */}
+            {/* name, address, email, phone, bank name, bank account number, website client name, client address, Numero, Fecha, Fecha Vencimiento, notes */}
             <div>
               <div className="bordeTable">
               
@@ -487,11 +487,11 @@ const submitHandlerEnc = async (e) => {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Receipt Number</Form.Label>
+                          <Form.Label>Numero</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input3Ref}
-                            placeholder="Receipt Number"
+                            placeholder="Numero"
                             value={cajNum}
                             onChange={(e) => RecControl(e)}
                             onKeyDown={(e) => e.key === "Enter" && input4Ref.current.focus()}
@@ -506,12 +506,12 @@ const submitHandlerEnc = async (e) => {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Receipt Date</Form.Label>
+                          <Form.Label>Fecha</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input4Ref}
                             type="date"
-                            placeholder="Receipt Date"
+                            placeholder="Fecha"
                             value={cajDat}
                             onChange={(e) => setCajDat(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
@@ -525,11 +525,11 @@ const submitHandlerEnc = async (e) => {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Additional Notes</Form.Label>
+                          <Form.Label>Observaciones</Form.Label>
                           <textarea
                             className="input"
                             ref={input5Ref}
-                            placeholder="Additional notes to the client"
+                            placeholder="Observaciones "
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input8Ref.current.focus()}

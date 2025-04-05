@@ -153,7 +153,7 @@ export default function OrderState({ invoice, show, setShow }) {
             <Card.Body>
               <Card.Title>
                 <Form.Group className="input">
-                  <Form.Label>Invoice N°</Form.Label>
+                  <Form.Label>Factura N°</Form.Label>
                   <p>{invNum}</p>
                 </Form.Group>
               </Card.Title>
@@ -173,7 +173,7 @@ export default function OrderState({ invoice, show, setShow }) {
             <Card.Body>
               <Card.Title>
                 <Form.Group className="input">
-                  <Form.Label>Remit N°</Form.Label>
+                  <Form.Label>Remito N°</Form.Label>
                   <p>{remNum}</p>
                 </Form.Group>
               </Card.Title>

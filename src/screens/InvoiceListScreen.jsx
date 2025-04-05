@@ -256,32 +256,32 @@ try {
           <table className="table">
             <thead>
               <tr>
-                <th>FACTURA</th>
-                <th>FECHA</th>
-                <th>REMITO</th>
-                <th>PEDIDO</th>
-                <th>RECIBO</th>
-                <th>CLIENTE</th>
-                <th>PAGOS</th>
-                <th>FORMA PAGO</th>
-                <th>TOTAL</th>
-                <th>ACCIONES</th>
+                <th className="text-center">FACTURA</th>
+                <th className="text-center">FECHA</th>
+                <th className="text-center">REMITO</th>
+                <th className="text-center">PEDIDO</th>
+                <th className="text-center">RECIBO</th>
+                <th className="text-center">CLIENTE</th>
+                <th className="text-center">PAGOS</th>
+                <th className="text-center">FORMA PAGO</th>
+                <th className="text-end">TOTAL</th>
+                <th className="text-end">ACCIONES</th>
               </tr>
             </thead>
             <tbody>
               {invoices?.map((invoice) => (
                 <tr key={invoice._id}>
-                  <td>{invoice.invNum ? invoice.invNum : 'REMITO S/F'}</td>
-                  <td>{invoice.invDat ? invoice.invDat.substring(0, 10): ''}</td>
-                  <td>{invoice.remNum}</td>
-                  {invoice.ordYes === 'Y' ? <td>{invoice._id}</td> : <td></td>}
-                  <td>{invoice.recNum}</td>
+                  <td className="text-end">{invoice.invNum ? invoice.invNum : 'REMITO S/F'}</td>
+                  <td className="text-center">{invoice.invDat ? invoice.invDat.substring(0, 10): ''}</td>
+                  <td className="text-end">{invoice.remNum}</td>
+                      {invoice.ordYes === 'Y' ? <td className="text-end">{invoice._id}</td> : <td></td>}
+                  <td className="text-end">{invoice.recNum}</td>
                   <td>{invoice.id_client ? invoice.id_client.nameCus : 'DELETED USER'}</td>
-                  <td>{invoice.recNum ? invoice.recDat.substring(0, 10) : 'No'}</td>
+                  <td className="text-center">{invoice.recNum ? invoice.recDat.substring(0, 10) : 'No'}</td>
                   <td>{invoice.desVal}</td>
-                  <td>{invoice.total.toFixed(2)}</td>
+                  <td className="text-end">{invoice.total.toFixed(2)}</td>
 
-                  <td>
+                  <td className="text-end">
                     {/* <Button
                       type="button"
                       title="Imprimir"

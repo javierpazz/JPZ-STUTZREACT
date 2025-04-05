@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import axios from 'axios';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
@@ -77,11 +77,14 @@ export default function ComprobanteListScreen() {
 
   const { state } = useContext(Store);
   const { userInfo } = state;
-
+  const [id_config, setId_config] = useState(userInfo.codCon);
+  console.log(id_config);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${API}/api/comprobantes/admin?page=${page} `, {
+        const { data } = await axios.get(`${API}/api/comprobantes/admin?page=${page}&id_config=${id_config} `, 
+        {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
 
@@ -204,7 +207,7 @@ export default function ComprobanteListScreen() {
               <Link
                 className={x + 1 === Number(page) ? 'btn text-bold' : 'btn'}
                 key={x + 1}
-                to={`/admin/comprobantes?page=${x + 1}`}
+                to={`/admin/comprobantes?page=${x + 1}&id_config=${id_config}`}
               >
                 {x + 1}
               </Link>

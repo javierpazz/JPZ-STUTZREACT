@@ -238,7 +238,7 @@ export default function TableFormRec({
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input">
-                          <Form.Label>Product</Form.Label>
+                          <Form.Label>Valor </Form.Label>
                           <h3>{desval}</h3>
                         </Form.Group>
                       </Card.Title>
@@ -251,7 +251,7 @@ export default function TableFormRec({
               <Card.Body>
                 <Card.Title>
                   <Form.Group className="input" controlId="name">
-                    <Form.Label>Value Number</Form.Label>
+                    <Form.Label>Numero Valor</Form.Label>
                     <Form.Control
                       className="input"
                       ref={input9Ref}
@@ -270,11 +270,11 @@ export default function TableFormRec({
               <Card.Body>
                 <Card.Title>
                   <Form.Group className="input" controlId="amount">
-                    <Form.Label>Amount</Form.Label>
+                    <Form.Label>Cantidad</Form.Label>
                     <Form.Control
                       className="input"
                       ref={input10Ref}
-                      placeholder="Amount"
+                      placeholder="Cantidad"
                       value={amountval}
                       onChange={(e) => setAmountval(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && input11Ref.current.focus()}
@@ -295,7 +295,7 @@ export default function TableFormRec({
                       className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                       disabled={!codVal || !numval || !amountval}
                     >
-                      {isEditing ? 'Editing Row Item' : 'Add Table Item'}
+                      {isEditing ? 'Editing Row Item' : 'Agrega'}
                     </Button>
                   </Form.Group>
                 </Card.Title>
@@ -368,10 +368,10 @@ export default function TableFormRec({
       <table width="100%" className="mb-10">
         <thead>
           <tr className="bg-gray-100 p-1">
-            <td className="font-bold">Value Code</td>
-            <td className="font-bold">Value Description</td>
-            <td className="font-bold">Value Number</td>
-            <td className="font-bold">Amount</td>
+            <td className="font-bold">Codigo Valor </td>
+            <td className="font-bold">Descripcion Valor </td>
+            <td className="font-bold">Numero Valor</td>
+            <td className="font-bold">Cantidad</td>
             <td className="font-bold">Options</td>
           </tr>
         </thead>

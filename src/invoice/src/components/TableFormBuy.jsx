@@ -204,7 +204,7 @@ export default function TableFormBuy({
 //     if (e.target.value <= stock) {
 //       setQuantity(e.target.value);
 //     } else {
-//       toast.error('This Product does not have stock enough');
+//       toast.error('This Producto does not have stock enough');
 //     }
 //   };
 
@@ -227,11 +227,11 @@ export default function TableFormBuy({
               <Card.Body>
                 <Card.Title>
                   <Form.Group className="input" controlId="name">
-                    <Form.Label>Product Code</Form.Label>
+                    <Form.Label>Codigo Producto</Form.Label>
                     <Form.Control
                       className="input"
                       ref={input8Ref}
-                      placeholder="Product Code"
+                      placeholder="Codigo Producto"
                       value={codProd}
                       onChange={(e) => setCodProd(e.target.value)}
                       // onKeyDown={(e) => e.key === "Enter" && buscarPorCodPro(codProd)}
@@ -258,7 +258,7 @@ export default function TableFormBuy({
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input">
-                          <Form.Label>Product</Form.Label>
+                          <Form.Label>Producto</Form.Label>
                           <h3>{desPro}</h3>
                         </Form.Group>
                       </Card.Title>
@@ -269,11 +269,11 @@ export default function TableFormBuy({
               <Card.Body>
                 <Card.Title>
                   <Form.Group className="input" controlId="name">
-                    <Form.Label>Quantity</Form.Label>
+                    <Form.Label>Cantidad</Form.Label>
                     <Form.Control
                       className="input"
                       ref={input9Ref}
-                      placeholder="Quantity"
+                      placeholder="Cantidad"
                       value={quantity}
                       onChange={(e) => setQuantity(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && input10Ref.current.focus()}
@@ -289,11 +289,11 @@ export default function TableFormBuy({
               <Card.Body>
                 <Card.Title>
                   <Form.Group className="input" controlId="name">
-                    <Form.Label>Price</Form.Label>
+                    <Form.Label>Precio</Form.Label>
                     <Form.Control
                       className="input"
                       ref={input10Ref}
-                      placeholder="Price"
+                      placeholder="Precio"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && input11Ref.current.focus()}
@@ -309,7 +309,7 @@ export default function TableFormBuy({
               <Card.Body>
                 <Card.Title>
                   <Form.Group className="input">
-                    <Form.Label>Amount</Form.Label>
+                    <Form.Label>Cantidad</Form.Label>
                     <p>{amount.toFixed(2)}</p>
                   </Form.Group>
                 </Card.Title>
@@ -326,7 +326,7 @@ export default function TableFormBuy({
                       className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                       disabled={isPaying}
                     >
-                      {isEditing ? 'Editing Row Item' : 'Add Table Item'}
+                      {isEditing ? 'Editing Row Item' : 'Agrega'}
                     </Button>
                   </Form.Group>
                 </Card.Title>
@@ -398,11 +398,11 @@ export default function TableFormBuy({
       <table width="100%" className="mb-10">
         <thead>
           <tr className="bg-gray-100 p-1">
-            <td className="font-bold">Product Code</td>
-            <td className="font-bold">Product Description</td>
-            <td className="font-bold">Quantity</td>
-            <td className="font-bold">Price</td>
-            <td className="font-bold">Amount</td>
+            <td className="font-bold">Codigo Producto </td>
+            <td className="font-bold">Descripcion Producto </td>
+            <td className="font-bold">Cantidad</td>
+            <td className="font-bold">Precio</td>
+            <td className="font-bold">Cantidad</td>
             <td className="font-bold">Options</td>
           </tr>
         </thead>

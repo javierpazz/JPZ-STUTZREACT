@@ -210,11 +210,11 @@ export default function TableForm({
       setQuantity(e.target.value);
     } else {
       setQuantity(e.target.value);
-      toast.error('This Product does not have stock enough');
+      toast.error('Este Producto no tiene stock');
     }
     if (stock-e.target.value <= miStock) {
       setQuantity(e.target.value);
-      toast.error('This Product has Minim Stock');
+      toast.error('Este Producto tiene Minimo Stock');
     }
   };
 
@@ -238,7 +238,7 @@ export default function TableForm({
               <Card.Body>
                 <Card.Title>
                   <Form.Group className="input" controlId="name">
-                    <Form.Label>Product Code</Form.Label>
+                    <Form.Label>Producto Codigo</Form.Label>
                     <Form.Control
                       className="input"
                       ref={input8Ref}
@@ -268,7 +268,7 @@ export default function TableForm({
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input">
-                          <Form.Label>Product</Form.Label>
+                          <Form.Label>Producto</Form.Label>
                           <h3>{desPro}</h3>
                         </Form.Group>
                       </Card.Title>
@@ -280,11 +280,11 @@ export default function TableForm({
               <Card.Body>
                 <Card.Title>
                   <Form.Group className="input" controlId="name">
-                    <Form.Label>Quantity</Form.Label>
+                    <Form.Label>Cantidad</Form.Label>
                     <Form.Control
                       className="input"
                       ref={input9Ref}
-                      placeholder="Quantity"
+                      placeholder="Cantidad"
                       value={quantity}
                       onChange={(e) => stockControl(e)}
                       onKeyDown={(e) => e.key === "Enter" && input10Ref.current.focus()}
@@ -300,11 +300,11 @@ export default function TableForm({
               <Card.Body>
                 <Card.Title>
                   <Form.Group className="input" controlId="name">
-                    <Form.Label>Price</Form.Label>
+                    <Form.Label>Precio</Form.Label>
                     <Form.Control
                       className="input"
                       ref={input10Ref}
-                      placeholder="Price"
+                      placeholder="Precio"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && input11Ref.current.focus()}
@@ -320,7 +320,7 @@ export default function TableForm({
               <Card.Body>
                 <Card.Title>
                   <Form.Group className="input">
-                    <Form.Label>Amount</Form.Label>
+                    <Form.Label>Total</Form.Label>
                     <p>{amount.toFixed(2)}</p>
                   </Form.Group>
                 </Card.Title>
@@ -336,7 +336,7 @@ export default function TableForm({
                       className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                       disabled={isPaying}
                     >
-                      {isEditing ? 'Editing Row Item' : 'Add Table Item'}
+                      {isEditing ? 'Editing Row Item' : 'Agrega'}
                     </Button>
                   </Form.Group>
                 </Card.Title>
@@ -410,11 +410,11 @@ export default function TableForm({
       <table width="100%" className="mb-10">
         <thead>
           <tr className="bg-gray-100 p-1">
-            <td className="font-bold">Product Code</td>
-            <td className="font-bold">Product Description</td>
-            <td className="font-bold">Quantity</td>
-            <td className="font-bold">Price</td>
-            <td className="font-bold">Amount</td>
+            <td className="font-bold">Codigo Producto </td>
+            <td className="font-bold">Descripcion Producto </td>
+            <td className="font-bold">Candidad</td>
+            <td className="font-bold">Precio</td>
+            <td className="font-bold">Total</td>
             <td className="font-bold">Options</td>
           </tr>
         </thead>

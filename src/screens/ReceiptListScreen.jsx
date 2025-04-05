@@ -201,25 +201,25 @@ const prodeleteReceipt = (receipt) => {
           <table className="table">
             <thead>
               <tr>
-                <th>RECIBO</th>
-                <th>FECHA</th>
-                <th>CLIENTE</th>
-                <th>FORMA PAGO</th>
-                <th>TOTAL</th>
-                <th>ACCIONES</th>
+                <th className="text-end">RECIBO</th>
+                <th className="text-center">FECHA</th>
+                <th className="text-center">CLIENTE</th>
+                <th className="text-center">FORMA PAGO</th>
+                <th className="text-end">TOTAL</th>
+                <th className="text-end">ACCIONES</th>
               </tr>
             </thead>
             <tbody>
               {receipts?.map((receipt) => (
                 <tr key={receipt._id}>
-                  <td>{receipt.recNum}</td>
+                  <td className="text-end">{receipt.recNum}</td>
                   {/* <td>{receipt.recDat.substring(0, 10)}</td> */}
-                  <td>{receipt.recDat ? receipt.recDat.substring(0, 10): ''}</td>
+                  <td className="text-center">{receipt.recDat ? receipt.recDat.substring(0, 10): ''}</td>
                   <td>{receipt.id_client ? receipt.id_client.nameCus : 'DELETED CLIENT'}</td>
                   <td>{receipt.desval}</td>
-                  <td>{receipt.total.toFixed(2)}</td>
+                  <td className="text-end">{receipt.total.toFixed(2)}</td>
 
-                  <td>
+                  <td className="text-end">
                     {/* <Button
                       type="button"
                       title="Imprimir"
@@ -287,7 +287,7 @@ const prodeleteReceipt = (receipt) => {
           >
             <Modal.Header closeButton>
               <Modal.Title id="example-modal-sizes-title-lg">
-                Invoices To Apply Receipt N° {recNum}
+                Invoices To Apply Recibo N° {recNum}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>

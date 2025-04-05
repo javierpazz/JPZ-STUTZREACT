@@ -411,7 +411,7 @@ const RecControl = (e) => {
       <main>
         {!showReceipt ? (
           <>
-            {/* name, address, email, phone, bank name, bank account number, website client name, client address, receipt number, receipt date, due date, notes */}
+            {/* name, address, email, phone, bank name, bank account number, website client name, client address, Numero, Fecha, Fecha Vencimiento, notes */}
             <div>
               <div className="bordeTable">
               <Row>
@@ -447,11 +447,11 @@ const RecControl = (e) => {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Customer Code</Form.Label>
+                          <Form.Label>Codigo Cliente</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input2Ref}
-                            placeholder="Customer Code"
+                            placeholder="Codigo Cliente"
                             value={codCust}
                             onChange={(e) => setCodCust(e.target.value)}
                             // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCus(codCust)}
@@ -492,11 +492,11 @@ const RecControl = (e) => {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Receipt Number</Form.Label>
+                          <Form.Label>Numero</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input3Ref}
-                            placeholder="Receipt Number"
+                            placeholder="Numero"
                             value={recNum}
                             onChange={(e) => RecControl(e)}
                             onKeyDown={(e) => e.key === "Enter" && input4Ref.current.focus()}
@@ -511,12 +511,12 @@ const RecControl = (e) => {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Receipt Date</Form.Label>
+                          <Form.Label>Fecha</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input4Ref}
                             type="date"
-                            placeholder="Receipt Date"
+                            placeholder="Fecha"
                             value={recDat}
                             onChange={(e) => setRecDat(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
@@ -530,11 +530,11 @@ const RecControl = (e) => {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Additional Notes</Form.Label>
+                          <Form.Label>Observaciones</Form.Label>
                           <textarea
                             className="input"
                             ref={input5Ref}
-                            placeholder="Additional notes to the client"
+                            placeholder="Observaciones "
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input8Ref.current.focus()}

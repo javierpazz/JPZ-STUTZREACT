@@ -295,7 +295,7 @@ export default function TableFormRecCon({
                       className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                       disabled={!codVal || !numval || !amountval}
                     >
-                      {isEditing ? 'Editing Row Item' : 'Add Table Item'}
+                      {isEditing ? 'Editing Row Item' : 'Agrega'}
                     </Button>
                   </Form.Group>
                 </Card.Title>

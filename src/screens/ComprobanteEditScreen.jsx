@@ -62,6 +62,7 @@ export default function ComprobanteEditScreen() {
   const [itDisc, setItDisc] = useState(false);
   const [interno, setInterno] = useState(false);
   const [numInt, setNumInt] = useState(false);
+  const [id_config, setId_config] = useState(userInfo.codCon);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -106,6 +107,7 @@ export default function ComprobanteEditScreen() {
           claCom,
           interno,
           numInt,
+          id_config,
         },
         {
           headers: { Authorization: `Bearer ${userInfo.token}` },
