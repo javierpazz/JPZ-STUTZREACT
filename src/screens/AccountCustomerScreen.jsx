@@ -125,11 +125,20 @@ export default function AccountCustomerScreen() {
 
     setTotal(sum);
   };
-
-  const handleShow = (invoice) => {
-    //setInvoices(invoice);
-    //setShow(true);
+  const handleConsultaRec = (receiptId) => {
+    navigate(`/admin/invoicerRecCon/${receiptId}`);
   };
+
+
+
+  const handleConsulta = (invoiceId) => {
+    navigate(`/admin/invoicerCon/${invoiceId}`);
+  };
+
+  // const handleShow = (invoice) => {
+  //   //setInvoices(invoice);
+  //   //setShow(true);
+  // };
 
   const aplyReceipt = async () => {};
 
@@ -212,14 +221,14 @@ export default function AccountCustomerScreen() {
         <title>Cuenta</title>
       </Helmet>
       <Row>
-        <Col>
+        <Col md={7}>
           <h1>Cuenta Clientes</h1>
         </Col>
 
-        <Col>
+        <Col md={3}>
           <h3>           Saldo: ${total.toFixed(2)}</h3>
         </Col>
-        <Col className="col text-end">
+        <Col  className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
               Seleccione otro Cliente
@@ -239,29 +248,29 @@ export default function AccountCustomerScreen() {
           <table className="table">
             <thead>
               <tr>
-                <th>DATE</th>
-                <th>DOCUMENT</th>
-                <th>NUMBER</th>
-                <th>AMOUNT</th>
-                <th>ACTIONS</th>
+                <th className="text-center">FECHA</th>
+                <th className="text-center">DOCUMENTO</th>
+                <th className="text-center">NUMERO</th>
+                <th className="text-center">TOTAL</th>
+                <th className="text-end">ACTIONS</th>
               </tr>
             </thead>
             <tbody>
               {invoices?.map((invoice) => (
                 <tr key={invoice._id}>
-                  <td>{invoice.docDat ? invoice.docDat.substring(0, 10): '' }</td>
+                  <td className="text-center">{invoice.docDat ? invoice.docDat.substring(0, 10): '' }</td>
                   {invoice.orderItems ? <td>Factura</td> : <td>Recibo</td>}
                   {invoice.orderItems ? (
-                    <td>{invoice.invNum ? invoice.invNum : 'REMITO S/F'}</td>
+                    <td className="text-end">{invoice.invNum ? invoice.invNum : 'REMITO S/F'}</td>
                   ) : (
-                    <td>{invoice.recNum}</td>
+                    <td className="text-end">{invoice.recNum}</td>
                   )}
 
 
-                  <td>{invoice.total.toFixed(2)}</td>
+                  <td className="text-end">{invoice.total.toFixed(2)}</td>
 
-                  <td>
-                    {invoice.orderItems ? (
+                  <td className="text-end">
+                    {/* {invoice.orderItems ? (
                       <Button
                         type="button"
                         title="Print Invoice"
@@ -281,8 +290,8 @@ export default function AccountCustomerScreen() {
                       >
                         <AiFillPrinter className="text-black-500 font-bold text-xl" />
                       </Button>
-                    )}
-                    &nbsp;
+                    )} */}
+                    {/* &nbsp;
                     {invoice.orderItems ? (
                       <Button
                         type="button"
@@ -303,27 +312,28 @@ export default function AccountCustomerScreen() {
                       >
                         <AiOutlineMail className="text-black-500 font-bold text-xl" />
                       </Button>
-                    )}
+                    )} */}
                     &nbsp;
                     {invoice.orderItems ? (
                       <Button
                         type="button"
-                        title="Consult Invoice"
-                        onClick={() => handleShow(invoice)}
-                      >
+                        title="Consulta Factura/Remito"
+                        // onClick={() => handleShow(invoice)}
+                        onClick={() => handleConsulta(invoice._id)}
+                        >
                         <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                       </Button>
                     ) : (
                       <Button
                         type="button"
-                        title="Consult Receipt"
-                        onClick={() => handleShow(invoice)}
-                      >
+                        title="Consulta Recibo"
+                        onClick={() => handleConsultaRec(receipt._id)}
+                        >
                         <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                       </Button>
                     )}
                     &nbsp;
-                    {invoice.orderItems ? (
+                    {/* {invoice.orderItems ? (
                       <Button
                         type="button"
                         title="Pay Invoice"
@@ -339,14 +349,14 @@ export default function AccountCustomerScreen() {
                       >
                         <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                       </Button>
-                    )}
+                    )} */}
                     &nbsp;
                     {invoice.orderItems ? (
                       <Button
                         type="button"
                         title="Delete Invoice"
                         onClick={() => deleteInvoice(invoice)}
-                        //disabled={invoice.invNum < 40}
+                        disabled={true}
                       >
                         <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                       </Button>
@@ -355,7 +365,7 @@ export default function AccountCustomerScreen() {
                         type="button"
                         title="Delete Receipt"
                         onClick={() => deleteReceipt(invoice)}
-                        //disabled={invoice.invNum < 40}
+                        disabled={true}
                       >
                         <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                       </Button>

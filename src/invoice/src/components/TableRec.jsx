@@ -8,10 +8,10 @@ export default function TableRec({ receiptItems, total }) {
       <table width="100%" className="mb-10">
         <thead>
           <tr className="bg-gray-100 p-1">
-            <td className="font-bold">Product Code</td>
+            <td className="font-bold">Codigo Producto</td>
             <td className="font-bold">Product Description</td>
             <td className="font-bold">Value Number</td>
-            <td className="font-bold">Amount</td>
+            <td className="font-bold">Total</td>
           </tr>
         </thead>
         {receiptItems.map((itemVal) => (

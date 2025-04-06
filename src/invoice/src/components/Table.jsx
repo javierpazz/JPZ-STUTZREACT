@@ -10,11 +10,11 @@ export default function Table({ orderItems, total }) {
       <table width="100%" className="mb-10">
         <thead>
           <tr className="bg-gray-100 p-1">
-            <td className="font-bold text-end">Product Code</td>
+            <td className="font-bold text-end">Codigo Producto</td>
             <td className="font-bold text-end">Product Description</td>
-            <td className="font-bold text-end">Quantity</td>
-            <td className="font-bold text-end">Price</td>
-            <td className="font-bold text-end">Amount</td>
+            <td className="font-bold text-end">Cantidad</td>
+            <td className="font-bold text-end">Precio</td>
+            <td className="font-bold text-end">Total</td>
           </tr>
         </thead>
         {orderItems?.map((itemInv) => (

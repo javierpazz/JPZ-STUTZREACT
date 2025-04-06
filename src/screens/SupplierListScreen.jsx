@@ -162,7 +162,7 @@ export default function SupplierListScreen() {
           <table className="table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>CODIGO</th>
                 <th>NOMBRE COMERCIAL</th>
                 <th>EMAIL</th>
                 <th>ACTIONS</th>
@@ -181,16 +181,18 @@ export default function SupplierListScreen() {
                       onClick={() =>
                         navigate(`/admin/supplier/${supplier._id}`)
                       }
+                      disabled={!userInfo.isAdmin}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                     </Button>
                     &nbsp;
                     <Button
                       type="button"
-                      title="Account"
+                      title="Cuenta"
                       onClick={() => {
                         navigate(`/admin/suppli/${supplier._id}`);
                       }}
+                      disabled={!userInfo.isAdmin}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                     </Button>
@@ -199,6 +201,7 @@ export default function SupplierListScreen() {
                       type="button"
                       title="Delete"
                       onClick={() => deleteHandler(supplier)}
+                      disabled={!userInfo.isAdmin}
                     >
                       <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                     </Button>

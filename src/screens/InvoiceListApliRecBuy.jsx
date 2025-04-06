@@ -188,7 +188,7 @@ export default function InvoiceListApliRec({
           <Card.Body>
             <Card.Title>
               <Form.Group className="input">
-                <Form.Label>Amount</Form.Label>
+                <Form.Label>Total</Form.Label>
                 <p>{total}</p>
               </Form.Group>
             </Card.Title>

@@ -126,9 +126,13 @@ export default function AccountUserScreen() {
     setTotal(sum);
   };
 
-  const handleShow = (invoice) => {
-    //setInvoices(invoice);
-    //setShow(true);
+  const handleConsultaOrd = (receiptId) => {
+    navigate(`/admin/invoicerBuyRecCon/${receiptId}`);
+  };
+
+
+  const handleConsulta = (invoiceId) => {
+    navigate(`/admin/invoicerBuyCon/${invoiceId}`);
   };
 
   const aplyReceipt = async () => {};
@@ -212,11 +216,11 @@ export default function AccountUserScreen() {
         <title>Cuenta Proovedores</title>
       </Helmet>
       <Row>
-        <Col>
+        <Col md={7}>
           <h1>Cuenta Proovedores</h1>
         </Col>
 
-        <Col>
+        <Col md={3}>
           <h3>           Saldo: ${total.toFixed(2)}</h3>
         </Col>
 
@@ -224,7 +228,7 @@ export default function AccountUserScreen() {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Seleccione otro Proveedor
+              Seleccione Proveedor
             </Button>
           </div>
         </Col>
@@ -240,28 +244,28 @@ export default function AccountUserScreen() {
           <table className="table">
             <thead>
               <tr>
-                <th>DATE</th>
-                <th>DOCUMENT</th>
-                <th>NUMBER</th>
-                <th>AMOUNT</th>
-                <th>ACTIONS</th>
+                <th className="text-center">FECHA</th>
+                <th className="text-center">DOCUMENTO</th>
+                <th className="text-center">NUMERO</th>
+                <th className="text-center">TOTAL</th>
+                <th className="text-end">ACTIONS</th>
               </tr>
             </thead>
             <tbody>
               {invoices?.map((invoice) => (
                 <tr key={invoice._id}>
-                  <td>{invoice.docDat ? invoice.docDat.substring(0, 10): '' }</td>
+                  <td className="text-center">{invoice.docDat ? invoice.docDat.substring(0, 10): '' }</td>
                   {invoice.orderItems ? <td>Factura</td> : <td>Recibo</td>}
                   {invoice.orderItems ? (
-                    <td>{invoice.invNum ? invoice.invNum : 'REMITO S/F'}</td>
+                    <td className="text-end">{invoice.invNum ? invoice.invNum : 'REMITO S/F'}</td>
                   ) : (
-                    <td>{invoice.recNum}</td>
+                    <td className="text-end">{invoice.recNum}</td>
                   )}
 
-                  <td>{invoice.totalBuy.toFixed(2)}</td>
+                  <td className="text-end">{invoice.totalBuy.toFixed(2)}</td>
 
-                  <td>
-                    {invoice.orderItems ? (
+                  <td className="text-end">
+                    {/* {invoice.orderItems ? (
                       <Button
                         type="button"
                         title="Print Invoice"
@@ -282,8 +286,8 @@ export default function AccountUserScreen() {
                         <AiFillPrinter className="text-black-500 font-bold text-xl" />
                       </Button>
                     )}
-                    &nbsp;
-                    {invoice.orderItems ? (
+                    &nbsp; */}
+                    {/* {invoice.orderItems ? (
                       <Button
                         type="button"
                         title="Send Email Invoice"
@@ -304,25 +308,25 @@ export default function AccountUserScreen() {
                         <AiOutlineMail className="text-black-500 font-bold text-xl" />
                       </Button>
                     )}
-                    &nbsp;
+                    &nbsp; */}
                     {invoice.orderItems ? (
                       <Button
                         type="button"
-                        title="Consult Invoice"
-                        onClick={() => handleShow(invoice)}
+                        title="Consulta Factura/Remito"
+                        onClick={() => handleConsulta(invoice._id)}
                       >
                         <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                       </Button>
                     ) : (
                       <Button
                         type="button"
-                        title="Consult Receipt"
-                        onClick={() => handleShow(invoice)}
-                      >
+                        title="Consulta Orden de Pago"
+                        onClick={() => handleConsultaOrd(receipt._id)}
+                        >
                         <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                       </Button>
                     )}
-                    &nbsp;
+                    {/* &nbsp;
                     {invoice.orderItems ? (
                       <Button
                         type="button"
@@ -339,14 +343,14 @@ export default function AccountUserScreen() {
                       >
                         <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                       </Button>
-                    )}
+                    )} */}
                     &nbsp;
                     {invoice.orderItems ? (
                       <Button
                         type="button"
                         title="Delete Invoice"
                         onClick={() => deleteInvoice(invoice)}
-                        //disabled={invoice.invNum < 40}
+                        disabled={true}
                       >
                         <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                       </Button>
@@ -355,7 +359,7 @@ export default function AccountUserScreen() {
                         type="button"
                         title="Delete Receipt"
                         onClick={() => deleteReceipt(invoice)}
-                        //disabled={invoice.invNum < 40}
+                        disabled={true}
                       >
                         <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                       </Button>

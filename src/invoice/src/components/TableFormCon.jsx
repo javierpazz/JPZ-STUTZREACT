@@ -33,11 +33,11 @@ export default function TableFormOrd({
       <table width="100%" className="mb-10">
         <thead>
           <tr className="bg-gray-100 p-1">
-            <td className="font-bold">Product Code</td>
+            <td className="font-bold">Codigo Producto</td>
             <td className="font-bold">Product Description</td>
-            <td className="font-bold">Quantity</td>
-            <td className="font-bold">Price</td>
-            <td className="font-bold">Amount</td>
+            <td className="font-bold">Cantidad</td>
+            <td className="font-bold">Precio</td>
+            <td className="font-bold">Total</td>
             <td className="font-bold">Options</td>
           </tr>
         </thead>

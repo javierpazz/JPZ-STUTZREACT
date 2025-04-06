@@ -161,7 +161,7 @@ export default function ProductListScreen() {
           <table className="table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>CODIGO BARRA</th>
                 <th>NOMBRE</th>
                 <th>PRECIO</th>
                 <th>CATEGORIA</th>
@@ -175,7 +175,7 @@ export default function ProductListScreen() {
             <tbody>
               {products.map((product) => (
                 <tr key={product._id}>
-                  <td>{product._id}</td>
+                  <td>{product.codPro}</td>
                   <td>{product.title}</td>
                   <td>{product.price}</td>
                   <td>{product.category}</td>

@@ -1026,7 +1026,7 @@ function AppBuyCon() {
             <div className="col-md-6 ">
               <p><strong>{nameCom}</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
-              <strong>     Comp. Nro:</strong> {invNum}</p>
+              <strong>     Comp. Nro:</strong> {invoice.invNum}</p>
               <p><strong>Fecha de Emision:</strong> {invDat}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>
@@ -1051,7 +1051,7 @@ function AppBuyCon() {
                   </tr>
                 </thead>
                 <tbody>
-                  {orderItems.map((item, index) => (
+                  {invoice.orderItems.map((item, index) => (
                     <tr key={item.id}>
                       <td>{index + 1}</td>
                       <td>{item.title}</td>
@@ -1122,7 +1122,7 @@ function AppBuyCon() {
                   </tr>
                 </thead>
                 <tbody>
-                  {orderItems.map((item, index) => (
+                  {invoice.orderItems.map((item, index) => (
                     <tr key={item.id}>
                       <td>{index + 1}</td>
                       <td>{item.title}</td>

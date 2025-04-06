@@ -186,16 +186,18 @@ export default function CustomerListScreen() {
                       onClick={() =>
                         navigate(`/admin/customer/${customer._id}`)
                       }
+                      disabled={!userInfo.isAdmin}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                     </Button>
                     &nbsp;
                     <Button
                       type="button"
-                      title="Account"
+                      title="Cuenta"
                       onClick={() => {
                         navigate(`/admin/customer/cta/${customer._id}`);
                       }}
+                      disabled={!userInfo.isAdmin}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                     </Button>
@@ -204,6 +206,7 @@ export default function CustomerListScreen() {
                       type="button"
                       title="Delete"
                       onClick={() => deleteHandler(customer)}
+                      disabled={!userInfo.isAdmin}
                     >
                       <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                     </Button>

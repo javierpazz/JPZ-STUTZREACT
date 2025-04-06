@@ -198,12 +198,12 @@ function App() {
                         <NavDropdown.Item>Recibos</NavDropdown.Item>
                       </LinkContainer>
                       {/* <LinkContainer to="/admin/invoices"> */}
-                      <LinkContainer to="/admin/remits">
+                      <LinkContainer to="/admin/remiter">
                         <NavDropdown.Item>Remitos de Egresos</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/admin/orders">
+                      {/* <LinkContainer to="/admin/orders">
                         <NavDropdown.Item>Ordenes de Comprars</NavDropdown.Item>
-                      </LinkContainer>
+                      </LinkContainer> */}
                       {/* <LinkContainer to="/admin/stateOrds">
                         <NavDropdown.Item>States Order</NavDropdown.Item>
                       </LinkContainer> */}
@@ -225,7 +225,7 @@ function App() {
                       <LinkContainer to="/admin/invoicerBuyRec">
                         <NavDropdown.Item>Ordenes de Pago</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/admin/remitsBuy">
+                      <LinkContainer to="/admin/remiterBuy">
                         <NavDropdown.Item>Remitos de Ingresos</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/suppliers">
@@ -241,10 +241,12 @@ function App() {
 
                   {userInfo && (
                     <NavDropdown title="Caja" id="buys-nav-dropdown">
-                      <LinkContainer to="/admin/invoicesCajIng">
+                      {/* <LinkContainer to="/admin/invoicesCajIng"> */}
+                      <LinkContainer to="/admin/invoicerCajIng">
                         <NavDropdown.Item>Ingresos de Caja</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/admin/invoicesCajEgr">
+                      {/* <LinkContainer to="/admin/invoicesCajEgr"> */}
+                      <LinkContainer to="/admin/invoicerCajEgr">
                         <NavDropdown.Item>Retiros de Caja</NavDropdown.Item>
                       </LinkContainer>
                       {userInfo && userInfo.role=="admin" && (
@@ -261,17 +263,29 @@ function App() {
                       <LinkContainer to="/admin/dashboard">
                         <NavDropdown.Item>Dashboard</NavDropdown.Item>
                       </LinkContainer>
+                      <LinkContainer to="/admin/remits">
+                        <NavDropdown.Item>Remitos de Venta</NavDropdown.Item>
+                      </LinkContainer>
                       <LinkContainer to="/admin/invoices">
                         <NavDropdown.Item>Facturas de Ventas</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/invoicesRec">
                         <NavDropdown.Item>Recibos </NavDropdown.Item>
                       </LinkContainer>
+                      <LinkContainer to="/admin/remitsBuy">
+                        <NavDropdown.Item>Remitos de Compra</NavDropdown.Item>
+                      </LinkContainer>
                       <LinkContainer to="/admin/invoicesBuy">
                         <NavDropdown.Item>Facturas de Compras</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/invoicesBuyRec">
                         <NavDropdown.Item>Ordenes de Pago</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/invoicesCajIng">
+                        <NavDropdown.Item>Ingresos de Caja</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/invoicesCajEgr">
+                        <NavDropdown.Item>Retiros de Caja</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/products">
                         <NavDropdown.Item>Productos</NavDropdown.Item>
@@ -285,17 +299,17 @@ function App() {
                       <LinkContainer to="/admin/valuees">
                         <NavDropdown.Item>Valores</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/admin/configurations">
-                        <NavDropdown.Item>Puntos de Venta</NavDropdown.Item>
-                      </LinkContainer>
                       <LinkContainer to="/admin/comprobantes">
                         <NavDropdown.Item>Comprobantes</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/admin/users">
-                        <NavDropdown.Item>Usuarios</NavDropdown.Item>
+                      <LinkContainer to="/admin/configurations">
+                        <NavDropdown.Item>Puntos de Venta</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/encargados">
                         <NavDropdown.Item>Encargados</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/users">
+                        <NavDropdown.Item>Usuarios</NavDropdown.Item>
                       </LinkContainer>
                       {/* <LinkContainer to="/admin/support">
                         <NavDropdown.Item>Chat Support</NavDropdown.Item>

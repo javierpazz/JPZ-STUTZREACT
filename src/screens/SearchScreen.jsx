@@ -158,7 +158,7 @@ export default function SearchScreen() {
             </ul>
           </div>
           <div>
-            <h3>Price</h3>
+            <h3>Precio</h3>
             <ul>
               <li>
                 <Link
@@ -217,7 +217,7 @@ export default function SearchScreen() {
                     {countProducts === 0 ? 'No' : countProducts} Results
                     {query !== 'all' && ' : ' + query}
                     {category !== 'all' && ' : ' + category}
-                    {price !== 'all' && ' : Price ' + price}
+                    {price !== 'all' && ' : Precio ' + price}
                     {rating !== 'all' && ' : Rating ' + rating + ' & up'}
                     {query !== 'all' ||
                     category !== 'all' ||
@@ -241,8 +241,8 @@ export default function SearchScreen() {
                     }}
                   >
                     <option value="newest">Newest Arrivals</option>
-                    <option value="lowest">Price: Low to High</option>
-                    <option value="highest">Price: High to Low</option>
+                    <option value="lowest">Precio: Low to High</option>
+                    <option value="highest">Precio: High to Low</option>
                     <option value="toprated">Avg. Customer Reviews</option>
                   </select>
                 </Col>
