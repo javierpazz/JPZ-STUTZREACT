@@ -73,6 +73,7 @@ export default function CajaIngListScreen() {
 
   const { state } = useContext(Store);
   const { userInfo } = state;
+  const [id_config, setId_config] = useState(userInfo.codCon);
 
   const [show, setShow] = useState(false);
   const [recNum, setRecNum] = useState('');
@@ -84,7 +85,7 @@ export default function CajaIngListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/receipts/adminS?page=${page} `, {
+        const { data } = await axios.get(`${API}/api/receipts/cajaS?page=${page}&id_config=${id_config} `, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
@@ -155,7 +156,7 @@ const prodeleteReceipt = (receipt) => {
       // buscar todas loock at the invoices that have a receipt and modify de numRec by null
       try {
         dispatch({ type: 'DELETE_REQUEST' });
-        await axios.delete(`${API}/api/receipts/${receipt._id}`, {
+        await axios.delete(`${API}/api/receipts/${receipt._id}&id_config=${id_config}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         toast.success('receipt deleted successfully');
@@ -272,7 +273,7 @@ const prodeleteReceipt = (receipt) => {
               <Link
                 className={x + 1 === Number(page) ? 'btn text-bold' : 'btn'}
                 key={x + 1}
-                to={`/admin/invoicesCajIng?page=${x + 1}`}
+                to={`/admin/invoicesCajIng?page=${x + 1}&id_config=${id_config}`}
               >
                 {x + 1}
               </Link>

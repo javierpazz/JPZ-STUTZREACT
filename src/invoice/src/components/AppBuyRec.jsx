@@ -118,6 +118,7 @@ function AppBuyRec() {
   const [receiptss, setReceiptss] = useState([]);
   const [userss, setUserss] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
+  const [suppObj, setSuppObj] = useState({});
   const [codSup, setCodSup] = useState('');
   const [codSupp, setCodSupp] = useState('');
   const [valuess, setValuess] = useState([]);
@@ -257,10 +258,12 @@ function AppBuyRec() {
   const buscarPorCodSup = (codSupp) => {
     const supplierRow = suppliers.find((row) => row.codSup === codSupp);
     if (!supplierRow) {
+        setSuppObj({});
         setCodSup('');
         setCodSupp('');
         setName('Elija Proovedor');
     }else{
+      setSuppObj(supplierRow);
       setCodSup(supplierRow._id);
       setCodSupp(supplierRow.codSup);
       setName(supplierRow.name);
@@ -708,14 +711,18 @@ const submitHandlerSup = async (e) => {
             </div>
           </div>
                     <hr />
+
+          <div className="row">
             <div className="row">
               <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {name}</p>
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {suppObj.name}</p>
+                <p><strong>Domicilio Comercial:</strong> {suppObj.domcomer}</p>
               </div>
               <div className="col-md-6">
-                <p><strong>CUIT:</strong> </p>
-                <p><strong>Condición IVA:</strong> </p>
+                <p><strong>CUIT:</strong> {suppObj.cuit}</p>
+                <p><strong>Condición IVA:</strong> {suppObj.coniva} </p>
               </div>
+          </div>
           </div>
 
 { true &&

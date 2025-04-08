@@ -242,9 +242,6 @@ function AppBuyRecCon() {
     }
   }, [width]);
 
-  const getTotal = () => {
-    return recibo.receiptItems.reduce((acc, item) => acc + item.amountval, 0);
-  };
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -614,15 +611,19 @@ const submitHandlerSup = async (e) => {
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>
             </div>
           </div>
-                    <hr />
+          <hr />
+
+          <div className="row">
             <div className="row">
               <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {name}</p>
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {recibo.supplier.name}</p>
+                <p><strong>Domicilio Comercial:</strong> {recibo.supplier.domcomer}</p>
               </div>
               <div className="col-md-6">
-                <p><strong>CUIT:</strong> </p>
-                <p><strong>Condición IVA:</strong> </p>
+                <p><strong>CUIT:</strong> {recibo.supplier.cuit}</p>
+                <p><strong>Condición IVA:</strong> {recibo.supplier.coniva} </p>
               </div>
+          </div>
           </div>
 
 { true &&
@@ -649,7 +650,7 @@ const submitHandlerSup = async (e) => {
                 </tbody>
               </table>
               <div className="text-end">
-                <h5><strong>Total:</strong> ${getTotal().toFixed(2)}</h5>
+                <h5><strong>Total:</strong> ${recibo.totalBuy.toFixed(2)}</h5>
               </div>
             </div>
           )}

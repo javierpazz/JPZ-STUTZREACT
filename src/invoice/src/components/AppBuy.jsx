@@ -417,6 +417,7 @@ function AppBuy() {
           invoice.codSup = codSup;
           invoice.codCon = userInfo.codCon;
           invoice.codConNum = codConNum;
+          invoice.codCom = codCom;
           invoice.remNum = remNum;
           invoice.remDat = invDat;
           invoice.invNum = invNum;

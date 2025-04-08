@@ -97,32 +97,13 @@ export default function SupplierListScreen() {
   }, [page, userInfo, successDelete]);
 
   const createHandler = async () => {
-    if (window.confirm('Are you sure to create?')) {
-      try {
-        dispatch({ type: 'CREATE_REQUEST' });
-        const { data } = await axios.post(
-          `${API}/api/suppliers`,
-          {},
-          {
-            headers: { Authorization: `Bearer ${userInfo.token}` },
-          }
-        );
-        toast.success('supplier created successfully');
-        dispatch({ type: 'CREATE_SUCCESS' });
-        navigate(`/admin/supplier/${data.supplier._id}`);
-      } catch (err) {
-        toast.error(getError(error));
-        dispatch({
-          type: 'CREATE_FAIL',
-        });
-      }
-    }
+        navigate(`/admin/supplier/0`);
   };
 
   const deleteHandler = async (supplier) => {
     if (window.confirm('Are you sure to delete?')) {
       try {
-        await axios.delete(`${API}/api/supplier/${supplier._id}`, {
+        await axios.delete(`${API}/api/suppliers/${supplier._id}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         toast.success('supplier deleted successfully');
@@ -165,6 +146,9 @@ export default function SupplierListScreen() {
                 <th>CODIGO</th>
                 <th>NOMBRE COMERCIAL</th>
                 <th>EMAIL</th>
+                <th>DOMICILIO</th>
+                <th>CUIT</th>
+                <th>CONDICION IVA</th>
                 <th>ACTIONS</th>
               </tr>
             </thead>
@@ -174,6 +158,9 @@ export default function SupplierListScreen() {
                   <td>{supplier.codSup}</td>
                   <td>{supplier.name}</td>
                   <td>{supplier.email}</td>
+                  <td>{supplier.domcomer}</td>
+                  <td>{supplier.cuit}</td>
+                  <td>{supplier.coniva}</td>
                   <td>
                     <Button
                       type="button"

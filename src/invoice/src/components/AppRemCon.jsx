@@ -242,17 +242,6 @@ function AppRemCon() {
     }
   }, [width]);
 
-  const getTotal = () => {
-    return invoice.orderItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
-  };
-
-  const getIVA = () => {
-    return invoice.orderItems.reduce((acc, item) => acc + (item.quantity * item.price * item.porIva) / 100, 0).toFixed(2);
-  };
-
-  const getTotalWithIVA = () => {
-    return (parseFloat(getTotal()) + parseFloat(getIVA())).toFixed(2);
-  };
 
   const handleShowCus = () => {
     setShowCus(true);
@@ -488,7 +477,7 @@ function AppRemCon() {
   return (
     <>
       <Helmet>
-        <title>Remitos de Egreso</title>
+        <title>Remitos de Venta</title>
       </Helmet>
 
       <main>
@@ -516,7 +505,7 @@ function AppRemCon() {
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              REMITO DE EGRESO Nro.: {invoice.codConNum +'-'+invoice.remNum}
+                              REMITO DE VENTA Nro.: {invoice.codConNum +'-'+invoice.remNum}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -930,15 +919,15 @@ function AppRemCon() {
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>
             </div>
           </div>
-                    <hr />
+          <hr />
             <div className="row">
               <div className="col-md-6">
-                <p><strong>CUIT:</strong> {userObj.cuit}</p>
-                <p><strong>Condición IVA:</strong> {userObj.coniva}</p>
+                <p><strong>CUIT:</strong> {invoice.id_client.cuit}</p>
+                <p><strong>Condición IVA:</strong> {invoice.id_client.coniva}</p>
               </div>
               <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {userObj.nameCus}</p>
-                <p><strong>Dirección:</strong> {userObj.domcomer}</p>
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {invoice.id_client.nameCus}</p>
+                <p><strong>Dirección:</strong> {invoice.id_client.domcomer}</p>
               </div>
           </div>
 
@@ -973,9 +962,9 @@ function AppRemCon() {
                 </tbody>
               </table>
               <div className="text-end">
-                <p><strong>Subtotal:</strong> ${getTotal()}</p>
-                <p><strong>IVA:</strong> ${getIVA()}</p>
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
+                <p><strong>Subtotal:</strong> ${invoice.subTotal.toFixed(2)}</p>
+                <p><strong>IVA:</strong> ${invoice.tax.toFixed(2)}</p>
+                <h5><strong>Total:</strong> ${invoice.total.toFixed(2)}</h5>
               </div>
             </div>
           )}

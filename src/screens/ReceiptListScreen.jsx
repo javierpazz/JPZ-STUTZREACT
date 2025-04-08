@@ -73,6 +73,7 @@ export default function ReceiptListScreen() {
 
   const { state } = useContext(Store);
   const { userInfo } = state;
+  const [id_config, setId_config] = useState(userInfo.codCon);
 
   const [show, setShow] = useState(false);
   const [recNum, setRecNum] = useState('');
@@ -84,7 +85,7 @@ export default function ReceiptListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/receipts/adminS?page=${page} `, {
+        const { data } = await axios.get(`${API}/api/receipts/adminS?page=${page}&id_config=${id_config}  `, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
@@ -273,7 +274,7 @@ const prodeleteReceipt = (receipt) => {
               <Link
                 className={x + 1 === Number(page) ? 'btn text-bold' : 'btn'}
                 key={x + 1}
-                to={`/admin/invoicesRec?page=${x + 1}`}
+                to={`/admin/invoicesRec?page=${x + 1}&id_config=${id_config} `}
               >
                 {x + 1}
               </Link>

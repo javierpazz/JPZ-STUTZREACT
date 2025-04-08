@@ -100,24 +100,7 @@ export default function ComprobanteListScreen() {
   }, [page, userInfo, successDelete]);
 
   const createHandler = async () => {
-      try {
-        dispatch({ type: 'CREATE_REQUEST' });
-        const { data } = await axios.post(
-          `${API}/api/comprobantes`,
-          {},
-          {
-            headers: { Authorization: `Bearer ${userInfo.token}` },
-          }
-        );
-        toast.success('comprobante created successfully');
-        dispatch({ type: 'CREATE_SUCCESS' });
-        navigate(`/admin/comprobante/${data.comprobante._id}`);
-      } catch (err) {
-        toast.error(getError(error));
-        dispatch({
-          type: 'CREATE_FAIL',
-        });
-      }
+        navigate(`/admin/comprobante/0`);
   };
 
   const deleteHandler = async (comprobante) => {

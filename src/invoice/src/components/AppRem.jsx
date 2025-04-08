@@ -517,7 +517,7 @@ function AppRem() {
   return (
     <>
       <Helmet>
-        <title>Remitos de Egreso</title>
+        <title>Remitos de Venta</title>
       </Helmet>
 
       <main>
@@ -545,7 +545,7 @@ function AppRem() {
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              REMITO DE EGRESO
+                              REMITO DE VENTA
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>

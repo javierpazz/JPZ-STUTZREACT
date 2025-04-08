@@ -241,6 +241,7 @@ function AppBuyCon() {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'ORDER_FETCH_SUCCESS', payload: data });
+        console.log(data)
         setCodUse(data.user);
         // setCodComp(invoice.codCom);
         // setCodCust(invoice.codCus);
@@ -291,17 +292,6 @@ function AppBuyCon() {
     }
   }, [width]);
 
-  const getTotal = () => {
-    return invoice.orderItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
-  };
-
-  const getIVA = () => {
-    return invoice.orderItems.reduce((acc, item) => acc + (item.quantity * item.price * item.porIva) / 100, 0).toFixed(2);
-  };
-
-  const getTotalWithIVA = () => {
-    return (parseFloat(getTotal()) + parseFloat(getIVA())).toFixed(2);
-  };
 
   const handleShowCom = () => {
     setShowCom(true);
@@ -594,12 +584,36 @@ function AppBuyCon() {
             {/* name, address, email, phone, bank name, bank account number, website client name, client address, invoice number, Fecha Factura, Fecha Vencimiento, notes */}
             <div>
               <div className="bordeTable">
-              <Row>
-                  <Col md={4}></Col>
-                  <Col md={8}>
-                    Comprobante Numero: <h3>{invoice.codConNum +'-'+invoice.invNum}</h3>
+              
+                <Row>
+                  <Col md={3}>
+                    <Card.Body>
+                      <Card.Title>
+                      <ListGroup.Item>
+                            <h3>
+                              
+                            </h3>
+                          </ListGroup.Item>
+
+                      </Card.Title>
+                    </Card.Body>
                   </Col>
+
+                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                      <Card.Body>
+                        <Card.Title>
+                          <ListGroup.Item>
+                            <h3>
+                              COMPROBANTE COMPRA Nro.: {invoice.codConNum +'-'+invoice.invNum}
+                            </h3>
+                          </ListGroup.Item>
+                        </Card.Title>
+                      </Card.Body>
+                    </Col>
+
+
                 </Row>
+
 
               <Row>
                   <Col md={2}>
@@ -1000,17 +1014,18 @@ function AppBuyCon() {
         <div className="card-header bg-dark text-white text-center"></div>
         <div className="card-body">
           
-        <div className="text-black text-center">{nameCom}</div>
+        <div className="text-black text-center">{invoice.codCom.nameCom}</div>
  
 
           <div className="row">
             <div className="row">
               <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {name}</p>
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {invoice.supplier.name}</p>
+                <p><strong>Domicilio Comercial:</strong> {invoice.supplier.domcomer}</p>
               </div>
               <div className="col-md-6">
-                <p><strong>CUIT:</strong> </p>
-                <p><strong>Condición IVA:</strong> </p>
+                <p><strong>CUIT:</strong> {invoice.supplier.cuit}</p>
+                <p><strong>Condición IVA:</strong> {invoice.supplier.coniva} </p>
               </div>
           </div>
           </div>
@@ -1024,7 +1039,7 @@ function AppBuyCon() {
               <p><strong>Condición frente al IVA:</strong> {config.ivaCondition}</p>
             </div>
             <div className="col-md-6 ">
-              <p><strong>{nameCom}</strong></p>
+              <p><strong>{invoice.codCom.nameCom}</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
               <strong>     Comp. Nro:</strong> {invoice.invNum}</p>
               <p><strong>Fecha de Emision:</strong> {invDat}</p>
@@ -1035,7 +1050,7 @@ function AppBuyCon() {
           </div>
  
  
-          { toDisc &&
+          { invoice.codCom.toDisc &&
           (
             <div>
               <table className="table table-bordered mt-3">
@@ -1065,14 +1080,14 @@ function AppBuyCon() {
                 </tbody>
               </table>
               <div className="text-end">
-                <p><strong>Subtotal:</strong> ${getTotal()}</p>
-                <p><strong>IVA:</strong> ${getIVA()}</p>
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
+              <p><strong>Subtotal:</strong> ${invoice.subTotal.toFixed(2)}</p>
+                <p><strong>IVA:</strong> ${invoice.tax.toFixed(2)}</p>
+                <h5><strong>Total:</strong> ${invoice.totalBuy.toFixed(2)}</h5>
               </div>
             </div>
           )}
 
-          { itDisc &&
+          { invoice.codCom.itDisc &&
           (
             <div>
               <table className="table table-bordered mt-3">
@@ -1102,12 +1117,12 @@ function AppBuyCon() {
                 </tbody>
               </table>
               <div className="text-end">
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
+                <h5><strong>Total:</strong> ${invoice.totalBuy.toFixed(2)}</h5>
               </div>
             </div>
           )}
 
-          { noDisc &&
+          { invoice.codCom.noDisc &&
           (
             <div>
               <table className="table table-bordered mt-3">
@@ -1137,7 +1152,7 @@ function AppBuyCon() {
                 </tbody>
               </table>
               <div className="text-end">
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
+                <h5><strong>Total:</strong> ${invoice.totalBuy.toFixed(2)}</h5>
               </div>
             </div>
           )}

@@ -540,7 +540,7 @@ function AppBuyRem() {
   return (
     <>
       <Helmet>
-        <title>Remito de Ingreso</title>
+        <title>Remito de Compra</title>
       </Helmet>
 
       <main>
@@ -568,7 +568,7 @@ function AppBuyRem() {
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              REMITO DE INGRESO
+                              REMITO DE COMPRA
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>

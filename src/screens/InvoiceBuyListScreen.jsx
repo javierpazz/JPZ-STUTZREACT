@@ -76,6 +76,7 @@ export default function InvoiceBuyListScreen() {
 
   const { state } = useContext(Store);
   const { userInfo } = state;
+  const [id_config, setId_config] = useState(userInfo.codCon);
   const [total, setTotal] = useState(0);
   const [show, setShow] = useState(false);
   const [invoice, setInvoice] = useState('');
@@ -85,7 +86,7 @@ export default function InvoiceBuyListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/invoices/adminB?page=${page} `, {
+        const { data } = await axios.get(`${API}/api/invoices/adminB?page=${page}&id_config=${id_config} `, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
@@ -283,7 +284,7 @@ try {
               <Link
                 className={x + 1 === Number(page) ? 'btn text-bold' : 'btn'}
                 key={x + 1}
-                to={`/admin/invoicesBuy?page=${x + 1}`}
+                to={`/admin/invoicesBuy?page=${x + 1}&id_config=${id_config}`}
               >
                 {x + 1}
               </Link>

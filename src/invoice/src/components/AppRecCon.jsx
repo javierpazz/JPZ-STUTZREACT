@@ -606,17 +606,18 @@ const RecControl = (e) => {
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>
             </div>
           </div>
-                    <hr />
+          <hr />
             <div className="row">
               <div className="col-md-6">
-                <p><strong>CUIT:</strong> {userObj.cuit}</p>
-                <p><strong>Condición IVA:</strong> {userObj.coniva}</p>
+                <p><strong>CUIT:</strong> {recibo.id_client.cuit}</p>
+                <p><strong>Condición IVA:</strong> {recibo.id_client.coniva}</p>
               </div>
               <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {userObj.nameCus}</p>
-                <p><strong>Dirección:</strong> {userObj.domcomer}</p>
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {recibo.id_client.nameCus}</p>
+                <p><strong>Dirección:</strong> {recibo.id_client.domcomer}</p>
               </div>
           </div>
+
 
           { true &&
           (
@@ -642,7 +643,7 @@ const RecControl = (e) => {
                 </tbody>
               </table>
               <div className="text-end">
-                <h5><strong>Total:</strong> ${getTotal().toFixed(2)}</h5>
+                <h5><strong>Total:</strong> ${recibo.total.toFixed(2)}</h5>
               </div>
             </div>
           )}

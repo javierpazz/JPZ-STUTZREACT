@@ -137,16 +137,21 @@ function App() {
                 <i className="fas fa-bars"></i>
               </Button> */}
 {/* /////////////////  borrar ecomerce  ////////////////////// */}
-
-              <LinkContainer to="/salepoint">
+              {(userInfo && userInfo.nameCon) && (
+                <LinkContainer to="/salepoint">
                 <Navbar.Brand>Punto.: {userInfo && userInfo.salePoint || ""}</Navbar.Brand>
               </LinkContainer>
-              <LinkContainer to="/salepoint">
+              )}
+              {(userInfo && userInfo.nameCon) && (
+                <LinkContainer to="/salepoint">
                 <Navbar.Brand>{userInfo && userInfo.nameCon || ""}</Navbar.Brand>
               </LinkContainer>
-              <LinkContainer  className="nav-link" to="/">
+              )}
+              {userInfo && (
+                <LinkContainer  className="nav-link" to="/">
                 <Navbar.Brand >User.:  {userInfo && userInfo.name || ""}</Navbar.Brand>
               </LinkContainer>
+              )}
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
 {/* /////////////////  borrar ecomerce  ////////////////////// */}
@@ -199,7 +204,7 @@ function App() {
                       </LinkContainer>
                       {/* <LinkContainer to="/admin/invoices"> */}
                       <LinkContainer to="/admin/remiter">
-                        <NavDropdown.Item>Remitos de Egresos</NavDropdown.Item>
+                        <NavDropdown.Item>Remitos de Ventas</NavDropdown.Item>
                       </LinkContainer>
                       {/* <LinkContainer to="/admin/orders">
                         <NavDropdown.Item>Ordenes de Comprars</NavDropdown.Item>
@@ -226,7 +231,7 @@ function App() {
                         <NavDropdown.Item>Ordenes de Pago</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/remiterBuy">
-                        <NavDropdown.Item>Remitos de Ingresos</NavDropdown.Item>
+                        <NavDropdown.Item>Remitos de Compras</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/suppliers">
                         <NavDropdown.Item>Proveedores</NavDropdown.Item>

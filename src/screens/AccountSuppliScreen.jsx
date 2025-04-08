@@ -76,6 +76,7 @@ export default function AccountUserScreen() {
 
   const { state } = useContext(Store);
   const { userInfo } = state;
+  const [id_config, setId_config] = useState(userInfo.codCon);
   const [total, setTotal] = useState(0);
   const [show, setShow] = useState(false);
   const [invoice, setInvoice] = useState('');
@@ -94,7 +95,7 @@ export default function AccountUserScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'TOTAL_FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/invoices/ctaB/${suppliId}`, {
+        const { data } = await axios.get(`${API}/api/invoices/ctaB/${suppliId}?id_config=${id_config}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'TOTAL_FETCH_SUCCESS', payload: data });

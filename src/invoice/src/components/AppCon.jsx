@@ -198,11 +198,6 @@ function AppCon() {
         });
         dispatch({ type: 'ORDER_FETCH_SUCCESS', payload: data });
         setCodUse(data.user);
-        // setCodComp(invoice.codCom);
-        // setCodCust(invoice.codCus);
-        // setName(invoice.supplier.name);
-        // setNameCom(invoice.nameCom);
-  
         setInvNum(invoice.invNum);
       } catch (err) {
         dispatch({ type: 'ORDER_FETCH_FAIL', payload: getError(err) });
@@ -240,6 +235,8 @@ function AppCon() {
 
   useEffect(() => {
     const calculateAmountval = (amountval) => {
+
+
       setAmountval(
         invoice.total
       );
@@ -260,17 +257,7 @@ function AppCon() {
   }, [width]);
 
 
-  const getTotal = () => {
-    return invoice.orderItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
-  };
 
-  const getIVA = () => {
-    return invoice.orderItems.reduce((acc, item) => acc + (item.quantity * item.price * item.porIva) / 100, 0).toFixed(2);
-  };
-
-  const getTotalWithIVA = () => {
-    return (parseFloat(getTotal()) + parseFloat(getIVA())).toFixed(2);
-  };
 
   const handleShowCom = () => {
     setShowCom(true);
@@ -460,7 +447,7 @@ true
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              COMPROBANTE Nro.: {invoice.codConNum +'-'+invoice.invNum}
+                              COMPROBANTE VENTA Nro.: {invoice.codConNum +'-'+invoice.invNum}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -878,7 +865,7 @@ true
               <p><strong>Condición frente al IVA:</strong> {config.ivaCondition}</p>
             </div>
             <div className="col-md-6 ">
-              <p><strong>ARREGLAR</strong></p>
+              <p><strong>{invoice.codCom.nameCom}</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
               <strong>     Comp. Nro:</strong> {invoice.invNum}</p>
               <p><strong>Fecha de Emision:</strong> {invDat}</p>
@@ -890,15 +877,15 @@ true
                     <hr />
             <div className="row">
               <div className="col-md-6">
-                <p><strong>CUIT:</strong> {userObj.cuit}</p>
-                <p><strong>Condición IVA:</strong> {userObj.coniva}</p>
+                <p><strong>CUIT:</strong> {invoice.id_client.cuit}</p>
+                <p><strong>Condición IVA:</strong> {invoice.id_client.coniva}</p>
               </div>
               <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {userObj.nameCus}</p>
-                <p><strong>Dirección:</strong> {userObj.domcomer}</p>
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {invoice.id_client.nameCus}</p>
+                <p><strong>Dirección:</strong> {invoice.id_client.domcomer}</p>
               </div>
           </div>
-          { toDisc &&
+          { invoice.codCom.toDisc &&
           (
             <div>
               <table className="table table-bordered mt-3">
@@ -928,14 +915,14 @@ true
                 </tbody>
               </table>
               <div className="text-end">
-                <p><strong>Subtotal:</strong> ${getTotal()}</p>
-                <p><strong>IVA:</strong> ${getIVA()}</p>
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
+                <p><strong>Subtotal:</strong> ${invoice.subTotal}</p>
+                <p><strong>IVA:</strong> ${invoice.tax}</p>
+                <h5><strong>Total:</strong> ${invoice.total}</h5>
               </div>
             </div>
           )}
 
-          { itDisc &&
+          { invoice.codCom.itDisc &&
           (
             <div>
               <table className="table table-bordered mt-3">
@@ -965,12 +952,12 @@ true
                 </tbody>
               </table>
               <div className="text-end">
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
+                <h5><strong>Total:</strong> ${invoice.total}</h5>
               </div>
             </div>
           )}
 
-          { noDisc &&
+          { invoice.codCom.noDisc &&
           (
             <div>
               <table className="table table-bordered mt-3">
@@ -999,7 +986,7 @@ true
                 </tbody>
               </table>
               <div className="text-end">
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
+                <h5><strong>Total:</strong> ${invoice.total.toFixed(2)}</h5>
               </div>
             </div>
           )}

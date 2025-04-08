@@ -49,7 +49,8 @@ export default function TableFormOrd({
                 <td>{itemInv.title}</td>
                 <td>{itemInv.quantity}</td>
                 <td>{itemInv.price}</td>
-                <td className="amount">{itemInv.quantity * itemInv.price}</td>
+                {/* <td className="amount">{itemInv.quantity * itemInv.price}</td> */}
+                <td className="amount">{(itemInv.quantity * itemInv.price).toFixed(2)}</td>
               </tr>
             </tbody>
           </React.Fragment>

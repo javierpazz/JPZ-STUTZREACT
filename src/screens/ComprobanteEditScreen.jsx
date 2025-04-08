@@ -65,7 +65,19 @@ export default function ComprobanteEditScreen() {
   const [id_config, setId_config] = useState(userInfo.codCon);
 
   useEffect(() => {
-    const fetchData = async () => {
+    if (comprobanteId === "0") {
+      setCodCom('');
+      setNameCom('');
+      setClaCom('');
+      setIsHaber(true);
+      setNoDisc(true);
+      setToDisc(false);
+      setItDisc(false);
+      setInterno(true);
+      setNumInt(0);
+    }
+    else {
+      const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(`${API}/api/comprobantes/${comprobanteId}`);
@@ -88,10 +100,45 @@ export default function ComprobanteEditScreen() {
       }
     };
     fetchData();
+  }
   }, [comprobanteId]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
+     if (comprobanteId === "0") {
+      try {
+        dispatch({ type: 'UPDATE_REQUEST' });
+        await axios.post(
+          `${API}/api/comprobantes`,
+          {
+            // _id: comprobanteId,
+            codCom,
+            nameCom,
+            isHaber,
+            noDisc,
+            toDisc,
+            itDisc,
+            claCom,
+            interno,
+            numInt,
+            id_config,
+          },
+          {
+            headers: { Authorization: `Bearer ${userInfo.token}` },
+          }
+        );
+        dispatch({
+          type: 'UPDATE_SUCCESS',
+        });
+        toast.success('Comprobante updated successfully');
+        navigate('/admin/comprobantes');
+      } catch (err) {
+        toast.error(getError(err));
+        dispatch({ type: 'UPDATE_FAIL' });
+      }
+     }
+     else
+     {
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(
@@ -122,6 +169,7 @@ export default function ComprobanteEditScreen() {
       toast.error(getError(err));
       dispatch({ type: 'UPDATE_FAIL' });
     }
+   }
   };
 
   return (
@@ -131,7 +179,7 @@ export default function ComprobanteEditScreen() {
       </Helmet>
       <h1>Edit Comprobante </h1>
 
-      {loading ? (
+      {false ? (
         <LoadingBox></LoadingBox>
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>

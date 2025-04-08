@@ -714,11 +714,7 @@ const RecControl = (e) => {
             <hr />
             <div className="row">
               <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {name}</p>
-              </div>
-              <div className="col-md-6">
-                <p><strong>CUIT:</strong> </p>
-                <p><strong>Condición IVA:</strong> </p>
+                <p><strong>Encargado :</strong> {name}</p>
               </div>
           </div>
 

@@ -611,11 +611,7 @@ const RecControl = (e) => {
             <hr />
             <div className="row">
               <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {name}</p>
-              </div>
-              <div className="col-md-6">
-                <p><strong>CUIT:</strong> </p>
-                <p><strong>Condición IVA:</strong> </p>
+                <p><strong>Encargado :</strong> {recibo.id_encarg.name}</p>
               </div>
           </div>
 
@@ -643,7 +639,7 @@ const RecControl = (e) => {
                 </tbody>
               </table>
               <div className="text-end">
-                <h5><strong>Total:</strong> ${getTotal().toFixed(2)}</h5>
+                <h5><strong>Total:</strong> ${recibo.total.toFixed(2)}</h5>
               </div>
             </div>
           )}

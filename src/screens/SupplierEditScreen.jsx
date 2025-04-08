@@ -56,8 +56,14 @@ export default function SupplierEditScreen() {
   const [codSup, setCodSup] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [domcomer, setDomcomer] = useState('');
+  const [cuit, setCuit] = useState('');
+  const [coniva, setConiva] = useState('');
 
   useEffect(() => {
+    if (supplierId === "0") {
+    }
+    else {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
@@ -66,6 +72,9 @@ export default function SupplierEditScreen() {
         setCodSup(data.codSup);
         setName(data.name);
         setEmail(data.email);
+        setDomcomer(data.domcomer);
+        setCuit(data.cuit);
+        setConiva(data.coniva);
         dispatch({ type: 'FETCH_SUCCESS' });
       } catch (err) {
         dispatch({
@@ -75,11 +84,41 @@ export default function SupplierEditScreen() {
       }
     };
     fetchData();
+    };
   }, [supplierId]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    try {
+    if (supplierId === "0") {
+      try {
+        dispatch({ type: 'UPDATE_REQUEST' });
+        await axios.post(
+          `${API}/api/suppliers`,
+          {
+            codSup,
+            name,
+            email,
+            domcomer,
+            cuit,
+            coniva,
+          },
+          {
+            headers: { Authorization: `Bearer ${userInfo.token}` },
+          }
+        );
+        dispatch({
+          type: 'UPDATE_SUCCESS',
+        });
+        toast.success('Supplier updated successfully');
+        navigate('/admin/suppliers');
+      } catch (err) {
+        toast.error(getError(err));
+        dispatch({ type: 'UPDATE_FAIL' });
+      }
+ 
+    }
+    else{
+      try {
       dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(
         `${API}/api/suppliers/${supplierId}`,
@@ -88,6 +127,9 @@ export default function SupplierEditScreen() {
           codSup,
           name,
           email,
+          domcomer,
+          cuit,
+          coniva,
         },
         {
           headers: { Authorization: `Bearer ${userInfo.token}` },
@@ -102,6 +144,7 @@ export default function SupplierEditScreen() {
       toast.error(getError(err));
       dispatch({ type: 'UPDATE_FAIL' });
     }
+    }
   };
 
   return (
@@ -111,7 +154,7 @@ export default function SupplierEditScreen() {
       </Helmet>
       <h1>Edita Proveedor</h1>
 
-      {loading ? (
+      {false ? (
         <LoadingBox></LoadingBox>
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
@@ -138,6 +181,30 @@ export default function SupplierEditScreen() {
             <Form.Control
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="email">
+            <Form.Label>Domcomer</Form.Label>
+            <Form.Control
+              value={domcomer}
+              onChange={(e) => setDomcomer(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="email">
+            <Form.Label>Cuit</Form.Label>
+            <Form.Control
+              value={cuit}
+              onChange={(e) => setCuit(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="email">
+            <Form.Label>Condicion IVA</Form.Label>
+            <Form.Control
+              value={coniva}
+              onChange={(e) => setConiva(e.target.value)}
               required
             />
           </Form.Group>

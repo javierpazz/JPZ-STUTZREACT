@@ -76,6 +76,7 @@ export default function RemitBuyListScreen() {
 
   const { state } = useContext(Store);
   const { userInfo } = state;
+  const [id_config, setId_config] = useState(userInfo.codCon);
   const [total, setTotal] = useState(0);
   const [show, setShow] = useState(false);
   const [invoice, setInvoice] = useState('');
@@ -85,7 +86,7 @@ export default function RemitBuyListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/invoices/adminB?page=${page} `, {
+        const { data } = await axios.get(`${API}/api/invoices/remitB?page=${page}&id_config=${id_config} `, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
@@ -173,17 +174,17 @@ try {
   return (
     <div>
       <Helmet>
-        <title>Remitos de Ingreso</title>
+        <title>Remitos de Compra</title>
       </Helmet>
       <Row>
         <Col>
-          <h1>Remitos de Ingreso</h1>
+          <h1>Remitos de Compra</h1>
         </Col>
 
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Remito de Ingreso
+              Create Remito de Compra
             </Button>
           </div>
         </Col>
@@ -281,7 +282,7 @@ try {
               <Link
                 className={x + 1 === Number(page) ? 'btn text-bold' : 'btn'}
                 key={x + 1}
-                to={`/admin/remitsBuy?page=${x + 1}`}
+                to={`/admin/remitsBuy?page=${x + 1}&id_config=${id_config}`}
               >
                 {x + 1}
               </Link>

@@ -97,24 +97,7 @@ export default function CustomerListScreen() {
   }, [page, userInfo, successDelete]);
 
   const createHandler = async () => {
-      try {
-        dispatch({ type: 'CREATE_REQUEST' });
-        const { data } = await axios.post(
-          `${API}/api/customers`,
-          {},
-          {
-            headers: { Authorization: `Bearer ${userInfo.token}` },
-          }
-        );
-        toast.success('customer created successfully');
-        dispatch({ type: 'CREATE_SUCCESS' });
-        navigate(`/admin/customer/${data.customer._id}`);
-      } catch (err) {
-        toast.error(getError(error));
-        dispatch({
-          type: 'CREATE_FAIL',
-        });
-      }
+        navigate(`/admin/customer/0`);
   };
 
   const deleteHandler = async (customer) => {

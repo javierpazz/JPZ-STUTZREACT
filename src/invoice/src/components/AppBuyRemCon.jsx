@@ -272,17 +272,6 @@ function AppBuyRemCon
     }
   }, [width]);
 
-  const getTotal = () => {
-    return invoice.orderItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2);
-  };
-
-  const getIVA = () => {
-    return invoice.orderItems.reduce((acc, item) => acc + (item.quantity * item.price * item.porIva) / 100, 0).toFixed(2);
-  };
-
-  const getTotalWithIVA = () => {
-    return (parseFloat(getTotal()) + parseFloat(getIVA())).toFixed(2);
-  };
 
   const handleShowSup = () => {
     setShowSup(true);
@@ -541,7 +530,7 @@ function AppBuyRemCon
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              REMITO DE INGRESO Nro.: {invoice.codConNum +'-'+invoice.remNum}
+                              REMITO DE COMPRA Nro.: {invoice.codConNum +'-'+invoice.remNum}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -940,14 +929,16 @@ function AppBuyRemCon
         <div className="card-body">
           
         <div className="card-header text-black text-center">REMITO</div>
-        <div className="row">
+
+          <div className="row">
             <div className="row">
               <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {name}</p>
-              </div>
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {invoice.supplier.name}</p>
+                <p><strong>Domicilio Comercial:</strong> {invoice.supplier.domcomer}</p>
+                </div>
               <div className="col-md-6">
-                <p><strong>CUIT:</strong> </p>
-                <p><strong>Condición IVA:</strong> </p>
+                <p><strong>CUIT:</strong> {invoice.supplier.cuit}</p>
+                <p><strong>Condición IVA:</strong> {invoice.supplier.coniva} </p>
               </div>
           </div>
           </div>
@@ -1000,9 +991,9 @@ function AppBuyRemCon
                 </tbody>
               </table>
               <div className="text-end">
-                <p><strong>Subtotal:</strong> ${getTotal()}</p>
-                <p><strong>IVA:</strong> ${getIVA()}</p>
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
+              <p><strong>Subtotal:</strong> ${invoice.subTotal.toFixed(2)}</p>
+                <p><strong>IVA:</strong> ${invoice.tax.toFixed(2)}</p>
+                <h5><strong>Total:</strong> ${invoice.totalBuy.toFixed(2)}</h5>
               </div>
             </div>
           )}

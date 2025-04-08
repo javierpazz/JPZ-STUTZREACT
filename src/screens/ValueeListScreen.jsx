@@ -98,27 +98,7 @@ export default function ValueeListScreen() {
   }, [page, userInfo, successDelete]);
 
   const createHandler = async () => {
-    if (window.confirm('Are you sure to create?')) {
-      try {
-        dispatch({ type: 'CREATE_REQUEST' });
-        const { data } = await axios.post(
-          `${API}/api/valuees`,
-          {},
-          {
-            headers: { Authorization: `Bearer ${userInfo.token}` },
-          }
-        );
-        toast.success('valuee created successfully');
-        dispatch({ type: 'CREATE_SUCCESS' });
-        navigate(`/admin/valuee/${data.valuee._id}`);
-      } catch (err) {
-        toast.error(getError(error));
-
-        dispatch({
-          type: 'CREATE_FAIL',
-        });
-      }
-    }
+        navigate(`/admin/valuee/0`);
   };
 
   const deleteHandler = async (valuee) => {

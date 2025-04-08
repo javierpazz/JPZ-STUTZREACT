@@ -57,47 +57,79 @@ export default function ValueEditScreen() {
   const [desVal, setDesVal] = useState('');
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/valuees/${valueeId}`);
-        setCodVal(data.codVal);
-        setDesVal(data.desVal);
-        dispatch({ type: 'FETCH_SUCCESS' });
-      } catch (err) {
-        dispatch({
-          type: 'FETCH_FAIL',
-          payload: getError(err),
-        });
-      }
+    if (valueeId === "0") {
+      setCodVal('');
+      setDesVal('');
+    }
+    else {
+      const fetchData = async () => {
+        try {
+          dispatch({ type: 'FETCH_REQUEST' });
+          const { data } = await axios.get(`${API}/api/valuees/${valueeId}`);
+          setCodVal(data.codVal);
+          setDesVal(data.desVal);
+          dispatch({ type: 'FETCH_SUCCESS' });
+        } catch (err) {
+          dispatch({
+            type: 'FETCH_FAIL',
+            payload: getError(err),
+          });
+        }
+      };
+      fetchData();
     };
-    fetchData();
   }, [valueeId]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (valueeId === "0") {
     try {
-      dispatch({ type: 'UPDATE_REQUEST' });
-      await axios.put(
-        `${API}/api/valuees/${valueeId}`,
-        {
-          _id: valueeId,
-          codVal,
-          desVal,
-        },
-        {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        }
-      );
-      dispatch({
-        type: 'UPDATE_SUCCESS',
-      });
-      toast.success('Value updated successfully');
-      navigate('/admin/valuees');
-    } catch (err) {
-      toast.error(getError(err));
-      dispatch({ type: 'UPDATE_FAIL' });
-    }
+        dispatch({ type: 'UPDATE_REQUEST' });
+        await axios.post(
+          `${API}/api/valuees`,
+          {
+            codVal,
+            desVal,
+          },
+          {
+            headers: { Authorization: `Bearer ${userInfo.token}` },
+          }
+        );
+        dispatch({
+          type: 'UPDATE_SUCCESS',
+        });
+        toast.success('Value updated successfully');
+        navigate('/admin/valuees');
+      } catch (err) {
+        toast.error(getError(err));
+        dispatch({ type: 'UPDATE_FAIL' });
+      }
+      }
+      else 
+      {
+        try {
+        dispatch({ type: 'UPDATE_REQUEST' });
+        await axios.put(
+          `${API}/api/valuees/${valueeId}`,
+          {
+            // _id: valueeId,
+            codVal,
+            desVal,
+          },
+          {
+            headers: { Authorization: `Bearer ${userInfo.token}` },
+          }
+        );
+        dispatch({
+          type: 'UPDATE_SUCCESS',
+        });
+        toast.success('Value updated successfully');
+        navigate('/admin/valuees');
+      } catch (err) {
+        toast.error(getError(err));
+        dispatch({ type: 'UPDATE_FAIL' });
+      }
+    };
   };
 
   return (
@@ -107,7 +139,7 @@ export default function ValueEditScreen() {
       </Helmet>
       <h1>Edit Valor</h1>
 
-      {loading ? (
+      {false ? (
         <LoadingBox></LoadingBox>
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>

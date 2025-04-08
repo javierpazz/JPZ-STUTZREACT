@@ -61,6 +61,10 @@ export default function CustomerEditScreen() {
   const [coniva, setConiva] = useState('');
 
   useEffect(() => {
+    if (customerId === "0") {
+
+    }
+    else {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
@@ -81,11 +85,41 @@ export default function CustomerEditScreen() {
       }
     };
     fetchData();
+  };
   }, [customerId]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    try {
+    if (customerId === "0") {
+      try {
+        dispatch({ type: 'UPDATE_REQUEST' });
+        await axios.post(
+          `${API}/api/customers`,
+          {
+            codCus,
+            nameCus,
+            emailCus,
+            domcomer,
+            cuit,
+            coniva,
+          },
+          {
+            headers: { Authorization: `Bearer ${userInfo.token}` },
+          }
+        );
+        dispatch({
+          type: 'UPDATE_SUCCESS',
+        });
+        toast.success('Customer updated successfully');
+        navigate('/admin/customers');
+      } catch (err) {
+        toast.error(getError(err));
+        dispatch({ type: 'UPDATE_FAIL' });
+      }
+    }
+    else
+    {
+      try {
       dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(
         `${API}/api/customers/${customerId}`,
@@ -111,6 +145,7 @@ export default function CustomerEditScreen() {
       toast.error(getError(err));
       dispatch({ type: 'UPDATE_FAIL' });
     }
+    }
   };
 
   return (
@@ -120,7 +155,7 @@ export default function CustomerEditScreen() {
       </Helmet>
       <h1>Edita Cliente </h1>
 
-      {loading ? (
+      {false ? (
         <LoadingBox></LoadingBox>
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
