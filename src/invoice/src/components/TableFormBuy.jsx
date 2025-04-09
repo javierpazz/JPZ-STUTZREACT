@@ -59,6 +59,7 @@ export default function TableFormBuy({
     invoice: { orderItems },
     userInfo,
   } = state;
+  const [id_config, setId_config] = useState(userInfo.codCon);
 
   const [
     {
@@ -93,7 +94,7 @@ export default function TableFormBuy({
     input8Ref.current.focus()
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${API}/api/products/`, {
+        const { data } = await axios.get(`${API}/api/products/xpv?id_config=${id_config}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         setProductss(data);
@@ -152,9 +153,9 @@ export default function TableFormBuy({
     setCodProd(productRow.codPro);
     setDesPro(productRow.title);
     setQuantity(1);
-    setPrice(productRow.price);
+    setPrice(productRow.priceBuy);
     setPorIva(productRow.porIva);
-    setAmount(productRow.price);
+    setAmount(productRow.priceBuy);
     setStock(productRow.inStock);
   };
 
@@ -188,9 +189,9 @@ export default function TableFormBuy({
         setCodProd(productRow.codProd);
         setDesPro(productRow.title);
         setQuantity(1);
-        setPrice(productRow.price);
+        setPrice(productRow.priceBuy);
         setPorIva(productRow.porIva);
-        setAmount(productRow.price);
+        setAmount(productRow.priceBuy);
         setStock(productRow.inStock);
         // setMiStock(productRow.minStock);
         input11Ref.current.focus()

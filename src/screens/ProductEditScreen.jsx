@@ -48,6 +48,7 @@ export default function ProductEditScreen() {
 
   const { state } = useContext(Store);
   const { userInfo } = state;
+  const [id_config, setId_config] = useState(userInfo.codCon);
   const [{ loading, error, loadingUpdate, loadingUpload }, dispatch] =
     useReducer(reducer, {
       loading: true,
@@ -59,6 +60,7 @@ export default function ProductEditScreen() {
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [price, setPrice] = useState('');
+  const [priceBuy, setPriceBuy] = useState('');
   const [image, setImage] = useState('');
   const [images, setImages] = useState([]);
   const [category, setCategory] = useState('');
@@ -69,7 +71,10 @@ export default function ProductEditScreen() {
   const [description, setDescription] = useState('');
 
   useEffect(() => {
-    const fetchData = async () => {
+    if (productId === "0") {
+    }
+    else {
+      const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(`${API}/api/products/${productId}`);
@@ -78,6 +83,7 @@ export default function ProductEditScreen() {
         setTitle(data.title);
         setSlug(data.slug);
         setPrice(data.price);
+        setPriceBuy(data.priceBuy);
         setImage(data.image);
         setImages(data.images);
         setCategory(data.category);
@@ -95,44 +101,88 @@ export default function ProductEditScreen() {
       }
     };
     fetchData();
+  };
   }, [productId]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    try {
-      dispatch({ type: 'UPDATE_REQUEST' });
-      await axios.put(
-        `${API}/api/products/${productId}`,
-        {
-          _id: productId,
-          codigoPro,
-          codPro,
-          title,
-          slug,
-          price,
-          image,
-          images,
-          category,
-          brand,
-          inStock,
-          minStock,
-          porIva,
-          description,
-        },
-        {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        }
-      );
-      dispatch({
-        type: 'UPDATE_SUCCESS',
-      });
-      toast.success('Product updated successfully');
-      navigate('/admin/products');
-    } catch (err) {
-      toast.error(getError(err));
-      dispatch({ type: 'UPDATE_FAIL' });
+    if (productId === "0") {
+      try {
+        dispatch({ type: 'UPDATE_REQUEST' });
+        await axios.post(
+          `${API}/api/products`,
+          {
+            codigoPro,
+            codPro,
+            title,
+            slug,
+            price,
+            priceBuy,
+            image,
+            images,
+            id_config,
+            category,
+            brand,
+            inStock,
+            minStock,
+            porIva,
+            description,
+          },
+          {
+            headers: { Authorization: `Bearer ${userInfo.token}` },
+          }
+        );
+        dispatch({
+          type: 'UPDATE_SUCCESS',
+        });
+        toast.success('Product updated successfully');
+        navigate('/admin/products');
+      } catch (err) {
+        toast.error(getError(err));
+        dispatch({ type: 'UPDATE_FAIL' });
+      }
+  
     }
-  };
+    else
+    {
+      try {
+        dispatch({ type: 'UPDATE_REQUEST' });
+        await axios.put(
+          `${API}/api/products/${productId}`,
+          {
+            _id: productId,
+            codigoPro,
+            codPro,
+            title,
+            slug,
+            price,
+            priceBuy,
+            image,
+            images,
+            id_config,
+            category,
+            brand,
+            inStock,
+            minStock,
+            porIva,
+            description,
+          },
+          {
+            headers: { Authorization: `Bearer ${userInfo.token}` },
+          }
+        );
+        dispatch({
+          type: 'UPDATE_SUCCESS',
+        });
+        toast.success('Product updated successfully');
+        navigate('/admin/products');
+      } catch (err) {
+        toast.error(getError(err));
+        dispatch({ type: 'UPDATE_FAIL' });
+      }
+    };
+    }
+
   const uploadFileHandler = async (e, forImages) => {
     const file = e.target.files[0];
     const bodyFormData = new FormData();
@@ -172,7 +222,7 @@ export default function ProductEditScreen() {
       </Helmet>
       <h1>Edit Producto</h1>
 
-      {loading ? (
+      {false ? (
         <LoadingBox></LoadingBox>
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
@@ -223,6 +273,14 @@ export default function ProductEditScreen() {
             <Form.Control
               value={price}
               onChange={(e) => setPrice(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="name">
+            <Form.Label>Precio Costo</Form.Label>
+            <Form.Control
+              value={priceBuy}
+              onChange={(e) => setPriceBuy(e.target.value)}
               required
             />
           </Form.Group>

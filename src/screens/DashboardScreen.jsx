@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import Chart from 'react-google-charts';
 import axios from 'axios';
 import { Store } from '../Store';
@@ -32,14 +32,17 @@ export default function DashboardScreen() {
   });
   const { state } = useContext(Store);
   const { userInfo } = state;
+  const [id_config, setId_config] = useState(userInfo.codCon);
 
   useEffect(() => {
+    console.log(id_config);
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${API}/api/orders/summary`, {
+        const { data } = await axios.get(`${API}/api/orders/summary?id_config=${id_config}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
+        console.log(data);
       } catch (err) {
         dispatch({
           type: 'FETCH_FAIL',
@@ -241,7 +244,7 @@ export default function DashboardScreen() {
             ) : (
               <Col md={12}>
                 <Card>
-                  {console.log(summary.producIO)}
+                  {/* {console.log(summary.producIO)} */}
                   <Card.Body>
                     <Chart
                       width="100%"

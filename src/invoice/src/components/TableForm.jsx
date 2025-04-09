@@ -60,6 +60,7 @@ export default function TableForm({
     invoice: { orderItems },
     userInfo,
   } = state;
+  const [id_config, setId_config] = useState(userInfo.codCon);
 
   const [
     {
@@ -95,7 +96,7 @@ export default function TableForm({
     input8Ref.current.focus()
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${API}/api/products/`, {
+        const { data } = await axios.get(`${API}/api/products/xpv?id_config=${id_config}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         setProductss(data);

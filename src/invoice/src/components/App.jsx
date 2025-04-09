@@ -147,6 +147,9 @@ function App() {
   const [amountval, setAmountval] = useState(0);
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(0);
+  const [totalSubImp, setTotalSubImp] = useState(0);
+  const [taxImp, setTaxImp] = useState(0);
+  const [totalImp, setTotalImp] = useState(0);
   const [width] = useState(641);
   const [showInvoice, setShowInvoice] = useState(false);
 
@@ -384,6 +387,7 @@ function App() {
           invoice.totalBuy = 0;
           invoice.codCus = codCus;
           invoice.codCon = userInfo.codCon;
+          invoice.user = userInfo._id,
           invoice.codConNum = codConNum;
           invoice.codCom = codCom;
 
@@ -403,6 +407,7 @@ function App() {
             receipt.totalBuy = invoice.totalBuy;
             receipt.codCus = invoice.codCus;
             receipt.codCon = invoice.codCon;
+            receipt.user = userInfo._id,
             receipt.codConNum = invoice.codConNum;
             receipt.codSup = '0';
             receipt.recNum = invoice.recNum;
@@ -452,6 +457,7 @@ function App() {
 
           codCus: receipt.codCus,
           codCon: receipt.codCon,
+          user: userInfo._id,
           codConNum: receipt.codConNum,
 
           //          codSup: receipt.codSup,
@@ -492,8 +498,9 @@ function App() {
         `${API}/api/products/downstock/${item.item._id}`,
         {
           quantitys: item.item.quantity,
+          id_config: id_config,
         },
-        {
+        { 
           headers: {
             authorization: `Bearer ${userInfo.token}`,
           },
@@ -524,6 +531,7 @@ function App() {
 
           codCus: invoice.codCus,
           codCon: invoice.codCon,
+          user: userInfo.codCon,
           codConNum: invoice.codConNum,
           codCom: invoice.codCom,
 
@@ -550,6 +558,9 @@ function App() {
       //      localStorage.removeItem('orderItems');
       setIsPaying(false);
       setInvNumImp(data.invoice.invNum);
+      setTotalSubImp(data.invoice.subTotal),
+      setTaxImp(data.invoice.tax),
+      setTotalImp(data.invoice.total),
       setDesval('');
       setDesVal('');
       setRecNum('');
@@ -1167,9 +1178,9 @@ function App() {
                 </tbody>
               </table>
               <div className="text-end">
-                <p><strong>Subtotal:</strong> ${getTotal()}</p>
-                <p><strong>IVA:</strong> ${getIVA()}</p>
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
+                <p><strong>Subtotal:</strong> ${totalSubImp}</p>
+                <p><strong>IVA:</strong> ${taxImp}</p>
+                <h5><strong>Total:</strong> ${totalImp}</h5>
               </div>
             </div>
           )}
@@ -1204,7 +1215,7 @@ function App() {
                 </tbody>
               </table>
               <div className="text-end">
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
+                      <h5><strong>Total:</strong> ${totalImp}</h5>
               </div>
             </div>
           )}
@@ -1238,7 +1249,7 @@ function App() {
                 </tbody>
               </table>
               <div className="text-end">
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
+                      <h5><strong>Total:</strong> ${totalImp}</h5>
               </div>
             </div>
           )}

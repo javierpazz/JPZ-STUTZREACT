@@ -88,6 +88,7 @@ export default function SalePointScreen() {
     userInfo.nameCon = name;
     userInfo.configurationObj = configurationObj
     localStorage.setItem('userInfo', JSON.stringify(userInfo));
+    // navigate('/admin/dashboard');
     navigate('/');
     window.location.reload();
   };

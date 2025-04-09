@@ -39,19 +39,6 @@ const reducer = (state, action) => {
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
 
-    case 'SUPPLIER_FETCH_REQUEST':
-      return { ...state, loading: true };
-    case 'SUPPLIER_FETCH_SUCCESS':
-      return {
-        ...state,
-        suppliers: action.payload.supliers,
-        page: action.payload.page,
-        pages: action.payload.pages,
-        loading: false,
-      };
-    case 'SUPPLIER_FETCH_FAIL':
-      return { ...state, loading: false, error: action.payload };
-
     case 'VALUE_FETCH_REQUEST':
       return { ...state, loadingVal: true };
     case 'VALUE_FETCH_SUCCESS':
@@ -69,7 +56,7 @@ const reducer = (state, action) => {
   }
 };
 
-function AppBuyRem() {
+function AppBuyRempv() {
   const [
     {
       loading,
@@ -97,7 +84,6 @@ function AppBuyRem() {
 
   const { invoice, receipt, userInfo, values } = state;
 
-
   const input1Ref = useRef(null);
   const input2Ref = useRef(null);
   const input3Ref = useRef(null);
@@ -108,36 +94,36 @@ function AppBuyRem() {
   const input8Ref = useRef(null);
   const input9Ref = useRef(null);
   const input0Ref = useRef(null);
-  
+
   const input20Ref = useRef(null);
   const input21Ref = useRef(null);
 
-
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
-  const [showSup, setShowSup] = useState(false);
+  const [showCon2, setShowCon2] = useState(false);
 
-  const [codUse, setCodUse] = useState('');
+  // const [codUse, setCodUse] = useState('');
+  const [codCon2, setCodCon2] = useState('');
+  const [codCon2t, setCodCon2t] = useState('');
   const [name, setName] = useState('');
-  const [suppObj, setSuppObj] = useState({});
-  const [remNum, setRemNum] = useState('');
+  const [userObj, setUserObj] = useState({});
+  const [movpvNum, setMovpvNum] = useState('');
+  const [movpvNumImp, setMovpvNumImp] = useState('');
   const today = new Date().toISOString().split("T")[0];
-  const [remDat, setRemDat] = useState(today);
+  const [movpvDat, setMovpvDat] = useState(today);
   const [invNum, setInvNum] = useState('');
   const [invDat, setInvDat] = useState('');
   const [recNum, setRecNum] = useState('');
   const [recDat, setRecDat] = useState(today);
   const [codVal, setCodVal] = useState('');
+  const [codval, setCodval] = useState('');
   const [desval, setDesval] = useState('');
   const [valueeR, setValueeR] = useState('');
   const [desVal, setDesVal] = useState('');
   const [numval, setNumval] = useState(' ');
-  const [userss, setUserss] = useState([]);
-  const [suppliers, setSuppliers] = useState([]);
-  const [codSup, setCodSup] = useState('');
-  const [codSupp, setCodSupp] = useState('');
+  // const [userss, setUserss] = useState([]);
+  const [configura2, setConfigura2] = useState([]);
   const [valuess, setValuess] = useState([]);
   const [codPro, setCodPro] = useState('');
-  const [codPro1, setCodPro1] = useState('');
   const [address, setAddress] = useState('Direccion Usuario');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -149,21 +135,17 @@ function AppBuyRem() {
   const [dueDat, setDueDat] = useState(today);
   const [notes, setNotes] = useState('');
   const [desPro, setDesPro] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [price, setPrice] = useState('');
+  const [quantity, setQuantity] = useState(0);
+  const [price, setPrice] = useState(0);
   const [porIva, setPorIva] = useState(0);
   const [amount, setAmount] = useState(0);
   const [amountval, setAmountval] = useState(0);
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(0);
-  const [totalSubImp, setTotalSubImp] = useState(0);
-  const [taxImp, setTaxImp] = useState(0);
-  const [totalImp, setTotalImp] = useState(0);
   const [width] = useState(641);
   const [showInvoice, setShowInvoice] = useState(false);
 
   const [isPaying, setIsPaying] = useState(false);
-
 
   const config = {
     salePoint: userInfo.configurationObj.codCon,
@@ -177,7 +159,6 @@ function AppBuyRem() {
     date: "",
 
   };
-
 
 
   const componentRef = useRef();
@@ -194,38 +175,25 @@ function AppBuyRem() {
     if (numval === '') {
       setNumval(' ');
     }
-    setCodUse(codSup);
+    setCodCon2(codCon2);
     setDesVal(desVal);
     calculateAmountval(amountval);
     addToCartHandler(valueeR);
   }, [orderItems, numval, desval, recNum, recDat]);
 
   useEffect(() => {
+    clearitems();
+    input2Ref.current.focus()
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${API}/api/users/`, {
+        const { data } = await axios.get(`${API}/api/configurations/`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        setUserss(data);
+        setConfigura2(data);
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (err) {}
     };
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    clearitems();
-    input2Ref.current.focus()
-    const fetchDataVal = async () => {
-      try {
-        const { data } = await axios.get(`${API}/api/suppliers/`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
-        setSuppliers(data);
-        dispatch({ type: 'SUPPLIER_FETCH_SUCCESS', payload: data });
-      } catch (err) {}
-    };
-    fetchDataVal();
   }, []);
 
   useEffect(() => {
@@ -259,56 +227,57 @@ function AppBuyRem() {
     return (parseFloat(getTotal()) + parseFloat(getIVA())).toFixed(2);
   };
 
-  const handleShowSup = () => {
-    setShowSup(true);
+  const handleShowCon2 = () => {
+    setShowCon2(true);
+    input21Ref.current.focus();
   };
 
-  const searchSup = (codSup) => {
-    const supplierRow = suppliers.find((row) => row._id === codSup);
-    setSuppObj(supplierRow);
-    setCodSup(supplierRow._id);
-    setCodSupp(supplierRow.codSup);
-    setName(supplierRow.name);
+
+  const searchUser = (codCon2) => {
+    const usersRow = configura2.find((row) => row._id === codCon2);
+    setUserObj(usersRow);
+    setCodCon2(usersRow._id);
+    setCodCon2t(usersRow.codCon);
+    setName(usersRow.name);
   };
 
   
-  const ayudaSup = (e) => {
-    e.key === "Enter" && buscarPorCodSup(codSupp);
-    e.key === "F2" && handleShowSup(codSup);
-    e.key === "Tab" && buscarPorCodSup(codSupp);
+  const ayudaCon2 = (e) => {
+    e.key === "Enter" && buscarPorCodCon2(codCon2t);
+    e.key === "F2" && handleShowCon2(codCon2);
+    e.key === "Tab" && buscarPorCodCon2(codCon2t);
   };
+  
 
-  const buscarPorCodSup = (codSupp) => {
-    const supplierRow = suppliers.find((row) => row.codSup === codSupp);
-    if (!supplierRow) {
-        setCodSup('');
-        setCodSupp('');
-        setName('Elija Proovedor');
+  const buscarPorCodCon2 = (codCon2t) => {
+    const usersRow = configura2.find((row) => row.codCon === codCon2t);
+    if (!usersRow) {
+        setCodCon2('');
+        setCodCon2t('');
+        setName('Elija Punto de Venta');
     }else{
-      setCodSup(supplierRow._id);
-      setCodSupp(supplierRow.codSup);
-      setName(supplierRow.name);
+      setCodCon2(usersRow._id);
+      setCodCon2t(usersRow.codCon2t);
+      setUserObj(usersRow);
+      setName(usersRow.name);
       input6Ref.current.focus();
       };
   };
 
-
-  const submitHandlerSup = async (e) => {
-    e.preventDefault();
-    setShowSup(false)
-  };
-
   const handleChange = (e) => {
-    searchSup(e.target.value);
+    searchUser(e.target.value);
   };
+  const submitHandlerCon2 = async (e) => {
+    e.preventDefault();
+    setShowCon2(false)
+  };
+
 
   const searchValue = (codVal) => {
     const valuesRow = valuess.find((row) => row._id === codVal);
     setValueeR(valuesRow);
     setCodVal(valuesRow.codVal);
     setDesVal(valuesRow.desVal);
-    setDesVal(valuesRow.desVal);
-    setDesval(valuesRow.desVal);
   };
 
   const handleValueChange = (e) => {
@@ -320,63 +289,65 @@ function AppBuyRem() {
   const placeInvoiceHandler = async () => {
       if (window.confirm('Esta seguro de Grabar?')) {
       if (isPaying && (!recNum || !recDat || !desVal)) {
-      unloadpayment();
-    } else {
-      if (remNum && remDat && codSup) {
-        //    list.map((item) => stockHandler({ item }));
-        orderItems.map((item) => stockHandler({ item }));
+        unloadpayment();
+      } else {
+        if (movpvDat && codCon2) {
+          orderItems.map((item) => stockHandler({ item }));
+          const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
+          invoice.subTotal = round2(
+            invoice.orderItems.reduce((a, c) => a + c.quantity * c.price, 0)
+          );
+          invoice.shippingPrice = 0;
 
-        const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
-        invoice.subTotal = round2(
-          invoice.orderItems.reduce((a, c) => a + c.quantity * c.price, 0)
-        );
-        invoice.shippingPrice = 0;
-        //        invoice.shippingPrice =
-        //        invoice.subTotal > 100 ? round2(0) : round2(10);
-        // invoice.tax = round2((poriva/100) * invoice.subTotal);
-        invoice.tax = round2(
-          invoice.orderItems.reduce((a, c) => a + c.quantity * c.price * (c.porIva/100), 0)
-        );
-        invoice.totalBuy = round2(
-          invoice.subTotal + invoice.shippingPrice + invoice.tax
-        );
-        invoice.total = 0;
+          //        invoice.shippingPrice =
+          //        invoice.subTotal > 100 ? round2(0) : round2(10);
+          // invoice.tax = round2((poriva/100) * invoice.subTotal);
+          invoice.tax = round2(
+            invoice.orderItems.reduce((a, c) => a + c.quantity * c.price * (c.porIva/100), 0)
+          );
+          invoice.total = round2(
+            invoice.subTotal + invoice.shippingPrice + invoice.tax
+          );
+          invoice.totalBuy = 0;
+          invoice.codCon2 = codCon2;
+          invoice.codCon = userInfo.codCon;
+          invoice.user = userInfo._id,
 
-        invoice.codSup = codSup;
-        invoice.codCon = userInfo.codCon;
-        invoice.user = userInfo._id,
-        invoice.codConNum = codConNum;
-        invoice.remNum = remNum;
-        invoice.remDat = remDat;
-        invoice.invNum = invNum;
-        invoice.invDat = invDat;
-        invoice.recNum = recNum;
-        invoice.recDat = recDat;
-        invoice.desVal = desVal;
-        invoice.notes = notes;
+          invoice.codConNum = codConNum;
 
-        if (recNum && recDat && desVal) {
-          receipt.total = invoice.total;
-          receipt.totalBuy = invoice.totalBuy;
-          receipt.codSup = invoice.codSup;
-          receipt.codCon = invoice.codCon;
-          receipt.user = userInfo._id,
-          receipt.codConNum = invoice.codConNum;
-          receipt.recNum = invoice.recNum;
-          receipt.recDat = invoice.recDat;
-          receipt.desVal = invoice.desVal;
-          receipt.notes = invoice.notes;
+          invoice.codSup = '0';
+          invoice.movpvNum = movpvNum;
+          invoice.movpvDat = movpvDat;
+          invoice.invNum = 0 ;
+          invoice.invDat = invDat;
+          invoice.recNum = recNum;
+          invoice.recDat = recDat;
+          invoice.desVal = desVal;
+          invoice.notes = notes;
 
-          receiptHandler();
+          if (recNum && recDat && desVal) {
+            receipt.subTotal = invoice.subTotal;
+            receipt.total = invoice.total;
+            receipt.totalBuy = invoice.totalBuy;
+            receipt.codCon2 = invoice.codCon2;
+            receipt.codCon = invoice.codCon;
+            receipt.user = userInfo._id,
+            receipt.codConNum = invoice.codConNum;
+            receipt.codSup = '0';
+            receipt.recNum = invoice.recNum;
+            receipt.recDat = invoice.recDat;
+            receipt.desVal = invoice.desVal;
+            receipt.notes = invoice.notes;
+
+            receiptHandler();
+          }
+          orderHandler();
+          setShowInvoice(true);
+          //      handlePrint();
         }
-
-        orderHandler();
-        setShowInvoice(true);
-        //      handlePrint();
       }
-    }
+    };
   };
-};
 
   /////////////////////////////////////////////
 
@@ -408,15 +379,14 @@ function AppBuyRem() {
           total: receipt.total,
           totalBuy: receipt.totalBuy,
 
-          //          codUse: receipt.codUse,
-
-          codSup: receipt.codSup,
+          codCon2: receipt.codCon2,
           codCon: receipt.codCon,
           user: userInfo._id,
           codConNum: receipt.codConNum,
 
-          remNum: receipt.remNum,
-          remDat: receipt.remDat,
+          //          codSup: receipt.codSup,
+
+          movpvNum: receipt.movpvNum,
           invNum: receipt.invNum,
           invDat: receipt.invDat,
           recNum: receipt.recNum,
@@ -442,7 +412,6 @@ function AppBuyRem() {
   };
 
   /////////////////////////////////////////////
-
   const stockHandler = async (item) => {
     try {
       dispatch({ type: 'CREATE_REQUEST' });
@@ -464,11 +433,12 @@ function AppBuyRem() {
     }
   };
 
+
   const orderHandler = async () => {
     try {
       dispatch({ type: 'CREATE_REQUEST' });
       const { data } = await axios.post(
-        `${API}/api/invoices/rem`,
+        `${API}/api/invoices/mov`,
 
         {
           orderItems: invoice.orderItems,
@@ -480,13 +450,15 @@ function AppBuyRem() {
           total: invoice.total,
           totalBuy: invoice.totalBuy,
 
-          codSup: invoice.codSup,
+          codCon2: invoice.codCon2,
           codCon: invoice.codCon,
           user: userInfo.codCon,
           codConNum: invoice.codConNum,
-          
-          remNum: invoice.remNum,
-          remDat: invoice.remDat,
+
+          //        codSup: invoice.codSup,
+
+          movpvNum: invoice.movpvNum,
+          movpvDat: invoice.movpvDat,
           invNum: invoice.invNum,
           invDat: invoice.invDat,
           recNum: invoice.recNum,
@@ -501,15 +473,13 @@ function AppBuyRem() {
           },
         }
       );
-      //      ctxDispatch({ type: 'INVOICE_CLEAR' });
-      //    dispatch({ type: 'CREATE_SUCCESS' });
-      //  localStorage.removeItem('orderItems');
+      //ctxDispatch({ type: 'INVOICE_CLEAR' });
+      //      dispatch({ type: 'CREATE_SUCCESS' });
+      //      localStorage.removeItem('orderItems');
       setIsPaying(false);
-      setTotalSubImp(data.invoice.subTotal),
-      setTaxImp(data.invoice.tax),
-      setTotalImp(data.invoice.totalBuy),
       setDesval('');
       setDesVal('');
+      setMovpvNumImp(data.invoice.movpvNum);
       setRecNum('');
       setRecDat('');
       setNumval(' ');
@@ -550,7 +520,7 @@ function AppBuyRem() {
   return (
     <>
       <Helmet>
-        <title>Remito de Compra</title>
+        <title>Recepcion desde Punto de Venta</title>
       </Helmet>
 
       <main>
@@ -578,7 +548,7 @@ function AppBuyRem() {
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              REMITO DE COMPRA
+                              RECEPCION DESDE PTO VENTA
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -588,22 +558,22 @@ function AppBuyRem() {
 
                 </Row>
 
-                <Row>
+              <Row>
                   <Col md={2}>
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Codigo Proovedor</Form.Label>
+                          <Form.Label>Codigo Pto Venta</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input2Ref}
-                            placeholder="Codigo Proovedor"
-                            value={codSupp}
-                            onChange={(e) => setCodSupp(e.target.value)}
-                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodSup(codSupp)}
-                            onKeyDown={(e) => ayudaSup(e)}
+                            placeholder="Codigo Pto Venta"
+                            value={codCon2t}
+                            onChange={(e) => setCodCon2t(e.target.value)}
+                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCon2(codCon2t)}
+                            onKeyDown={(e) => ayudaCon2(e)}
                             required
-                          />
+                            />
                         </Form.Group>
                       </Card.Title>
                     </Card.Body>
@@ -613,7 +583,7 @@ function AppBuyRem() {
                       className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                       type="button"
                       title="Buscador"
-                      onClick={() => handleShowSup()}
+                      onClick={() => handleShowCon2()}
                       >
                       <BiFileFind className="text-blue-500 font-bold text-xl" />
                     </Button>
@@ -631,21 +601,20 @@ function AppBuyRem() {
                       </Card.Body>
                     </Col>
 
-
                 </Row>
 
                 <Row>
-                <Col md={1}>
+                <Col md={2}>
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Remito N°</Form.Label>
+                          <Form.Label>Recepcion N°</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input6Ref}
-                            placeholder="Remito N°"
-                            value={remNum}
-                            onChange={(e) => setRemNum(e.target.value)}
+                            placeholder="Recepcion N°"
+                            value={movpvNum}
+                            onChange={(e) => setMovpvNum(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input9Ref.current.focus()}
                             required
                           />
@@ -658,14 +627,14 @@ function AppBuyRem() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Fecha Remito</Form.Label>
+                          <Form.Label>Fecha Recepcion</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input9Ref}
                             type="date"
-                            placeholder="Fecha Remito"
-                            value={remDat}
-                            onChange={(e) => setRemDat(e.target.value)}
+                            placeholder="Fecha Recepcion"
+                            value={movpvDat}
+                            onChange={(e) => setMovpvDat(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
                             required
                           />
@@ -777,10 +746,10 @@ function AppBuyRem() {
                       <Card.Body>
                         <Card.Title>
                           <Form.Group className="input" controlId="name">
-                            <Form.Label>Orden N°</Form.Label>
+                            <Form.Label>Recibo N°</Form.Label>
                             <Form.Control
                               className="input"
-                              placeholder="Orden N°"
+                              placeholder="Recibo N°"
                               value={recNum}
                               onChange={(e) => setRecNum(e.target.value)}
                               disabled={!isPaying}
@@ -798,9 +767,9 @@ function AppBuyRem() {
                           className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                           disabled={
                             orderItems.length === 0 ||
-                            !invNum ||
-                            !invDat ||
-                            !codSup
+                            !movpvNum ||
+                            !movpvDat ||
+                            !codCon2
                           }
                         >
                           {isPaying ? 'Not Payment' : 'Carga Pago'}
@@ -832,9 +801,8 @@ function AppBuyRem() {
                           onClick={placeCancelInvoiceHandler}
                           disabled={
                             orderItems.length === 0 ||
-                            !remNum ||
-                            !remDat ||
-                            !codSup
+                            !movpvDat ||
+                            !codCon2
                           }
                         >
                           CANCELA
@@ -851,12 +819,11 @@ function AppBuyRem() {
                           onClick={placeInvoiceHandler}
                           disabled={
                             orderItems.length === 0 ||
-                            !remNum ||
-                            !remDat ||
-                            !codSup
+                            !movpvDat ||
+                            !codCon2
                           }
                         >
-                          GRABA REMITO
+                          GRABA RECEPCION
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -907,30 +874,32 @@ function AppBuyRem() {
                   />
                 </article>
 
+
                 <Modal
+                  // input21Ref={input21Ref}
                   size="md"
-                  show={showSup}
-                  onHide={() => setShowSup(false)}
+                  show={showCon2}
+                  onHide={() => setShowCon2(false)}
                   aria-labelledby="example-modal-sizes-title-lg"
                 >
                   <Modal.Header closeButton>
                     <Modal.Title id="example-modal-sizes-title-lg">
-                    Elija un Proovedor
+                    Elija un Punto de Venta
                     </Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
                   <Col md={12}>
                     <Card.Body>
                       <Card.Title>
-                      <Form onSubmit={submitHandlerSup}>
-                          <Form.Group className="mb-3" controlId="name">
-                          {/* <Form.Group className="input" controlId="name"> */}
-                          <Form.Label>Proveedor</Form.Label>
+                      <Form onSubmit={submitHandlerCon2}>
+                            <Form.Group className="mb-3" controlId="name">
+                            {/* <Form.Group className="input" controlId="name"> */}
+                          <Form.Label>Puntos de Venta</Form.Label>
                           <Form.Select
                             className="input"
                             onClick={(e) => handleChange(e)}
                           >
-                            {suppliers.map((elemento) => (
+                            {configura2.map((elemento) => (
                               <option key={elemento._id} value={elemento._id}>
                                 {elemento.name}
                               </option>
@@ -939,7 +908,7 @@ function AppBuyRem() {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="name">
                               <Form.Control
-                                placeholder="Proveedor"
+                                placeholder="Cliente"
                                 value={name}
                                 disabled={true}
                                 required
@@ -952,6 +921,7 @@ function AppBuyRem() {
                                   >Continuar</Button>
                               </div>
                               </Form>
+
                       </Card.Title>
                     </Card.Body>
                   </Col>
@@ -967,7 +937,7 @@ function AppBuyRem() {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
-            <Button onClick={() => clearitems()}>Nuevo Remito</Button>
+            <Button onClick={() => clearitems()}>Nueva RECEPCION</Button>
 
             {/* Invoice Preview */}
 
@@ -979,20 +949,8 @@ function AppBuyRem() {
         <div className="card-header bg-dark text-white text-center"></div>
         <div className="card-body">
           
-        <div className="card-header text-black text-center">REMITO</div>
+        <div className="card-header text-black text-center">RECEPCION DESDE PTO VENTA</div>
         <div className="row">
-            <div className="row">
-              <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {name}</p>
-              </div>
-              <div className="col-md-6">
-                <p><strong>CUIT:</strong> </p>
-                <p><strong>Condición IVA:</strong> </p>
-              </div>
-          </div>
-          </div>
-                    <hr />
-                    <div className="row">
             <div className="col-md-6">
               <p><strong>{userInfo.nameCon}</strong></p>
               <p><strong>Razon Social:</strong> {userInfo.nameCon}</p>
@@ -1000,15 +958,27 @@ function AppBuyRem() {
               <p><strong>Condición frente al IVA:</strong> {config.ivaCondition}</p>
             </div>
             <div className="col-md-6 ">
-              <p><strong>REMITO</strong></p>
+              <p><strong>RECEPCION DESDE PTO VENTA</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
-              <strong>     Comp. Nro:</strong> {remNum}</p>
-              <p><strong>Fecha de Emision:</strong> {remDat}</p>
+              <strong>     Comp. Nro:</strong> {movpvNumImp}</p>
+              <p><strong>Fecha de Emision:</strong> {movpvDat}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>
             </div>
           </div>
+                    <hr />
+            <div className="row">
+              <div className="col-md-6">
+                <p><strong>CUIT:</strong> {userObj.cuit}</p>
+                <p><strong>Condición IVA:</strong> {userObj.coniva}</p>
+              </div>
+              <div className="col-md-6">
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {userObj.name}</p>
+                <p><strong>Dirección:</strong> {userObj.domcomer}</p>
+              </div>
+          </div>
+
           </div>
           { true &&
           (
@@ -1031,7 +1001,7 @@ function AppBuyRem() {
                       <td>{index + 1}</td>
                       <td>{item.title}</td>
                       <td className="text-end">{item.quantity}</td>
-                      <td className="text-end">${item.price.toFixed(2)}</td>
+                      <td className="text-end">${item.price}</td>
                       <td className="text-end">${(item.quantity * item.price).toFixed(2)}</td>
                       <td className="text-end">%{item.porIva}</td>
                       <td className="text-end">${(item.quantity * item.price*(1+(item.porIva/100))).toFixed(2)}</td>
@@ -1040,9 +1010,9 @@ function AppBuyRem() {
                 </tbody>
               </table>
               <div className="text-end">
-                {/* <p><strong>Subtotal:</strong> ${getTotal()}</p>
-                <p><strong>IVA:</strong> ${getIVA()}</p> */}
-                <h5><strong>Total:</strong> ${totalImp}</h5>
+                <p><strong>Subtotal:</strong> ${getTotal()}</p>
+                <p><strong>IVA:</strong> ${getIVA()}</p>
+                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
               </div>
             </div>
           )}
@@ -1050,7 +1020,6 @@ function AppBuyRem() {
 
       </div>
     </div>
-
 
 
 
@@ -1063,4 +1032,4 @@ function AppBuyRem() {
   );
 }
 
-export default AppBuyRem;
+export default AppBuyRempv;

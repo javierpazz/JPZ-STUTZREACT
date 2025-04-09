@@ -326,6 +326,7 @@ const RecControl = (e) => {
         receipt.totalBuy = 0;
         receipt.codCus = codCus;
         receipt.codCon = userInfo.codCon;
+        receipt.user = userInfo._id,
         receipt.codConNum = codConNum;
         receipt.codSup = 0;
         receipt.remNum = remNum;
@@ -363,6 +364,7 @@ const RecControl = (e) => {
 
           codCus: receipt.codCus,
           codCon: receipt.codCon,
+          user: userInfo._id,
           codConNum: receipt.codConNum,
 
           //          supplier: receipt.codSup,

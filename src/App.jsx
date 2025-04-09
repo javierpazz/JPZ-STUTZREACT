@@ -38,8 +38,10 @@ import AccountCustomerScreen from './screens/AccountCustomerScreen';
 import AccountSuppliScreen from './screens/AccountSuppliScreen';
 import InvoiceListScreen from './screens/InvoiceListScreen';
 import RemitListScreen from './screens/RemitListScreen';
+import RemitpvListScreen from './screens/RemitpvListScreen';
 import InvoiceBuyListScreen from './screens/InvoiceBuyListScreen';
 import RemitBuyListScreen from './screens/RemitBuyListScreen';
+import RemitBuypvListScreen from './screens/RemitBuypvListScreen';
 import ReceiptListScreen from './screens/ReceiptListScreen';
 import CajaIngListScreen from './screens/CajaIngListScreen';
 import CajaEgrListScreen from './screens/CajaEgrListScreen';
@@ -72,11 +74,13 @@ import InvoicesBuyRecCon from './invoice/src/InvoicesBuyRecCon';
 import InvoicesBuyRemCon from './invoice/src/InvoicesBuyRemCon';
 import Invoices from './invoice/src/Invoices';
 import Remits from './invoice/src/Remits';
+import Remitspv from './invoice/src/Remitspv';
 import InvoicesRec from './invoice/src/InvoicesRec';
 import InvoicesBuy from './invoice/src/InvoicesBuy';
 import InvoicesCajIng from './invoice/src/InvoicesCajIng';
 import InvoicesCajEgr from './invoice/src/InvoicesCajEgr';
 import RemitsBuy from './invoice/src/RemitsBuy';
+import RemitsBuypv from './invoice/src/RemitsBuypv';
 import InvoicesBuyRec from './invoice/src/InvoicesBuyRec';
 import MapScreen from './screens/MapScreen';
 import ForgetPasswordScreen from './screens/ForgetPasswordScreen';
@@ -262,6 +266,21 @@ function App() {
                     </NavDropdown>
                   )}
 
+                  {userInfo && (
+                    <NavDropdown title="Stocks Ptos Venta" id="buys-nav-dropdown">
+                      <LinkContainer to="/admin/remiterpv">
+                        <NavDropdown.Item>Entregas a Punto Venta</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/remiterBuypv">
+                        <NavDropdown.Item>Recepcion desde Punto de Venta</NavDropdown.Item>
+                      </LinkContainer>
+                      {userInfo && userInfo.role=="admin" && (
+                        <LinkContainer to="/admin/infosupp">
+                          <NavDropdown.Item>Informes</NavDropdown.Item>
+                        </LinkContainer>
+                        )}
+                    </NavDropdown>
+                  )}
 
                   {userInfo && userInfo.role=="admin" && (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
@@ -292,6 +311,21 @@ function App() {
                       <LinkContainer to="/admin/invoicesCajEgr">
                         <NavDropdown.Item>Retiros de Caja</NavDropdown.Item>
                       </LinkContainer>
+                      <LinkContainer to="/admin/remitspv">
+                        <NavDropdown.Item>Entregas a Pto Vta</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/remitsBuypv">
+                        <NavDropdown.Item>Recepcion desde Pto Vta</NavDropdown.Item>
+                      </LinkContainer>
+                      {/* <LinkContainer to="/admin/support">
+                        <NavDropdown.Item>Chat Support</NavDropdown.Item>
+                      </LinkContainer> */}
+
+
+                    </NavDropdown>
+                  )}
+                  {userInfo && userInfo.role=="admin" && (
+                    <NavDropdown title="Configuracion" id="admin-nav-dropdown">
                       <LinkContainer to="/admin/products">
                         <NavDropdown.Item>Productos</NavDropdown.Item>
                       </LinkContainer>
@@ -463,6 +497,14 @@ function App() {
                 }
               ></Route>
               <Route
+                path="/admin/remitspv"
+                element={
+                  <AdminRoute>
+                    <RemitpvListScreen />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
                 path="/admin/invoicesBuy"
                 element={
                   <AdminRoute>
@@ -475,6 +517,14 @@ function App() {
                 element={
                   <AdminRoute>
                     <RemitBuyListScreen />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/remitsBuypv"
+                element={
+                  <AdminRoute>
+                    <RemitBuypvListScreen />
                   </AdminRoute>
                 }
               ></Route>
@@ -640,6 +690,14 @@ function App() {
                 }
               ></Route>
               <Route
+                path="/admin/remiterpv"
+                element={
+                  <ProtectedRoute>
+                    <Remitspv />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
                 path="/admin/invoicerOrd/:id"
                 element={
                   <AdminRoute>
@@ -740,6 +798,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <RemitsBuy />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/remiterBuypv"
+                element={
+                  <ProtectedRoute>
+                    <RemitsBuypv />
                   </ProtectedRoute>
                 }
               ></Route>

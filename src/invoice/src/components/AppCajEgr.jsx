@@ -334,6 +334,7 @@ const submitHandlerEnc = async (e) => {
         receipt.totalBuy = receipt.subTotal;
         receipt.codEnc = codEnc;
         receipt.codCon = userInfo.codCon;
+        receipt.user = userInfo._id,
         receipt.codConNum = codConNum;
         receipt.remNum = remNum;
         receipt.invNum = invNum;
@@ -366,6 +367,7 @@ const submitHandlerEnc = async (e) => {
 
           codEnc: receipt.codEnc,
           codCon: receipt.codCon,
+          user: userInfo._id,
           codConNum: receipt.codConNum,
 
           cajNum: receipt.cajNum,

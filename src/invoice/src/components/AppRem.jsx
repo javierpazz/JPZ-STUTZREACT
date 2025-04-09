@@ -142,6 +142,9 @@ function AppRem() {
   const [amountval, setAmountval] = useState(0);
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(0);
+  const [totalSubImp, setTotalSubImp] = useState(0);
+  const [taxImp, setTaxImp] = useState(0);
+  const [totalImp, setTotalImp] = useState(0);
   const [width] = useState(641);
   const [showInvoice, setShowInvoice] = useState(false);
 
@@ -311,6 +314,7 @@ function AppRem() {
           invoice.totalBuy = 0;
           invoice.codCus = codCus;
           invoice.codCon = userInfo.codCon;
+          invoice.user = userInfo._id,
           invoice.codConNum = codConNum;
 
           invoice.codSup = '0';
@@ -329,6 +333,7 @@ function AppRem() {
             receipt.totalBuy = invoice.totalBuy;
             receipt.codCus = invoice.codCus;
             receipt.codCon = invoice.codCon;
+            receipt.user = userInfo._id,
             receipt.codConNum = invoice.codConNum;
             receipt.codSup = '0';
             receipt.recNum = invoice.recNum;
@@ -378,6 +383,7 @@ function AppRem() {
 
           codCus: receipt.codCus,
           codCon: receipt.codCon,
+          user: userInfo._id,
           codConNum: receipt.codConNum,
 
           //          codSup: receipt.codSup,
@@ -450,6 +456,7 @@ function AppRem() {
 
           codCus: invoice.codCus,
           codCon: invoice.codCon,
+          user: userInfo._id,
           codConNum: invoice.codConNum,
 
           //        codSup: invoice.codSup,
@@ -477,6 +484,9 @@ function AppRem() {
       setDesval('');
       setDesVal('');
       setRemNumImp(data.invoice.remNum);
+      setTotalSubImp(data.invoice.subTotal),
+      setTaxImp(data.invoice.tax),
+      setTotalImp(data.invoice.total),
       setRecNum('');
       setRecDat('');
       setNumval(' ');
@@ -1007,9 +1017,9 @@ function AppRem() {
                 </tbody>
               </table>
               <div className="text-end">
-                <p><strong>Subtotal:</strong> ${getTotal()}</p>
-                <p><strong>IVA:</strong> ${getIVA()}</p>
-                <h5><strong>Total:</strong> ${getTotalWithIVA()}</h5>
+                {/* <p><strong>Subtotal:</strong> ${totalSubImp}</p>
+                <p><strong>IVA:</strong> ${taxImp}</p> */}
+                <h5><strong>Total:</strong> ${totalImp}</h5>
               </div>
             </div>
           )}
