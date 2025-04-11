@@ -268,7 +268,7 @@ try {
                       type="button"
                       title="Delete"
                       onClick={() => deleteHandler(invoice)}
-                      disabled={true}
+                      // disabled={true}
                     >
                       <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                     </Button>

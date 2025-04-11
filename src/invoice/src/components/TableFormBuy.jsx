@@ -274,6 +274,7 @@ export default function TableFormBuy({
                     <Form.Control
                       className="input"
                       ref={input9Ref}
+                      type="number"
                       placeholder="Cantidad"
                       value={quantity}
                       onChange={(e) => setQuantity(e.target.value)}
@@ -294,6 +295,7 @@ export default function TableFormBuy({
                     <Form.Control
                       className="input"
                       ref={input10Ref}
+                      type="number"
                       placeholder="Precio"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}

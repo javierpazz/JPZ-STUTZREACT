@@ -114,10 +114,22 @@ function App() {
   const [remNum, setRemNum] = useState('');
   const [invNum, setInvNum] = useState('');
   const [invNumImp, setInvNumImp] = useState('');
+
+
+  const getTodayInGMT3 = () => {
+    const now = new Date();
+    // Convertimos a la hora de Argentina (GMT-3)
+    const offset = now.getTimezoneOffset(); // En minutos
+    const localDate = new Date(now.getTime() - (offset + 180) * 60 * 1000); // 180 = 3 horas
+    
+    return localDate.toISOString().split("T")[0];
+  };
+
+
   const today = new Date().toISOString().split("T")[0];
-  const [invDat, setInvDat] = useState(today);
+  const [invDat, setInvDat] = useState(getTodayInGMT3());
   const [recNum, setRecNum] = useState('');
-  const [recDat, setRecDat] = useState(today);
+  const [recDat, setRecDat] = useState(getTodayInGMT3());
   const [codVal, setCodVal] = useState('');
   const [codval, setCodval] = useState('');
   const [desval, setDesval] = useState('');
@@ -137,7 +149,7 @@ function App() {
   const [website, setWebsite] = useState('');
   const [clientName, setClientName] = useState('');
   const [clientAddress, setClientAddress] = useState('');
-  const [dueDat, setDueDat] = useState(today);
+  const [dueDat, setDueDat] = useState(getTodayInGMT3());
   const [notes, setNotes] = useState('');
   const [desPro, setDesPro] = useState('');
   const [quantity, setQuantity] = useState(0);
@@ -712,6 +724,7 @@ function App() {
                           <Form.Label>Factura N°</Form.Label>
                           <Form.Control
                             className="input"
+                            type="number"
                             ref={input3Ref}
                             placeholder="Factura N°"
                             value={invNum}
@@ -770,6 +783,7 @@ function App() {
                           <Form.Control
                             className="input"
                             ref={input6Ref}
+                            type="number"
                             placeholder="Remito N°"
                             value={remNum}
                             onChange={(e) => setRemNum(e.target.value)}
@@ -869,6 +883,7 @@ function App() {
                             <Form.Control
                               className="input"
                               placeholder="Recibo N°"
+                              type="number"
                               value={recNum}
                               onChange={(e) => setRecNum(e.target.value)}
                               disabled={!isPaying}

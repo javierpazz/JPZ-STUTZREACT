@@ -49,6 +49,7 @@ export default function UserEditScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,6 +62,7 @@ export default function UserEditScreen() {
         setEmail(data.email);
         // setPassword(data.password);
         setIsAdmin(data.isAdmin);
+        setIsActive(data.isActive);
         dispatch({ type: 'FETCH_SUCCESS' });
       } catch (err) {
         dispatch({
@@ -78,15 +80,15 @@ export default function UserEditScreen() {
       toast.error('Passwords does not match');
       return;
     }
-    if (password == '') {
-      toast.error('Passwords does not exist');
-      return;
-    }
+    // if (password == '') {
+    //   toast.error('Passwords does not exist');
+    //   return;
+    // }
       try {
       dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(
         `${API}/api/users/${userId}`,
-        { _id: userId, name, email, password, isAdmin },
+        { _id: userId, name, email, password, isAdmin, isActive },
         {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         }
@@ -156,6 +158,14 @@ export default function UserEditScreen() {
             label="isAdmin"
             checked={isAdmin}
             onChange={(e) => setIsAdmin(e.target.checked)}
+          />
+          <Form.Check
+            className="mb-3"
+            type="checkbox"
+            id="isActive"
+            label="Activo"
+            checked={isActive}
+            onChange={(e) => setIsActive(e.target.checked)}
           />
 
           <div className="mb-3">

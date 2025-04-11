@@ -116,16 +116,25 @@ function AppBuyRem() {
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
   const [showSup, setShowSup] = useState(false);
 
+  
+  const getTodayInGMT3 = () => {
+    const now = new Date();
+    // Convertimos a la hora de Argentina (GMT-3)
+    const offset = now.getTimezoneOffset(); // En minutos
+    const localDate = new Date(now.getTime() - (offset + 180) * 60 * 1000); // 180 = 3 horas
+    
+    return localDate.toISOString().split("T")[0];
+  };
+
   const [codUse, setCodUse] = useState('');
   const [name, setName] = useState('');
   const [suppObj, setSuppObj] = useState({});
   const [remNum, setRemNum] = useState('');
-  const today = new Date().toISOString().split("T")[0];
-  const [remDat, setRemDat] = useState(today);
+  const [remDat, setRemDat] = useState(getTodayInGMT3);
   const [invNum, setInvNum] = useState('');
   const [invDat, setInvDat] = useState('');
   const [recNum, setRecNum] = useState('');
-  const [recDat, setRecDat] = useState(today);
+  const [recDat, setRecDat] = useState(getTodayInGMT3);
   const [codVal, setCodVal] = useState('');
   const [desval, setDesval] = useState('');
   const [valueeR, setValueeR] = useState('');
@@ -146,7 +155,7 @@ function AppBuyRem() {
   const [website, setWebsite] = useState('');
   const [clientName, setClientName] = useState('');
   const [clientAddress, setClientAddress] = useState('');
-  const [dueDat, setDueDat] = useState(today);
+  const [dueDat, setDueDat] = useState(getTodayInGMT3());
   const [notes, setNotes] = useState('');
   const [desPro, setDesPro] = useState('');
   const [quantity, setQuantity] = useState('');
@@ -642,6 +651,7 @@ function AppBuyRem() {
                           <Form.Label>Remito N°</Form.Label>
                           <Form.Control
                             className="input"
+                            type="number"
                             ref={input6Ref}
                             placeholder="Remito N°"
                             value={remNum}
@@ -710,7 +720,7 @@ function AppBuyRem() {
                     </Card.Body>
                   </Col>
                 </Row>
-
+{/* 
                 <div className="bordeTable">
                   <Row>
                     <Col md={2}>
@@ -820,7 +830,7 @@ function AppBuyRem() {
                       {loading && <LoadingBox></LoadingBox>}
                     </Col>
                   </Row>
-                </div>
+                </div> */}
               </div>
               <div className="bordeTable">
                 <div className="bordeTableinput">

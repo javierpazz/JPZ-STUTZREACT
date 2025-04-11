@@ -224,9 +224,12 @@ try {
     setTotal(tot);
   };
 
-  const createHandler = async () => {
-      navigate(`/admin/invoicer`);
+  const parametros = async () => {
+    navigate('/admin/filtros?redirect=/admin/invoices');
   };
+  const createHandler = async () => {
+    navigate(`/admin/invoicer`);
+};
 
   return (
     <div>
@@ -237,7 +240,28 @@ try {
         <Col>
           <h1>Facturas Venta</h1>
         </Col>
+        {/* <ListGroup.Item>
+                  <div className="d-grid">
+                    <Button
+                      type="button"
+                      variant="primary"
+                      onClick={checkoutHandler}
+                    >
+                      Filtros
+                    </Button>
+                  </div>
+                </ListGroup.Item> */}
 
+        <Col className="col text-end">
+          <div>
+            <Button type="button"
+                    variant="primary"
+                    onClick={parametros}
+                  >
+              Ver Filtros
+            </Button>
+            </div>
+        </Col>
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>

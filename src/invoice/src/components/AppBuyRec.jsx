@@ -106,13 +106,22 @@ function AppBuyRec() {
 
   const [codUse, setCodUse] = useState('');
   
+  const getTodayInGMT3 = () => {
+    const now = new Date();
+    // Convertimos a la hora de Argentina (GMT-3)
+    const offset = now.getTimezoneOffset(); // En minutos
+    const localDate = new Date(now.getTime() - (offset + 180) * 60 * 1000); // 180 = 3 horas
+    
+    return localDate.toISOString().split("T")[0];
+  };
+
+
   const [name, setName] = useState('');
   const [remNum, setRemNum] = useState('');
   const [invNum, setInvNum] = useState('');
   const [invDat, setInvDat] = useState('');
   const [recNum, setRecNum] = useState('');
-  const today = new Date().toISOString().split("T")[0];
-  const [recDat, setRecDat] = useState(today);
+  const [recDat, setRecDat] = useState(getTodayInGMT3);
   const [codVal, setCodVal] = useState('');
   const [desval, setDesval] = useState('');
   const [receiptss, setReceiptss] = useState([]);
@@ -496,6 +505,7 @@ const submitHandlerSup = async (e) => {
                           <Form.Label>Numero</Form.Label>
                           <Form.Control
                             className="input"
+                            type="number"
                             ref={input3Ref}
                             placeholder="Numero"
                             value={recNum}

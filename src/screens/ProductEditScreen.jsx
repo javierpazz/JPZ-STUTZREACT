@@ -5,6 +5,8 @@ import axios from 'axios';
 import { Store } from '../Store';
 import { getError, API } from '../utils';
 import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import { Helmet } from 'react-helmet-async';
@@ -228,6 +230,10 @@ export default function ProductEditScreen() {
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
         <Form onSubmit={submitHandler}>
+        <Row>
+        <Col md={6}>
+
+
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Codigo</Form.Label>
             <Form.Control
@@ -244,13 +250,14 @@ export default function ProductEditScreen() {
               required
             />
           </Form.Group>
+
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Nombre</Form.Label>
             <Form.Control
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-            />
+              />
           </Form.Group>
           <Form.Group className="mb-3" controlId="description">
             <Form.Label>Description</Form.Label>
@@ -258,23 +265,23 @@ export default function ProductEditScreen() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
-            />
+              />
           </Form.Group>
           {/* <Form.Group className="mb-3" controlId="slug">
             <Form.Label>Slug</Form.Label>
             <Form.Control
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              required
+            value={slug}
+            onChange={(e) => setSlug(e.target.value)}
+            required
             />
-          </Form.Group> */}
+            </Form.Group> */}
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Precio</Form.Label>
             <Form.Control
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               required
-            />
+              />
           </Form.Group>
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Precio Costo</Form.Label>
@@ -282,47 +289,50 @@ export default function ProductEditScreen() {
               value={priceBuy}
               onChange={(e) => setPriceBuy(e.target.value)}
               required
-            />
+              />
           </Form.Group>
+        </Col>
+        <Col md={6}>
+
           {/* <Form.Group className="mb-3" controlId="image">
             <Form.Label>Image File</Form.Label>
             <Form.Control
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              required
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+            required
             />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="imageFile">
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="imageFile">
             <Form.Label>Upload Image</Form.Label>
             <Form.Control type="file" onChange={uploadFileHandler} />
             {loadingUpload && <LoadingBox></LoadingBox>}
-          </Form.Group>
-          */}
+            </Form.Group>
+            */}
 
           {/* /////imagenes//////
           <Form.Group className="mb-3" controlId="additionalImageFile">
-            <Form.Label>Upload Image</Form.Label>
-            <Form.Control
-              type="file"
-              onChange={(e) => uploadFileHandler(e, true)}
-            />
-            {loadingUpload && <LoadingBox></LoadingBox>}
+          <Form.Label>Upload Image</Form.Label>
+          <Form.Control
+          type="file"
+          onChange={(e) => uploadFileHandler(e, true)}
+          />
+          {loadingUpload && <LoadingBox></LoadingBox>}
           </Form.Group>
           <Form.Group className="mb-3" controlId="additionalImage">
-            <Form.Label>Images</Form.Label>
-            {images.length === 0 && <MessageBox>No image</MessageBox>}
-            <ListGroup variant="flush">
-              {images.map((x) => (
-                <ListGroup.Item key={x}>
-                  {x}
-                  <Button variant="light" onClick={() => deleteFileHandler(x)}>
-                    <i className="fa fa-times-circle"></i>
-                  </Button>
-                </ListGroup.Item>
-              ))}
+          <Form.Label>Images</Form.Label>
+          {images.length === 0 && <MessageBox>No image</MessageBox>}
+          <ListGroup variant="flush">
+          {images.map((x) => (
+            <ListGroup.Item key={x}>
+            {x}
+            <Button variant="light" onClick={() => deleteFileHandler(x)}>
+            <i className="fa fa-times-circle"></i>
+            </Button>
+            </ListGroup.Item>
+            ))}
             </ListGroup>
-          </Form.Group>
-          /////imagenes////// */}
+            </Form.Group>
+            /////imagenes////// */}
 
           <Form.Group className="mb-3" controlId="category">
             <Form.Label>Categoria</Form.Label>
@@ -330,7 +340,7 @@ export default function ProductEditScreen() {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               required
-            />
+              />
           </Form.Group>
           <Form.Group className="mb-3" controlId="brand">
             <Form.Label>Marca</Form.Label>
@@ -338,7 +348,7 @@ export default function ProductEditScreen() {
               value={brand}
               onChange={(e) => setBrand(e.target.value)}
               required
-            />
+              />
           </Form.Group>
           <Form.Group className="mb-3" controlId="inStock">
             <Form.Label>Stock</Form.Label>
@@ -346,7 +356,7 @@ export default function ProductEditScreen() {
               value={inStock}
               onChange={(e) => setInStock(e.target.value)}
               required
-            />
+              />
           </Form.Group>
           <Form.Group className="mb-3" controlId="inStock">
             <Form.Label>Stock Minimo</Form.Label>
@@ -354,7 +364,7 @@ export default function ProductEditScreen() {
               value={minStock}
               onChange={(e) => setMinStock(e.target.value)}
               required
-            />
+              />
           </Form.Group>
           <Form.Group className="mb-3" controlId="inStock">
             <Form.Label>% IVA</Form.Label>
@@ -362,14 +372,17 @@ export default function ProductEditScreen() {
               value={porIva}
               onChange={(e) => setPorIva(e.target.value)}
               required
-            />
+              />
           </Form.Group>
-          <div className="mb-3">
-            <Button disabled={loadingUpdate} type="submit">
+
+          <div className="mb-3 text-end">
+          <Button disabled={loadingUpdate} type="submit">
               Graba
             </Button>
             {loadingUpdate && <LoadingBox></LoadingBox>}
-          </div>
+            </div>
+      </Col>
+      </Row>
         </Form>
       )}
     </Container>

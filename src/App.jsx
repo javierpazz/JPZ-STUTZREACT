@@ -73,6 +73,7 @@ import InvoicesCajEgrCon from './invoice/src/InvoicesCajEgrCon';
 import InvoicesBuyRecCon from './invoice/src/InvoicesBuyRecCon';
 import InvoicesBuyRemCon from './invoice/src/InvoicesBuyRemCon';
 import Invoices from './invoice/src/Invoices';
+import Filtros from './invoice/src/Filtros';
 import Remits from './invoice/src/Remits';
 import Remitspv from './invoice/src/Remitspv';
 import InvoicesRec from './invoice/src/InvoicesRec';
@@ -216,9 +217,6 @@ function App() {
                       {/* <LinkContainer to="/admin/stateOrds">
                         <NavDropdown.Item>States Order</NavDropdown.Item>
                       </LinkContainer> */}
-                      <LinkContainer to="/admin/customers">
-                        <NavDropdown.Item>Clientes</NavDropdown.Item>
-                      </LinkContainer>
                       {userInfo && userInfo.role=="admin" && (
                         <LinkContainer to="/admin/infocust">
                           <NavDropdown.Item>Informes</NavDropdown.Item>
@@ -236,9 +234,6 @@ function App() {
                       </LinkContainer>
                       <LinkContainer to="/admin/remiterBuy">
                         <NavDropdown.Item>Remitos de Compras</NavDropdown.Item>
-                      </LinkContainer>
-                      <LinkContainer to="/admin/suppliers">
-                        <NavDropdown.Item>Proveedores</NavDropdown.Item>
                       </LinkContainer>
                       {userInfo && userInfo.role=="admin" && (
                         <LinkContainer to="/admin/infosupp">
@@ -326,6 +321,9 @@ function App() {
                   )}
                   {userInfo && userInfo.role=="admin" && (
                     <NavDropdown title="Configuracion" id="admin-nav-dropdown">
+                      <LinkContainer to="/admin/filtros">
+                        <NavDropdown.Item>Filtros</NavDropdown.Item>
+                      </LinkContainer>
                       <LinkContainer to="/admin/products">
                         <NavDropdown.Item>Productos</NavDropdown.Item>
                       </LinkContainer>
@@ -350,11 +348,27 @@ function App() {
                       <LinkContainer to="/admin/users">
                         <NavDropdown.Item>Usuarios</NavDropdown.Item>
                       </LinkContainer>
+                      <LinkContainer to="/profile">
+                        <NavDropdown.Item>User Profile</NavDropdown.Item>
+                      </LinkContainer>
                       {/* <LinkContainer to="/admin/support">
                         <NavDropdown.Item>Chat Support</NavDropdown.Item>
                       </LinkContainer> */}
 
 
+                    </NavDropdown>
+                  )}
+                  {(userInfo && !userInfo.isAdmin) && (
+                    <NavDropdown title="Configuracion" id="basic-nav-dropdown">
+                      <LinkContainer to="/admin/customers">
+                        <NavDropdown.Item>Clientes</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/suppliers">
+                        <NavDropdown.Item>Proveedores</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/profile">
+                        <NavDropdown.Item>PerFil de Usuario</NavDropdown.Item>
+                      </LinkContainer>
                     </NavDropdown>
                   )}
 
@@ -621,8 +635,7 @@ function App() {
                 element={
                   <AdminRoute>
                     <UserListScreen />
-                    <EncargadoListScreen />
-             Encargado </AdminRoute>
+                  </AdminRoute>
                 }
               ></Route>
               <Route
@@ -638,6 +651,14 @@ function App() {
                 element={
                   <AdminRoute>
                     <ProductListScreen />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/filtros"
+                element={
+                  <AdminRoute>
+                    <Filtros />
                   </AdminRoute>
                 }
               ></Route>

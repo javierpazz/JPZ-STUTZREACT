@@ -65,6 +65,14 @@ export default function ComprobanteEditScreen() {
   const [id_config, setId_config] = useState(userInfo.codCon);
 
   useEffect(() => {
+    if (noDisc) setItDisc(false), setToDisc(false);
+    if (toDisc) setItDisc(false), setNoDisc(false);
+    if (itDisc) setToDisc(false), setNoDisc(false);
+
+ }, [noDisc, toDisc, itDisc,]);
+
+
+  useEffect(() => {
     if (comprobanteId === "0") {
       setCodCom('');
       setNameCom('');

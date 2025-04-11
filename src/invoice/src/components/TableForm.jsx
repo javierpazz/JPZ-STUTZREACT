@@ -284,6 +284,7 @@ export default function TableForm({
                     <Form.Label>Cantidad</Form.Label>
                     <Form.Control
                       className="input"
+                      type="number"
                       ref={input9Ref}
                       placeholder="Cantidad"
                       value={quantity}
@@ -305,6 +306,7 @@ export default function TableForm({
                     <Form.Control
                       className="input"
                       ref={input10Ref}
+                      type="number"
                       placeholder="Precio"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}

@@ -104,6 +104,16 @@ function AppRec() {
 
   const [showCus, setShowCus] = useState(false);
 
+
+  const getTodayInGMT3 = () => {
+    const now = new Date();
+    // Convertimos a la hora de Argentina (GMT-3)
+    const offset = now.getTimezoneOffset(); // En minutos
+    const localDate = new Date(now.getTime() - (offset + 180) * 60 * 1000); // 180 = 3 horas
+    
+    return localDate.toISOString().split("T")[0];
+  };
+  
   // const [codUse, setCodUse] = useState('');
   const [codCus, setCodCus] = useState('');
   const [codCust, setCodCust] = useState('');
@@ -114,8 +124,7 @@ function AppRec() {
   const [invDat, setInvDat] = useState('');
   const [recNum, setRecNum] = useState('');
   const [recNumImp, setRecNumImp] = useState('');
-  const today = new Date().toISOString().split("T")[0];
-  const [recDat, setRecDat] = useState(today);
+  const [recDat, setRecDat] = useState(getTodayInGMT3());
   const [codVal, setCodVal] = useState('');
   const [desval, setDesval] = useState('');
   const [receiptss, setReceiptss] = useState([]);
@@ -497,6 +506,7 @@ const RecControl = (e) => {
                           <Form.Label>Numero</Form.Label>
                           <Form.Control
                             className="input"
+                            type="number"
                             ref={input3Ref}
                             placeholder="Numero"
                             value={recNum}

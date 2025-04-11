@@ -274,6 +274,7 @@ export default function TableFormRec({
                     <Form.Control
                       className="input"
                       ref={input10Ref}
+                      type="number"
                       placeholder="Cantidad"
                       value={amountval}
                       onChange={(e) => setAmountval(e.target.value)}

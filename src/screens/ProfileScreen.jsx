@@ -35,10 +35,17 @@ export default function ProfileScreen() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error('Passwords does not match');
+      return;
+    }
+    // if (password == '') {
+    //   toast.error('Passwords does not exist');
+    //   return;
+    // }
     try {
       const { data } = await axios.put(
-        '/api/users/profile',
-        `${API}/api/users/profile`,
+        `${API}/api/users/profile/${userInfo._id}`,
         {
           name,
           email,
