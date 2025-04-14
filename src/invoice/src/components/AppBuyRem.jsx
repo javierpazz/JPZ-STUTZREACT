@@ -491,7 +491,7 @@ function AppBuyRem() {
 
           codSup: invoice.codSup,
           codCon: invoice.codCon,
-          user: userInfo.codCon,
+          user: userInfo._id,
           codConNum: invoice.codConNum,
           
           remNum: invoice.remNum,

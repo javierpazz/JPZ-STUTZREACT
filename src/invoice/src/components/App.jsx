@@ -543,7 +543,7 @@ function App() {
 
           codCus: invoice.codCus,
           codCon: invoice.codCon,
-          user: userInfo.codCon,
+          user: userInfo._id,
           codConNum: invoice.codConNum,
           codCom: invoice.codCom,
 

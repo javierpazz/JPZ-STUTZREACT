@@ -80,28 +80,37 @@ export default function InvoiceListScreen() {
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
   const page = sp.get('page') || 1;
-
+  
   const { state } = useContext(Store);
   const { userInfo } = state;
   const [id_config, setId_config] = useState(userInfo.codCon);
   const [total, setTotal] = useState(0);
   const [show, setShow] = useState(false);
   const [invoice, setInvoice] = useState('');
+  
+  
+  const fech1 = userInfo.filtro.firstDat;
+  const fech2 = userInfo.filtro.lastDat;
+  const codCon = userInfo.filtro.codCon;
+  const codCom = userInfo.filtro.codCom;
+  const codCus = userInfo.filtro.codCus;
+  const codSup = userInfo.filtro.codSup;
+  const codPro = userInfo.filtro.codPro;
+  const codVal = userInfo.filtro.codVal;
+  const codCon2 = userInfo.filtro.codCon2;
+  const codEnc = userInfo.filtro.codEnc;
+  const codUse = userInfo.filtro.codUse;
+  const order = userInfo.filtro.order;
+  
 
-  const [invId, setInvId] = useState('');
-  const [name, setName] = useState('');
-  const [remNum, setRemNum] = useState('');
-  const [invNum, setInvNum] = useState('');
-  const [ordNum, setOrdNum] = useState('');
-  const [invDat, setInvDat] = useState('');
-
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/invoices/adminS?page=${page}&id_config=${id_config} `, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
+        // const { data } = await axios.get(`${API}/api/invoices/adminS?page=${page}&id_config=${id_config} `, {
+          const { data } = await axios.get(`${API}/api/invoices/searchinvS?page=${page}&order=${order}&fech1=${fech1}&fech2=${fech2}&configuracion=${codCon}&usuario=${codUse}&customer=${codCus}&comprobante=${codCom}`,{
+            headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
         //        calculatotal();
@@ -117,7 +126,7 @@ export default function InvoiceListScreen() {
     } else {
       fetchData();
     }
-  }, [page, userInfo, successDelete, show]);
+  }, [page, userInfo, successDelete, show, order, page, codCus]);
 
   const handleShow = (invoice) => {
     setInvoice(invoice);
@@ -271,6 +280,7 @@ try {
         </Col>
       </Row>
 
+
       {loadingDelete && <LoadingBox></LoadingBox>}
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -281,7 +291,7 @@ try {
           <table className="table">
             <thead>
               <tr>
-                <th className="text-center">FACTURA</th>
+              <th className="text-center">FACTURA</th>
                 <th className="text-center">FECHA</th>
                 <th className="text-center">REMITO</th>
                 <th className="text-center">PEDIDO</th>

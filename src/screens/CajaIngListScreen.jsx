@@ -80,14 +80,32 @@ export default function CajaIngListScreen() {
   const [recDat, setRecDat] = useState('');
   const [userId, setUserId] = useState('');
 
+  
+  const fech1 = userInfo.filtro.firstDat;
+  const fech2 = userInfo.filtro.lastDat;
+  const codCon = userInfo.filtro.codCon;
+  const codCom = userInfo.filtro.codCom;
+  const codCus = userInfo.filtro.codCus;
+  const codSup = userInfo.filtro.codSup;
+  const codPro = userInfo.filtro.codPro;
+  const codVal = userInfo.filtro.codVal;
+  const codCon2 = userInfo.filtro.codCon2;
+  const codEnc = userInfo.filtro.codEnc;
+  const codUse = userInfo.filtro.codUse;
+  const order = userInfo.filtro.order;
+  
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/receipts/cajaS?page=${page}&id_config=${id_config} `, {
+        // const { data } = await axios.get(`${API}/api/receipts/cajaS?page=${page}&id_config=${id_config} `, {
+        //   headers: { Authorization: `Bearer ${userInfo.token}` },
+        // });
+        const { data } = await axios.get(`${API}/api/receipts/searchcajS?page=${page}&order=${order}&fech1=${fech1}&fech2=${fech2}&configuracion=${codCon}&usuario=${codUse}&customer=${codCus}`,{
           headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
+      });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (err) {
         dispatch({
@@ -169,6 +187,10 @@ const prodeleteReceipt = (receipt) => {
       }
   };
 
+  const parametros = async () => {
+    navigate('/admin/filtros?redirect=/admin/invoicesCajIng');
+  };
+
   const createHandler = async () => {
       navigate(`/admin/invoicerCajIng`);
   };
@@ -181,6 +203,16 @@ const prodeleteReceipt = (receipt) => {
       <Row>
         <Col>
           <h1>Ingresos de Caja</h1>
+        </Col>
+        <Col className="col text-end">
+          <div>
+            <Button type="button"
+                    variant="primary"
+                    onClick={parametros}
+                  >
+              Ver Filtros
+            </Button>
+            </div>
         </Col>
 
         <Col className="col text-end">

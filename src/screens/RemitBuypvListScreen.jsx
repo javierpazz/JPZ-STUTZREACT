@@ -81,14 +81,32 @@ export default function RemitBuypvListScreen() {
   const [show, setShow] = useState(false);
   const [invoice, setInvoice] = useState('');
 
+  
+  
+  const fech1 = userInfo.filtro.firstDat;
+  const fech2 = userInfo.filtro.lastDat;
+  const codCon = userInfo.filtro.codCon;
+  const codCom = userInfo.filtro.codCom;
+  const codCus = userInfo.filtro.codCus;
+  const codSup = userInfo.filtro.codSup;
+  const codPro = userInfo.filtro.codPro;
+  const codVal = userInfo.filtro.codVal;
+  const codCon2 = userInfo.filtro.codCon2;
+  const codEnc = userInfo.filtro.codEnc;
+  const codUse = userInfo.filtro.codUse;
+  const order = userInfo.filtro.order;
+  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/invoices/movimB?page=${page}&id_config=${id_config} `, {
+        // const { data } = await axios.get(`${API}/api/invoices/movimB?page=${page}&id_config=${id_config} `, {
+        //   headers: { Authorization: `Bearer ${userInfo.token}` },
+        // });
+        const { data } = await axios.get(`${API}/api/invoices/searchmovB?page=${page}&order=${order}&fech1=${fech1}&fech2=${fech2}&configuracion=${codCon}&usuario=${codUse}&supplier=${codSup}`,{
           headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
+      });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (err) {
         dispatch({
@@ -167,6 +185,11 @@ try {
     setTotal(tot);
   };
 
+  const parametros = async () => {
+    navigate('/admin/filtros?redirect=/admin/remitsBuypv');
+  };
+
+
   const createHandler = async () => {
       navigate(`/admin/remiterBuypv`);
   };
@@ -180,6 +203,18 @@ try {
         <Col>
           <h1>Recepciones desde Pto Venta</h1>
         </Col>
+
+        <Col className="col text-end">
+          <div>
+            <Button type="button"
+                    variant="primary"
+                    onClick={parametros}
+                  >
+              Ver Filtros
+            </Button>
+            </div>
+        </Col>
+
 
         <Col className="col text-end">
           <div>
@@ -272,7 +307,7 @@ try {
               <Link
                 className={x + 1 === Number(page) ? 'btn text-bold' : 'btn'}
                 key={x + 1}
-                to={`/admin/remitsBuy?page=${x + 1}&id_config=${id_config}`}
+                to={`/admin/remitsBuypv?page=${x + 1}&id_config=${id_config}`}
               >
                 {x + 1}
               </Link>

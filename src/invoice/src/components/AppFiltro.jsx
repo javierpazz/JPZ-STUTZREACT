@@ -153,6 +153,8 @@ const [
   const today = new Date().toISOString().split("T")[0];
   const [firstDat, setFirstDat] = useState(today);
   const [lastDat, setLastDat] = useState(today);
+  const [order, setOrder] = useState('newest');
+
   // const [userss, setUserss] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [valuess, setValuess] = useState([]);
@@ -162,6 +164,30 @@ const [
 
   const [isPaying, setIsPaying] = useState(false);
 
+  const filtroCero = {
+    firstDat : '',
+    lastDat : '',
+    codCus : '',
+    codSup : '',
+    codPro : '',
+    codEnc : '',
+    codCom : '',
+    codVal : '',
+    codCon : '',
+    codUse : '',
+    nameCus : 'Todos',
+    nameCon : 'Todos',
+    nameUse : 'Todos',
+    nameSup : 'Todos',
+    desPro : 'Todos',
+    nameCom : 'Todos',
+    // desVal : 'Todos',
+    nameEnc : 'Todos',
+    order : 'newest',
+  };
+
+
+
   const filtro = {
     firstDat : firstDat,
     lastDat : lastDat,
@@ -170,11 +196,16 @@ const [
     codPro : codPro,
     codEnc : codEnc,
     codCom : codCom,
-    codVal : 1,
+    codVal : codVal,
     codCon : codCon,
     codUse : codUse,
-    };
+    order : order,
+  };
 
+    const getFilterUrl = (filter) => {
+      const sortOrder = filter.order || order;
+   };
+  
   useEffect(() => {
     if (userInfo.filtro) { 
       // setName('Elija Cliente');
@@ -185,13 +216,40 @@ const [
       setFirstDat(userInfo.filtro.firstDat);
       setLastDat(userInfo.filtro.lastDat);
       setCodCus(userInfo.filtro.codCus);
+      setName(userInfo.filtro.nameCus);
       setCodPro(userInfo.filtro.codPro);
+      setDesPro(userInfo.filtro.desPro);
       setCodSup(userInfo.filtro.codSup);
+      setNameSup(userInfo.filtro.nameSup);
       setCodCom(userInfo.filtro.codCom);
+      setNameCom(userInfo.filtro.nameCom);
       setCodEnc(userInfo.filtro.codEnc);
+      setNameEnc(userInfo.filtro.nameEnc);
       setCodUse(userInfo.filtro.codUse);
+      setNameUse(userInfo.filtro.nameUse);
       setCodCon(userInfo.filtro.codCon);
-    };
+      setNameCon(userInfo.filtro.nameCon);
+      setOrder(userInfo.filtro.order);
+    }else{
+      setFirstDat('Todos');
+      setLastDat('Todos');
+      // setCodCus('Todos');
+      setName('Todos');
+      // setCodPro('Todos');
+      setDesPro('Todos');
+      // setCodSup('Todos');
+      setNameSup('Todos');
+      // setCodCom('Todos');
+      setNameCom('Todos');
+      // setCodEnc('Todos');
+      setNameEnc('Todos');
+      // setCodUse('Todos');
+      setNameUse('Todos');
+      // setCodCon('Todos');
+      setNameCon('Todos');
+      setOrder('newest');
+    }
+    ;
 }, []);
 
 useEffect(() => {
@@ -412,7 +470,7 @@ useEffect(() => {
         if (!configurationRow) {
             setCodCon('');
             setCodConp('');
-            setNameCon('Elija Usuario');
+            setNameCon('Elija Punto Venta');
         }else{
           setCodCon(configurationRow._id);
           setCodConp(configurationRow.codCon);
@@ -704,12 +762,37 @@ useEffect(() => {
   };
 
 
-  const placeCancelInvoiceHandler = async () => {
+  const placeCancelaFiltro = async () => {
     navigate(redirect);
+  };
+  const placeLimpiaFiltro = async () => {
+    if (window.confirm('Esta seguro de Grabar Parametros?')) {
+      userInfo.filtro = filtroCero;
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+    navigate(redirect);
+    };
   };
 
   const placeInvoiceHandler = async () => {
     if (window.confirm('Esta seguro de Grabar Parametros?')) {
+      filtro.firstDat = firstDat;
+      filtro.lastDat = lastDat;
+      filtro.codCus = codCus;
+      filtro.nameCus = name;
+      filtro.codPro = codPro;
+      filtro.desPro = desPro;
+      filtro.codSup = codSup;
+      filtro.nameSup = nameSup;
+      filtro.codCom = codCom;
+      filtro.nameCom = nameCom;
+      filtro.codEnc = codEnc;
+      filtro.nameEnc = nameEnc;
+      filtro.codUse = codUse;
+      filtro.nameUse = nameUse;
+      filtro.codCon = codCon;
+      filtro.nameCon = nameCon;
+      filtro.order = order;
+
         userInfo.filtro = filtro
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
         navigate(redirect);
@@ -762,6 +845,27 @@ useEffect(() => {
                 </Row>
 
 
+      <Row>
+      <Col className="text-end">
+      <Card.Body>
+                      <Card.Title>
+                        <Form.Group className="input" controlId="name">
+                  Ordenado por{' '}
+                  <select
+                    value={order}
+                    onChange={(e) => setOrder(e.target.value)}
+                    >
+                    <option value="newest">Fecha Des </option>
+                    <option value="oldest">Fecha Asc</option>
+                    <option value="mayimporte">Importe Des </option>
+                    <option value="menimporte">Importe Asc </option>
+
+                  </select>
+                  </Form.Group>
+                    </Card.Title>
+                </Card.Body>
+        </Col>
+        </Row>
 
               <Row>
 
@@ -804,6 +908,7 @@ useEffect(() => {
                     </Card.Title>
                 </Card.Body>
                 </Col>
+
                 </Row>
 
                 <Row>
@@ -863,6 +968,7 @@ useEffect(() => {
                             onChange={(e) => setCodUsep(e.target.value)}
                             // onKeyDown={(e) => e.key === "Enter" && buscarPorCodUse(codUsep)}
                             onKeyDown={(e) => ayudaUse(e)}
+                            disabled={true}
                             // buscarPorCodUse
                             />
                         </Form.Group>
@@ -1173,9 +1279,20 @@ useEffect(() => {
                       <div className="d-grid">
                         <Button
                           type="button"
-                          onClick={placeCancelInvoiceHandler}
+                          onClick={placeCancelaFiltro}
                           >
                           CANCELA
+                        </Button>
+                      </div>
+                      {loading && <LoadingBox></LoadingBox>}
+                    </Col>
+                    <Col md={4} sm={3} xs={12}>
+                      <div className="d-grid">
+                        <Button
+                          type="button"
+                          onClick={placeLimpiaFiltro}
+                          >
+                          LIMPIA FILTRO
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}

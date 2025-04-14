@@ -38,6 +38,39 @@ export default function SalePointScreen() {
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { userInfo } = state;
+
+  const getTodayInGMT3 = () => {
+    const now = new Date();
+    // Convertimos a la hora de Argentina (GMT-3)
+    const offset = now.getTimezoneOffset(); // En minutos
+    const localDate = new Date(now.getTime() - (offset + 180) * 60 * 1000); // 180 = 3 horas
+    
+    return localDate.toISOString().split("T")[0];
+  };
+
+  const filtro = {
+    firstDat : getTodayInGMT3(),
+    lastDat : getTodayInGMT3(),
+    codCus : '',
+    codSup : '',
+    codPro : '',
+    codEnc : '',
+    codCom : '',
+    codVal : '',
+    codCon : '',
+    codUse : '',
+    nameCus : 'Todos',
+    nameCon : 'Todos',
+    nameUse : 'Todos',
+    nameSup : 'Todos',
+    desPro : 'Todos',
+    nameCom : 'Todos',
+    // desVal : 'Todos',
+    nameEnc : 'Todos',
+    order : 'newest',
+  };
+
+
   const [name, setName] = useState("");
   const [salePoint, setSalePoint] = useState("");
   const [codCon, setCodCon] = useState('');
@@ -87,6 +120,11 @@ export default function SalePointScreen() {
     userInfo.salePoint = salePoint;
     userInfo.nameCon = name;
     userInfo.configurationObj = configurationObj
+
+      userInfo.filtro = filtro;
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+      navigate(redirect);
+
     localStorage.setItem('userInfo', JSON.stringify(userInfo));
     // navigate('/admin/dashboard');
     navigate('/');
