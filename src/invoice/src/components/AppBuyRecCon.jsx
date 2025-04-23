@@ -605,7 +605,7 @@ const submitHandlerSup = async (e) => {
               <p><strong>ORDEN DE PAGO</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
               <strong>     Comp. Nro:</strong> {recibo.recNum}</p>
-              <p><strong>Fecha de Emision:</strong> {recDat}</p>
+              <p><strong>Fecha de Emision:</strong> {recibo.recDat.substring(0, 10)}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>

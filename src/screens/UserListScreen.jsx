@@ -187,7 +187,7 @@ export default function UserListScreen() {
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                     </Button>
-                    &nbsp;
+                    {/* &nbsp;
                     <Button
                       type="button"
                       title="Account"
@@ -196,7 +196,7 @@ export default function UserListScreen() {
                       }}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
-                    </Button>
+                    </Button> */}
                     &nbsp;
                     <Button
                       type="button"

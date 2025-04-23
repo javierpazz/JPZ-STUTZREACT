@@ -845,28 +845,6 @@ useEffect(() => {
                 </Row>
 
 
-      <Row>
-      <Col className="text-end">
-      <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                  Ordenado por{' '}
-                  <select
-                    value={order}
-                    onChange={(e) => setOrder(e.target.value)}
-                    >
-                    <option value="newest">Fecha Des </option>
-                    <option value="oldest">Fecha Asc</option>
-                    <option value="mayimporte">Importe Des </option>
-                    <option value="menimporte">Importe Asc </option>
-
-                  </select>
-                  </Form.Group>
-                    </Card.Title>
-                </Card.Body>
-        </Col>
-        </Row>
-
               <Row>
 
                 <Col md={2}>
@@ -907,6 +885,26 @@ useEffect(() => {
                     </Form.Group>
                     </Card.Title>
                 </Card.Body>
+                </Col>
+                <Col md={3}>
+                  <Card.Body>
+                        <Card.Title>
+                          <Form.Group className="input" controlId="name">
+                            Ordenado por{' '}
+                            <select
+                              className="input"
+                              value={order}
+                              onChange={(e) => setOrder(e.target.value)}
+                              >
+                              <option value="newest">Fecha Des </option>
+                              <option value="oldest">Fecha Asc</option>
+                              <option value="mayimporte">Importe Des </option>
+                              <option value="menimporte">Importe Asc </option>
+
+                            </select>
+                          </Form.Group>
+                      </Card.Title>
+                  </Card.Body>
                 </Col>
 
                 </Row>

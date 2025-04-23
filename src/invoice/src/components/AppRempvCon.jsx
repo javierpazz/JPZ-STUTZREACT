@@ -64,7 +64,7 @@ const reducer = (state, action) => {
   }
 };
 
-function AppRemCon() {
+function AppRempvCon() {
     const [
         { loading, error, invoice, values, pages, loadingDelete, successDelete },
         dispatch,
@@ -108,10 +108,13 @@ function AppRemCon() {
   const [codUse, setCodUse] = useState('');
   const [codCus, setCodCus] = useState('');
   const [codCust, setCodCust] = useState('');
+  const [codCon2, setCodCon2] = useState('');
+  const [codCon2t, setCodCon2t] = useState('');
+
   const [name, setName] = useState('');
   const [userObj, setUserObj] = useState({});
-  const [remNum, setRemNum] = useState('');
-  const [remNumImp, setRemNumImp] = useState('');
+  const [movpvNum, setMovpvNum] = useState('');
+  const [movpvNumImp, setMovpvNumImp] = useState('');
   const today = new Date().toISOString().split("T")[0];
   const [remDat, setRemDat] = useState(today);
   const [invNum, setInvNum] = useState('');
@@ -210,10 +213,10 @@ function AppRemCon() {
         dispatch({ type: 'ORDER_FETCH_SUCCESS', payload: data });
         setCodUse(data.user);
         // setCodComp(invoice.codCom);
-        setCodCust(invoice.codCus);
-        setName(invoice.id_client.nameCus);
+        // setCodCust(invoice.codCus);
+        // setName(invoice.supplier.name);
   
-        setRemNum(invoice.remNum);
+        setMovpvNum(invoice.movpvNum);
       } catch (err) {
         dispatch({ type: 'ORDER_FETCH_FAIL', payload: getError(err) });
       }
@@ -248,6 +251,10 @@ function AppRemCon() {
     input21Ref.current.focus();
   };
 
+  const handleShowCon2 = () => {
+    setShowCon2(true);
+    input21Ref.current.focus();
+  };
 
   const searchUser = (codCus) => {
     const usersRow = customers.find((row) => row._id === codCus);
@@ -436,7 +443,7 @@ function AppRemCon() {
       setIsPaying(false);
       setDesval('');
       setDesVal('');
-      setRemNumImp(data.invoice.remNum);
+      setMovpvNumImp(data.invoice.movpvNum);
       setRecNum('');
       setRecDat('');
       setNumval(' ');
@@ -505,7 +512,7 @@ function AppRemCon() {
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              REMITO DE VENTA Nro.: {invoice.codConNum +'-'+invoice.remNum}
+                              REMITO DE VENTA Nro.: {invoice.codConNum +'-'+invoice.movpvNum}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -515,20 +522,20 @@ function AppRemCon() {
 
                 </Row>
 
-              <Row>
+                <Row>
                   <Col md={2}>
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Codigo Cliente</Form.Label>
+                          <Form.Label>Codigo Pto Venta</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input2Ref}
-                            placeholder="Codigo Cliente"
-                            value={codCust}
-                            onChange={(e) => setCodCust(e.target.value)}
-                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCus(codCust)}
-                            onKeyDown={(e) => ayudaCus(e)}
+                            placeholder="Codigo Pto Venta"
+                            value={codCon2t}
+                            onChange={(e) => setCodCon2t(e.target.value)}
+                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCon2(codCon2t)}
+                            onKeyDown={(e) => ayudaCon2(e)}
                             required
                             />
                         </Form.Group>
@@ -540,7 +547,7 @@ function AppRemCon() {
                       className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                       type="button"
                       title="Buscador"
-                      onClick={() => handleShowCus()}
+                      onClick={() => handleShowCon2()}
                       >
                       <BiFileFind className="text-blue-500 font-bold text-xl" />
                     </Button>
@@ -570,8 +577,8 @@ function AppRemCon() {
                             className="input"
                             ref={input6Ref}
                             placeholder="Remito N°"
-                            value={remNum}
-                            onChange={(e) => setRemNum(e.target.value)}
+                            value={movpvNum}
+                            onChange={(e) => setMovpvNum(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input9Ref.current.focus()}
                             required
                           />
@@ -901,7 +908,7 @@ function AppRemCon() {
         <div className="card-header bg-dark text-white text-center"></div>
         <div className="card-body">
           
-        <div className="card-header text-black text-center">REMITO</div>
+        <div className="card-header text-black text-center">ENTREGA A PTO VENTA</div>
         <div className="row">
             <div className="col-md-6">
               <p><strong>{userInfo.nameCon}</strong></p>
@@ -910,10 +917,10 @@ function AppRemCon() {
               <p><strong>Condición frente al IVA:</strong> {config.ivaCondition}</p>
             </div>
             <div className="col-md-6 ">
-              <p><strong>REMITO</strong></p>
+              <p><strong>ENTREGA A PTO VENTA</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
-              <strong>     Comp. Nro:</strong> {invoice.remNum}</p>
-              <p><strong>Fecha de Emision:</strong> {invoice.remDat.substring(0, 10)}</p>
+              <strong>     Comp. Nro:</strong> {invoice.movpvNum}</p>
+              <p><strong>Fecha de Emision:</strong> {invoice.movpvDat.substring(0, 10)}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>
@@ -922,12 +929,12 @@ function AppRemCon() {
           <hr />
             <div className="row">
               <div className="col-md-6">
-                <p><strong>CUIT:</strong> {invoice.id_client.cuit}</p>
-                <p><strong>Condición IVA:</strong> {invoice.id_client.coniva}</p>
+                <p><strong>CUIT:</strong> {invoice.id_config2.cuit}</p>
+                <p><strong>Condición IVA:</strong> {invoice.id_config2.coniva}</p>
               </div>
               <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {invoice.id_client.nameCus}</p>
-                <p><strong>Dirección:</strong> {invoice.id_client.domcomer}</p>
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {invoice.id_config2.name}</p>
+                <p><strong>Dirección:</strong> {invoice.id_config2.domcomer}</p>
               </div>
           </div>
 
@@ -984,4 +991,4 @@ function AppRemCon() {
   );
 }
 
-export default AppRemCon;
+export default AppRempvCon;

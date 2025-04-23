@@ -76,7 +76,7 @@ export default function AccountCustomerScreen() {
 
   const { state } = useContext(Store);
   const { userInfo } = state;
-  const [id_config, setId_config] = useState(userInfo.codCon);
+
   const [total, setTotal] = useState(0);
   const [show, setShow] = useState(false);
   const [invoice, setInvoice] = useState('');
@@ -91,17 +91,38 @@ export default function AccountCustomerScreen() {
   const params = useParams();
   const { id: userId } = params;
 
+  const fech1 = userInfo.filtro.firstDat;
+  const fech2 = userInfo.filtro.lastDat;
+  const codCom = userInfo.filtro.codCom;
+  const codCus = userInfo.filtro.codCus;
+  const codSup = userInfo.filtro.codSup;
+  const codPro = userInfo.filtro.codPro;
+  const codVal = userInfo.filtro.codVal;
+  const codCon2 = userInfo.filtro.codCon2;
+  const codEnc = userInfo.filtro.codEnc;
+  const codUse = userInfo.filtro.codUse;
+  const order = userInfo.filtro.order;
+  
+ 
+  const [id_config, setId_config] = useState(userInfo.codCon);
+  // userInfo.filtro.codCon ? setId_config(userInfo.filtro.codCon) : setId_config(userInfo.codCon);
+
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         dispatch({ type: 'TOTAL_FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/invoices/ctaS/${userId}?id_config=${id_config} `, {
+        // const { data } = await axios.get(`${API}/api/invoices/ctaS/${userId}?id_config=${id_config} `, {
+           const { data } = await axios.get(`${API}/api/invoices/ctaS/${userId}?configuracion=${id_config}&order=${order}&fech1=${fech1}&fech2=${fech2}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'TOTAL_FETCH_SUCCESS', payload: data });
-        //        let kiki = data?.filter((data) => data.user === userId);
-        const sortedList = data.sort((a, b) => (a.docDat > b.docDat ? -1 : 0));
-        setInvoices(sortedList);
+        // //        let kiki = data?.filter((data) => data.user === userId);
+        // const sortedList = data.sort((a, b) => (a.docDat > b.docDat ? -1 : 0));
+        // setInvoices(sortedList);
+console.log(data);
+        setInvoices(data);
       } catch (err) {
         dispatch({
           type: 'TOTAL_FETCH_FAIL',
@@ -211,6 +232,9 @@ export default function AccountCustomerScreen() {
       }
     }
   };
+  const parametros = async () => {
+    navigate(`/admin/filtros?redirect=/admin/customer/cta/${userId}`);
+  };
 
   const createHandler = async () => {
     navigate(`/admin/customers`);
@@ -222,8 +246,18 @@ export default function AccountCustomerScreen() {
         <title>Cuenta</title>
       </Helmet>
       <Row>
-        <Col md={7}>
+        <Col md={5}>
           <h1>Cuenta Clientes</h1>
+        </Col>
+        <Col className="col text-end">
+          <div>
+            <Button type="button"
+                    variant="primary"
+                    onClick={parametros}
+                  >
+              Ver Filtros
+            </Button>
+            </div>
         </Col>
 
         <Col md={3}>

@@ -26,13 +26,13 @@ import { getError, API } from '../../../utils';
 
 const reducer = (state, action) => {
   switch (action.type) {
+
     case 'ORDER_FETCH_REQUEST':
         return { ...state, loading: true, error: '' };
     case 'ORDER_FETCH_SUCCESS':
         return { ...state, loading: false, invoice: action.payload, error: '' };
     case 'ORDER_FETCH_FAIL':
         return { ...state, loading: false, error: action.payload };
-
 
     case 'FETCH_REQUEST':
       return { ...state, loading: true };
@@ -45,6 +45,19 @@ const reducer = (state, action) => {
         loading: false,
       };
     case 'FETCH_FAIL':
+      return { ...state, loading: false, error: action.payload };
+
+    case 'SUPPLIER_FETCH_REQUEST':
+      return { ...state, loading: true };
+    case 'SUPPLIER_FETCH_SUCCESS':
+      return {
+        ...state,
+        suppliers: action.payload.supliers,
+        page: action.payload.page,
+        pages: action.payload.pages,
+        loading: false,
+      };
+    case 'SUPPLIER_FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
 
     case 'VALUE_FETCH_REQUEST':
@@ -64,17 +77,18 @@ const reducer = (state, action) => {
   }
 };
 
-function AppRemCon() {
-    const [
-        { loading, error, invoice, values, pages, loadingDelete, successDelete },
-        dispatch,
-      ] = useReducer(reducer, {
-        loading: true,
-        invoice: {},
-        loadingVal: true,
-        error: '',
-      });
-    
+function AppBuyRempvCon
+() {
+  const [
+    { loading, error, invoice, values, pages, loadingDelete, successDelete },
+    dispatch,
+  ] = useReducer(reducer, {
+    loading: true,
+    invoice: {},
+    loadingVal: true,
+    error: '',
+  });
+
   const navigate = useNavigate();
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -87,7 +101,6 @@ function AppRemCon() {
   const params = useParams();
   const { id: invoiceId } = params;
 
-
   const input1Ref = useRef(null);
   const input2Ref = useRef(null);
   const input3Ref = useRef(null);
@@ -98,20 +111,18 @@ function AppRemCon() {
   const input8Ref = useRef(null);
   const input9Ref = useRef(null);
   const input0Ref = useRef(null);
-
+  
   const input20Ref = useRef(null);
   const input21Ref = useRef(null);
 
+
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
-  const [showCus, setShowCus] = useState(false);
+  const [showSup, setShowSup] = useState(false);
 
   const [codUse, setCodUse] = useState('');
-  const [codCus, setCodCus] = useState('');
-  const [codCust, setCodCust] = useState('');
   const [name, setName] = useState('');
-  const [userObj, setUserObj] = useState({});
-  const [remNum, setRemNum] = useState('');
-  const [remNumImp, setRemNumImp] = useState('');
+  const [suppObj, setSuppObj] = useState({});
+  const [movpvNum, setMovpvNum] = useState('');
   const today = new Date().toISOString().split("T")[0];
   const [remDat, setRemDat] = useState(today);
   const [invNum, setInvNum] = useState('');
@@ -119,15 +130,17 @@ function AppRemCon() {
   const [recNum, setRecNum] = useState('');
   const [recDat, setRecDat] = useState(today);
   const [codVal, setCodVal] = useState('');
-  const [codval, setCodval] = useState('');
   const [desval, setDesval] = useState('');
   const [valueeR, setValueeR] = useState('');
   const [desVal, setDesVal] = useState('');
   const [numval, setNumval] = useState(' ');
-  // const [userss, setUserss] = useState([]);
-  const [customers, setCustomers] = useState([]);
+  const [userss, setUserss] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
+  const [codSup, setCodSup] = useState('');
+  const [codSupp, setCodSupp] = useState('');
   const [valuess, setValuess] = useState([]);
   const [codPro, setCodPro] = useState('');
+  const [codPro1, setCodPro1] = useState('');
   const [address, setAddress] = useState('Direccion Usuario');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -139,8 +152,8 @@ function AppRemCon() {
   const [dueDat, setDueDat] = useState(today);
   const [notes, setNotes] = useState('');
   const [desPro, setDesPro] = useState('');
-  const [quantity, setQuantity] = useState(0);
-  const [price, setPrice] = useState(0);
+  const [quantity, setQuantity] = useState('');
+  const [price, setPrice] = useState('');
   const [porIva, setPorIva] = useState(0);
   const [amount, setAmount] = useState(0);
   const [amountval, setAmountval] = useState(0);
@@ -150,6 +163,7 @@ function AppRemCon() {
   const [showInvoice, setShowInvoice] = useState(false);
 
   const [isPaying, setIsPaying] = useState(false);
+
 
   const config = {
     salePoint: userInfo.configurationObj.codCon,
@@ -165,6 +179,7 @@ function AppRemCon() {
   };
 
 
+
   const componentRef = useRef();
   const handlePrint = () => {
     window.print();
@@ -173,27 +188,25 @@ function AppRemCon() {
   useEffect(() => {
     const calculateAmountval = (amountval) => {
       setAmountval(
-        invoice.total
+        invoice.totalBuy
       );
     };
     if (numval === '') {
       setNumval(' ');
     }
-    setCodCus(codCus);
+    setCodUse(codSup);
     setDesVal(desVal);
     calculateAmountval(amountval);
     addToCartHandler(valueeR);
   }, [numval, desval, recNum, recDat]);
 
   useEffect(() => {
-    clearitems();
-    input2Ref.current.focus()
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${API}/api/customers/`, {
+        const { data } = await axios.get(`${API}/api/users/`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        setCustomers(data);
+        setUserss(data);
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (err) {}
     };
@@ -201,28 +214,45 @@ function AppRemCon() {
   }, []);
 
   useEffect(() => {
-    const fetchOrder = async () => {
+    clearitems();
+    input2Ref.current.focus()
+    const fetchDataVal = async () => {
       try {
-        dispatch({ type: 'ORDER_FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/invoices/${invoiceId}`, {
-          headers: { authorization: `Bearer ${userInfo.token}` },
+        const { data } = await axios.get(`${API}/api/suppliers/`, {
+          headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        dispatch({ type: 'ORDER_FETCH_SUCCESS', payload: data });
-        setCodUse(data.user);
-        // setCodComp(invoice.codCom);
-        setCodCust(invoice.codCus);
-        setName(invoice.id_client.nameCus);
-  
-        setRemNum(invoice.remNum);
-      } catch (err) {
-        dispatch({ type: 'ORDER_FETCH_FAIL', payload: getError(err) });
-      }
+        setSuppliers(data);
+        dispatch({ type: 'SUPPLIER_FETCH_SUCCESS', payload: data });
+      } catch (err) {}
     };
-    fetchOrder();
+    fetchDataVal();
   }, []);
 
 
-
+    
+    useEffect(() => {
+      const fetchOrder = async () => {
+        try {
+          dispatch({ type: 'ORDER_FETCH_REQUEST' });
+          const { data } = await axios.get(`${API}/api/invoices/${invoiceId}`, {
+            headers: { authorization: `Bearer ${userInfo.token}` },
+          });
+          dispatch({ type: 'ORDER_FETCH_SUCCESS', payload: data });
+          setCodUse(data.user);
+          // setCodComp(invoice.codCom);
+          // setCodCust(invoice.codCus);
+          // setName(invoice.supplier.name);
+          // setNameCom(invoice.nameCom);
+    
+          setMovpvNum(invoice.movpvNum);
+        } catch (err) {
+          dispatch({ type: 'ORDER_FETCH_FAIL', payload: getError(err) });
+        }
+      };
+      fetchOrder();
+    }, []);
+  
+  
   useEffect(() => {
     const fetchDataVal = async () => {
       try {
@@ -243,57 +273,56 @@ function AppRemCon() {
   }, [width]);
 
 
-  const handleShowCus = () => {
-    setShowCus(true);
-    input21Ref.current.focus();
+  const handleShowSup = () => {
+    setShowSup(true);
   };
 
-
-  const searchUser = (codCus) => {
-    const usersRow = customers.find((row) => row._id === codCus);
-    setUserObj(usersRow);
-    setCodCus(usersRow._id);
-    setCodCust(usersRow.codCus);
-    setName(usersRow.nameCus);
+  const searchSup = (codSup) => {
+    const supplierRow = suppliers.find((row) => row._id === codSup);
+    setSuppObj(supplierRow);
+    setCodSup(supplierRow._id);
+    setCodSupp(supplierRow.codSup);
+    setName(supplierRow.name);
   };
 
   
-  const ayudaCus = (e) => {
-    e.key === "Enter" && buscarPorCodCus(codCust);
-    e.key === "F2" && handleShowCus(codCus);
-    e.key === "Tab" && buscarPorCodCus(codCust);
+  const ayudaSup = (e) => {
+    e.key === "Enter" && buscarPorCodSup(codSupp);
+    e.key === "F2" && handleShowSup(codSup);
+    e.key === "Tab" && buscarPorCodSup(codSupp);
   };
-  
 
-  const buscarPorCodCus = (codCust) => {
-    const usersRow = customers.find((row) => row.codCus === codCust);
-    if (!usersRow) {
-        setCodCus('');
-        setCodCust('');
-        setName('Elija Cliente');
+  const buscarPorCodSup = (codSupp) => {
+    const supplierRow = suppliers.find((row) => row.codSup === codSupp);
+    if (!supplierRow) {
+        setCodSup('');
+        setCodSupp('');
+        setName('Elija Proovedor');
     }else{
-      setCodCus(usersRow._id);
-      setCodCust(usersRow.codCust);
-      setUserObj(usersRow);
-      setName(usersRow.nameCus);
+      setCodSup(supplierRow._id);
+      setCodSupp(supplierRow.codSup);
+      setName(supplierRow.name);
       input6Ref.current.focus();
       };
   };
 
-  const handleChange = (e) => {
-    searchUser(e.target.value);
-  };
-  const submitHandlerCus = async (e) => {
+
+  const submitHandlerSup = async (e) => {
     e.preventDefault();
-    setShowCus(false)
+    setShowSup(false)
   };
 
+  const handleChange = (e) => {
+    searchSup(e.target.value);
+  };
 
   const searchValue = (codVal) => {
     const valuesRow = valuess.find((row) => row._id === codVal);
     setValueeR(valuesRow);
     setCodVal(valuesRow.codVal);
     setDesVal(valuesRow.desVal);
+    setDesVal(valuesRow.desVal);
+    setDesval(valuesRow.desVal);
   };
 
   const handleValueChange = (e) => {
@@ -304,7 +333,7 @@ function AppRemCon() {
 
   const placeInvoiceHandler = async () => {
     setShowInvoice(true);
-  };
+};
 
   /////////////////////////////////////////////
 
@@ -336,20 +365,21 @@ function AppRemCon() {
           total: receipt.total,
           totalBuy: receipt.totalBuy,
 
-          codCus: receipt.codCus,
+          //          codUse: receipt.codUse,
+
+          codSup: receipt.codSup,
           codCon: receipt.codCon,
           codConNum: receipt.codConNum,
 
-          //          codSup: receipt.codSup,
-
           remNum: receipt.remNum,
+          remDat: receipt.remDat,
           invNum: receipt.invNum,
           invDat: receipt.invDat,
           recNum: receipt.recNum,
           recDat: receipt.recDat,
           desval: receipt.desval,
           notes: receipt.notes,
-          salbuy: 'SALE',
+          salbuy: 'BUY',
         },
         {
           headers: {
@@ -370,12 +400,10 @@ function AppRemCon() {
   /////////////////////////////////////////////
 
   const stockHandler = async (item) => {
-    // console.log(item.item._id);
-
     try {
       dispatch({ type: 'CREATE_REQUEST' });
       await axios.put(
-        `${API}/api/products/downstock/${item.item._id}`,
+        `${API}/api/products/upstock/${item.item._id}`,
         {
           quantitys: item.item.quantity,
         },
@@ -408,12 +436,10 @@ function AppRemCon() {
           total: invoice.total,
           totalBuy: invoice.totalBuy,
 
-          codCus: invoice.codCus,
+          codSup: invoice.codSup,
           codCon: invoice.codCon,
           codConNum: invoice.codConNum,
-
-          //        codSup: invoice.codSup,
-
+          
           remNum: invoice.remNum,
           remDat: invoice.remDat,
           invNum: invoice.invNum,
@@ -422,7 +448,7 @@ function AppRemCon() {
           recDat: invoice.recDat,
           desVal: invoice.desVal,
           notes: invoice.notes,
-          salbuy: 'SALE',
+          salbuy: 'BUY',
         },
         {
           headers: {
@@ -430,13 +456,12 @@ function AppRemCon() {
           },
         }
       );
-      //ctxDispatch({ type: 'INVOICE_CLEAR' });
-      //      dispatch({ type: 'CREATE_SUCCESS' });
-      //      localStorage.removeItem('orderItems');
+      //      ctxDispatch({ type: 'INVOICE_CLEAR' });
+      //    dispatch({ type: 'CREATE_SUCCESS' });
+      //  localStorage.removeItem('orderItems');
       setIsPaying(false);
       setDesval('');
       setDesVal('');
-      setRemNumImp(data.invoice.remNum);
       setRecNum('');
       setRecDat('');
       setNumval(' ');
@@ -477,7 +502,7 @@ function AppRemCon() {
   return (
     <>
       <Helmet>
-        <title>Remitos de Venta</title>
+        <title>Remito de Ingreso</title>
       </Helmet>
 
       <main>
@@ -505,7 +530,7 @@ function AppRemCon() {
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              REMITO DE VENTA Nro.: {invoice.codConNum +'-'+invoice.remNum}
+                              REMITO DE COMPRA Nro.: {invoice.codConNum +'-'+invoice.movpvNum}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -515,22 +540,23 @@ function AppRemCon() {
 
                 </Row>
 
-              <Row>
+
+                <Row>
                   <Col md={2}>
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Codigo Cliente</Form.Label>
+                          <Form.Label>Codigo Proovedor</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input2Ref}
-                            placeholder="Codigo Cliente"
-                            value={codCust}
-                            onChange={(e) => setCodCust(e.target.value)}
-                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCus(codCust)}
-                            onKeyDown={(e) => ayudaCus(e)}
+                            placeholder="Codigo Proovedor"
+                            value={codSupp}
+                            onChange={(e) => setCodSupp(e.target.value)}
+                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodSup(codSupp)}
+                            onKeyDown={(e) => ayudaSup(e)}
                             required
-                            />
+                          />
                         </Form.Group>
                       </Card.Title>
                     </Card.Body>
@@ -540,7 +566,7 @@ function AppRemCon() {
                       className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                       type="button"
                       title="Buscador"
-                      onClick={() => handleShowCus()}
+                      onClick={() => handleShowSup()}
                       >
                       <BiFileFind className="text-blue-500 font-bold text-xl" />
                     </Button>
@@ -558,6 +584,7 @@ function AppRemCon() {
                       </Card.Body>
                     </Col>
 
+
                 </Row>
 
                 <Row>
@@ -570,8 +597,8 @@ function AppRemCon() {
                             className="input"
                             ref={input6Ref}
                             placeholder="Remito N°"
-                            value={remNum}
-                            onChange={(e) => setRemNum(e.target.value)}
+                            value={movpvNum}
+                            onChange={(e) => setMovpvNum(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input9Ref.current.focus()}
                             required
                           />
@@ -753,8 +780,9 @@ function AppRemCon() {
                           onClick={placeCancelInvoiceHandler}
                         //   disabled={
                         //     orderItems.length === 0 ||
+                        //     !movpvNum ||
                         //     !remDat ||
-                        //     !codCus
+                        //     !codSup
                         //   }
                         >
                           CANCELA
@@ -771,11 +799,12 @@ function AppRemCon() {
                           onClick={placeInvoiceHandler}
                         //   disabled={
                         //     orderItems.length === 0 ||
+                        //     !movpvNum ||
                         //     !remDat ||
-                        //     !codCus
+                        //     !codSup
                         //   }
                         >
-                          IMPRIME
+                          CONSULTA
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -786,7 +815,8 @@ function AppRemCon() {
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                            {(+invoice.total).toFixed(2)}
+                              Total: $
+                              {(+invoice.totalBuy).toFixed(2)}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -826,41 +856,39 @@ function AppRemCon() {
                   />
                 </article>
 
-
                 <Modal
-                  // input21Ref={input21Ref}
                   size="md"
-                  show={showCus}
-                  onHide={() => setShowCus(false)}
+                  show={showSup}
+                  onHide={() => setShowSup(false)}
                   aria-labelledby="example-modal-sizes-title-lg"
                 >
                   <Modal.Header closeButton>
                     <Modal.Title id="example-modal-sizes-title-lg">
-                    Elija un Cliente
+                    Elija un Proovedor
                     </Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
                   <Col md={12}>
                     <Card.Body>
                       <Card.Title>
-                      <Form onSubmit={submitHandlerCus}>
-                            <Form.Group className="mb-3" controlId="name">
-                            {/* <Form.Group className="input" controlId="name"> */}
-                          <Form.Label>Clientes</Form.Label>
+                      <Form onSubmit={submitHandlerSup}>
+                          <Form.Group className="mb-3" controlId="name">
+                          {/* <Form.Group className="input" controlId="name"> */}
+                          <Form.Label>Proveedor</Form.Label>
                           <Form.Select
                             className="input"
                             onClick={(e) => handleChange(e)}
                           >
-                            {customers.map((elemento) => (
+                            {suppliers.map((elemento) => (
                               <option key={elemento._id} value={elemento._id}>
-                                {elemento.nameCus}
+                                {elemento.name}
                               </option>
                             ))}
                           </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="name">
                               <Form.Control
-                                placeholder="Cliente"
+                                placeholder="Proveedor"
                                 value={name}
                                 disabled={true}
                                 required
@@ -873,7 +901,6 @@ function AppRemCon() {
                                   >Continuar</Button>
                               </div>
                               </Form>
-
                       </Card.Title>
                     </Card.Body>
                   </Col>
@@ -901,7 +928,7 @@ function AppRemCon() {
         <div className="card-header bg-dark text-white text-center"></div>
         <div className="card-body">
           
-        <div className="card-header text-black text-center">REMITO</div>
+        <div className="card-header text-black text-center">RECEPCION DESDE PTO VENTA</div>
         <div className="row">
             <div className="col-md-6">
               <p><strong>{userInfo.nameCon}</strong></p>
@@ -910,24 +937,24 @@ function AppRemCon() {
               <p><strong>Condición frente al IVA:</strong> {config.ivaCondition}</p>
             </div>
             <div className="col-md-6 ">
-              <p><strong>REMITO</strong></p>
+              <p><strong>RECEPCION DESDE PTO VENTA</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
-              <strong>     Comp. Nro:</strong> {invoice.remNum}</p>
-              <p><strong>Fecha de Emision:</strong> {invoice.remDat.substring(0, 10)}</p>
+              <strong>     Comp. Nro:</strong> {invoice.movpvNum}</p>
+              <p><strong>Fecha de Emision:</strong> {invoice.movpvDat}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>
             </div>
           </div>
-          <hr />
+                    <hr />
             <div className="row">
               <div className="col-md-6">
-                <p><strong>CUIT:</strong> {invoice.id_client.cuit}</p>
-                <p><strong>Condición IVA:</strong> {invoice.id_client.coniva}</p>
+                <p><strong>CUIT:</strong> {invoice.id_config2.cuit}</p>
+                <p><strong>Condición IVA:</strong> {invoice.id_config2.coniva}</p>
               </div>
               <div className="col-md-6">
-                <p><strong>Apellido y Nombre / Razon Social:</strong> {invoice.id_client.nameCus}</p>
-                <p><strong>Dirección:</strong> {invoice.id_client.domcomer}</p>
+                <p><strong>Apellido y Nombre / Razon Social:</strong> {invoice.id_config2.name}</p>
+                <p><strong>Dirección:</strong> {invoice.id_config2.domcomer}</p>
               </div>
           </div>
 
@@ -953,7 +980,7 @@ function AppRemCon() {
                       <td>{index + 1}</td>
                       <td>{item.title}</td>
                       <td className="text-end">{item.quantity}</td>
-                      <td className="text-end">${item.price}</td>
+                      <td className="text-end">${item.price.toFixed(2)}</td>
                       <td className="text-end">${(item.quantity * item.price).toFixed(2)}</td>
                       <td className="text-end">%{item.porIva}</td>
                       <td className="text-end">${(item.quantity * item.price*(1+(item.porIva/100))).toFixed(2)}</td>
@@ -962,9 +989,9 @@ function AppRemCon() {
                 </tbody>
               </table>
               <div className="text-end">
-                <p><strong>Subtotal:</strong> ${invoice.subTotal.toFixed(2)}</p>
+              <p><strong>Subtotal:</strong> ${invoice.subTotal.toFixed(2)}</p>
                 <p><strong>IVA:</strong> ${invoice.tax.toFixed(2)}</p>
-                <h5><strong>Total:</strong> ${invoice.total.toFixed(2)}</h5>
+                <h5><strong>Total:</strong> ${invoice.totalBuy.toFixed(2)}</h5>
               </div>
             </div>
           )}
@@ -972,6 +999,7 @@ function AppRemCon() {
 
       </div>
     </div>
+
 
 
 
@@ -984,4 +1012,5 @@ function AppRemCon() {
   );
 }
 
-export default AppRemCon;
+export default AppBuyRempvCon
+;

@@ -34,12 +34,27 @@ export default function DashboardScreen() {
   const { userInfo } = state;
   const [id_config, setId_config] = useState(userInfo.codCon);
 
+  const fech1 = userInfo.filtro.firstDat;
+  const fech2 = userInfo.filtro.lastDat;
+  const codCon = userInfo.filtro.codCon;
+  const codCom = userInfo.filtro.codCom;
+  const codCus = userInfo.filtro.codCus;
+  const codSup = userInfo.filtro.codSup;
+  const codPro = userInfo.filtro.codPro;
+  const codVal = userInfo.filtro.codVal;
+  const codCon2 = userInfo.filtro.codCon2;
+  const codEnc = userInfo.filtro.codEnc;
+  const codUse = userInfo.filtro.codUse;
+  const order = userInfo.filtro.order;
+  
+
+
+
   useEffect(() => {
-    console.log(id_config);
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${API}/api/orders/summary?id_config=${id_config}`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
+        const { data } = await axios.get(`${API}/api/orders/summary?fech1=${fech1}&fech2=${fech2}&configuracion=${codCon}&usuario=${codUse}&customer=${codCus}`, {
+            headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
         console.log(data);
@@ -54,31 +69,31 @@ export default function DashboardScreen() {
   }, [userInfo]);
 
   const optionsPrIO = {
-    title: 'Inputs & Outputs Products',
+    title: 'Recepcion y Entregas de Productos',
     curveType: 'function',
     legend: { position: 'bottom' },
   };
 
   const optionsBuOu = {
-    title: 'Buys & Outputs',
+    title: 'Compras y Pagos',
     curveType: 'function',
     legend: { position: 'bottom' },
   };
 
   const optionsSaIn = {
-    title: 'Sales & Inputs',
+    title: 'Ventas y Cobros',
     curveType: 'function',
     legend: { position: 'bottom' },
   };
 
   const optionsMon = {
-    title: 'Money Flow',
+    title: 'Flujo de Dinero',
     curveType: 'function',
     legend: { position: 'bottom' },
   };
 
   const optionsSal = {
-    title: 'Sales & Buys',
+    title: 'Ventas y Compras',
     curveType: 'function',
     legend: { position: 'bottom' },
   };
@@ -148,7 +163,7 @@ export default function DashboardScreen() {
                       chartType="LineChart"
                       loader={<div>Loading Chart...</div>}
                       data={[
-                        ['Date', 'Sales', 'Buys'],
+                        ['Dia', 'Ventas', 'Compras'],
                         ...summary.dailyOrders.map((x) => [
                           x._id,
                           x.sales,
@@ -173,7 +188,7 @@ export default function DashboardScreen() {
                       chartType="LineChart"
                       loader={<div>Loading Chart...</div>}
                       data={[
-                        ['Date', '$ Inputs', '$ Outputs'],
+                        ['Dia', '$ Cobros', '$ Pagos'],
                         ...summary.dailyMoney.map((x) => [
                           x._id,
                           x.inputs,
@@ -199,7 +214,7 @@ export default function DashboardScreen() {
                       chartType="LineChart"
                       loader={<div>Loading Chart...</div>}
                       data={[
-                        ['Date', '$ Sales', '$ Inputs'],
+                        ['Dia', '$ Ventas', '$ Cobros'],
                         ...summary.ctacte.map((x) => [
                           x._id,
                           x.salesS,
@@ -225,7 +240,7 @@ export default function DashboardScreen() {
                       chartType="LineChart"
                       loader={<div>Loading Chart...</div>}
                       data={[
-                        ['Date', '$ Buys', '$ Outputs'],
+                        ['Dia', '$ Compras', '$ Pagos'],
                         ...summary.ctacte.map((x) => [
                           x._id,
                           x.salesB,
@@ -252,7 +267,7 @@ export default function DashboardScreen() {
                       chartType="LineChart"
                       loader={<div>Loading Chart...</div>}
                       data={[
-                        ['Date', '$ Inputs', '$ Outputs'],
+                        ['Dia', 'Recepciones', '$ Entregas'],
                         ...summary.producIO.map((x) => [
                           x._id,
                           x.entro,

@@ -602,7 +602,7 @@ const RecControl = (e) => {
               <p><strong>INGRESO DE CAJA</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
               <strong>     Comp. Nro:</strong> {recibo.cajNum}</p>
-              <p><strong>Fecha de Emision:</strong> {cajDat}</p>
+              <p><strong>Fecha de Emision:</strong> {recibo.cajDat.substring(0, 10)}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>

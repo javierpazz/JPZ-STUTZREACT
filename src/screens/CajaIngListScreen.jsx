@@ -103,7 +103,7 @@ export default function CajaIngListScreen() {
         // const { data } = await axios.get(`${API}/api/receipts/cajaS?page=${page}&id_config=${id_config} `, {
         //   headers: { Authorization: `Bearer ${userInfo.token}` },
         // });
-        const { data } = await axios.get(`${API}/api/receipts/searchcajS?page=${page}&order=${order}&fech1=${fech1}&fech2=${fech2}&configuracion=${codCon}&usuario=${codUse}&customer=${codCus}`,{
+        const { data } = await axios.get(`${API}/api/receipts/searchcajS?page=${page}&order=${order}&fech1=${fech1}&fech2=${fech2}&configuracion=${codCon}&usuario=${codUse}&encargado=${codEnc}`,{
           headers: { Authorization: `Bearer ${userInfo.token}` },
       });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
@@ -246,7 +246,7 @@ const prodeleteReceipt = (receipt) => {
               {receipts?.map((receipt) => (
                 <tr key={receipt._id}>
                   <td className="text-end">{receipt.cajNum}</td>
-                  <td className="text-center">{receipt.recDat ? receipt.recDat.substring(0, 10): ''}</td>
+                  <td className="text-center">{receipt.cajDat ? receipt.cajDat.substring(0, 10): ''}</td>
                   <td>{receipt.id_encarg ? receipt.id_encarg.name : ''}</td>
                   <td >{receipt.desval}</td>
                   <td className="text-end">{receipt.total.toFixed(2)}</td>

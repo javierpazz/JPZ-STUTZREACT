@@ -244,7 +244,7 @@ function AppBuyRemCon
           // setName(invoice.supplier.name);
           // setNameCom(invoice.nameCom);
     
-          setInvNum(invoice.invNum);
+          setRemNum(invoice.remNum);
         } catch (err) {
           dispatch({ type: 'ORDER_FETCH_FAIL', payload: getError(err) });
         }
@@ -954,7 +954,7 @@ function AppBuyRemCon
               <p><strong>REMITO</strong></p>
               <p><strong>Punto de Venta:</strong> {config.salePoint}    
               <strong>     Comp. Nro:</strong> {invoice.remNum}</p>
-              <p><strong>Fecha de Emision:</strong> {remDat}</p>
+              <p><strong>Fecha de Emision:</strong> {invoice.remDat.substring(0, 10)}</p>
               <p><strong>CUIT:</strong> {config.cuit}</p>
               <p><strong>Ingresos Brutos:</strong> {config.ib}</p>
               <p><strong>Fecha de Inicio de Actividades:</strong> {config.feciniact}</p>

@@ -142,7 +142,7 @@ export default function RemitpvListScreen() {
   };
 
   const handleConsulta = (invoiceId) => {
-    navigate(`/admin/invoicerRemCon/${invoiceId}`);
+    navigate(`/admin/invoicerRempvCon/${invoiceId}`);
   };
 
 //do
@@ -326,7 +326,7 @@ try {
                     &nbsp; */}
                     <Button
                       type="button"
-                      title="Consulta Remito"
+                      title="Consulta Entrega"
                       onClick={() => handleConsulta(invoice._id)}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />

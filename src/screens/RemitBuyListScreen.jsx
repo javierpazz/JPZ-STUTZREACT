@@ -283,7 +283,7 @@ try {
                     &nbsp;
                     <Button
                       type="button"
-                      title="Consulta Factura"
+                      title="Consulta Remito"
                       onClick={() => handleConsulta(invoice._id)}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />

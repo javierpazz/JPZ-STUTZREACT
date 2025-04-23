@@ -315,10 +315,10 @@ function AppBuyRempv() {
           invoice.tax = round2(
             invoice.orderItems.reduce((a, c) => a + c.quantity * c.price * (c.porIva/100), 0)
           );
-          invoice.total = round2(
+          invoice.totalBuy = round2(
             invoice.subTotal + invoice.shippingPrice + invoice.tax
           );
-          invoice.totalBuy = 0;
+          invoice.total = 0;
           invoice.codCon2 = codCon2;
           invoice.codCon = userInfo.codCon;
           invoice.user = userInfo._id,
