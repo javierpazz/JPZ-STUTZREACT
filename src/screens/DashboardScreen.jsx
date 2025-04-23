@@ -53,7 +53,7 @@ export default function DashboardScreen() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${API}/api/orders/summary?fech1=${fech1}&fech2=${fech2}&configuracion=${codCon}&usuario=${codUse}&customer=${codCus}`, {
+        const { data } = await axios.get(`${API}/api/orders/summary?fech1=${fech1}&fech2=${fech2}&configuracion=${id_config}&usuario=${codUse}&customer=${codCus}`, {
             headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });

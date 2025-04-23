@@ -112,7 +112,7 @@ export default function CajaIngEgrListScreen() {
       });
         dispatch({ type: 'FETCH_SUCCESS', payload: data.resultado });
         setCuentas(data.resultado);
-        console.log(cuentas);
+        console.log(data);
       } catch (err) {
         dispatch({
           type: 'FETCH_FAIL',
@@ -144,25 +144,31 @@ export default function CajaIngEgrListScreen() {
   
     return (
       <div className="p-1">
-        {/* Botón para imprimir */}
-        <div className="mb-1">
-          <ReactToPrint
-            trigger={() => (
-              <Button className="px-2 py-2 bg-blue-600 text-Black rounded hover:bg-blue-700">
-                Imprimir o Descargar PDF
-              </Button>
-            )}
-            content={() => printRef.current}
-            documentTitle="Informe_Caja"
-            pageStyle="@page { size: auto; margin: 20mm; } body { font-family: Arial; }"
-          />
-        <Button
-          onClick={() => exportToExcel(cuentas)}
-          className="ml-4 px-2 py-2 bg-green-600 text-Black rounded hover:bg-green-700"
-          >
-          Exportar a Excel
-        </Button>
-          </div>
+            {/* Botón para imprimir */}
+            <div className="mb-1">
+              <ReactToPrint
+                trigger={() => (
+                  <Button className="px-2 py-2 bg-blue-600 text-Black rounded hover:bg-blue-700">
+                    Imprimir o Descargar PDF
+                  </Button>
+                )}
+                content={() => printRef.current}
+                documentTitle="Informe_Caja"
+                pageStyle="@page { size: auto; margin: 20mm; } body { font-family: Arial; }"
+              />
+            <Button
+              onClick={() => exportToExcel(cuentas)}
+              className="ml-4 px-2 py-2 bg-green-600 text-Black rounded hover:bg-green-700"
+              >
+              Exportar a Excel
+            </Button>
+                <Button type="button"
+                        variant="primary"
+                        onClick={parametros}
+                        >
+                  Ver Filtros
+                </Button>
+              </div>
 
         {/* Contenido que se imprime */}
         <div ref={printRef}>
@@ -181,6 +187,9 @@ export default function CajaIngEgrListScreen() {
                   <thead>
                     <tr className="bg-gray-100">
                       <th className="p-2 border">Fecha</th>
+                      <th className="p-2 border">Comprobante</th>
+                      <th className="p-2 border">Numero</th>
+                      <th className="p-2 border">Descripcion</th>
                       <th className="p-2 border">Ingresos</th>
                       <th className="p-2 border">Egresos</th>
                       <th className="p-2 border">Saldo Acumulado</th>
@@ -190,6 +199,9 @@ export default function CajaIngEgrListScreen() {
                     {cuenta.movimientos.map((mov, index) => (
                       <tr key={index} className="hover:bg-gray-50">
                         <td className="p-2 border">{new Date(mov.fecha).toLocaleDateString()}</td>
+                        <td className="p-2 border">{mov.compDes}</td>
+                        <td className="p-2 border text-end">{mov.compNum}</td>
+                        <td className="p-2 border">{mov.descripcion}</td>
                         <td className="p-2 border text-end">${mov.totalBuy.toFixed(2)}</td>
                         <td className="p-2 border text-end">${mov.total.toFixed(2)}</td>
                         <td className="p-2 border text-end font-semibold">${mov.saldoAcumulado.toFixed(2)}</td>
@@ -198,7 +210,7 @@ export default function CajaIngEgrListScreen() {
                   </tbody>
                   <tfoot>
                     <tr className="bg-gray-100 font-bold">
-                      <td className="p-2 border" colSpan={3}>Saldo Total</td>
+                      <td className="p-2 border" colSpan={5}>Saldo Total</td>
                       <td className="p-2 border text-end">${cuenta.saldoTotal.toFixed(2)}</td>
                     </tr>
                   </tfoot>
