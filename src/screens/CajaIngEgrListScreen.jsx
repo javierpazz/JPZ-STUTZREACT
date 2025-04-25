@@ -148,7 +148,7 @@ export default function CajaIngEgrListScreen() {
             <div className="mb-1">
               <ReactToPrint
                 trigger={() => (
-                  <Button className="px-2 py-2 bg-blue-600 text-Black rounded hover:bg-blue-700">
+                  <Button>
                     Imprimir o Descargar PDF
                   </Button>
                 )}
@@ -157,9 +157,7 @@ export default function CajaIngEgrListScreen() {
                 pageStyle="@page { size: auto; margin: 20mm; } body { font-family: Arial; }"
               />
             <Button
-              onClick={() => exportToExcel(cuentas)}
-              className="ml-4 px-2 py-2 bg-green-600 text-Black rounded hover:bg-green-700"
-              >
+              onClick={() => exportToExcel(cuentas)}>
               Exportar a Excel
             </Button>
                 <Button type="button"
@@ -210,7 +208,7 @@ export default function CajaIngEgrListScreen() {
                   </tbody>
                   <tfoot>
                     <tr className="bg-gray-100 font-bold">
-                      <td className="p-2 border" colSpan={5}>Saldo Total</td>
+                      <td className="p-2 border" colSpan={6}>Saldo Total</td>
                       <td className="p-2 border text-end">${cuenta.saldoTotal.toFixed(2)}</td>
                     </tr>
                   </tfoot>

@@ -8,6 +8,8 @@ import MessageBox from '../components/MessageBox';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
+import { Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -32,7 +34,6 @@ export default function DashboardScreen() {
   });
   const { state } = useContext(Store);
   const { userInfo } = state;
-  const [id_config, setId_config] = useState(userInfo.codCon);
 
   const fech1 = userInfo.filtro.firstDat;
   const fech2 = userInfo.filtro.lastDat;
@@ -53,7 +54,7 @@ export default function DashboardScreen() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${API}/api/orders/summary?fech1=${fech1}&fech2=${fech2}&configuracion=${id_config}&usuario=${codUse}&customer=${codCus}`, {
+        const { data } = await axios.get(`${API}/api/orders/summary?fech1=${fech1}&fech2=${fech2}&configuracion=${codCon}&usuario=${codUse}&customer=${codCus}`, {
             headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
@@ -102,9 +103,18 @@ export default function DashboardScreen() {
     is3D: true,
   };
 
+  const navigate = useNavigate();
+
+  const parametros = async () => {
+    navigate(`/admin/filtros?redirect=/admin/dashboard`);
+  };
+
+
   return (
     <div>
       <h1>Dashboard</h1>
+
+
       {loading ? (
         <LoadingBox />
       ) : error ? (
@@ -112,7 +122,19 @@ export default function DashboardScreen() {
       ) : (
         <>
           <Row>
-            <Col md={4}>
+            <Col md={2}>
+              <Card>
+                <Card.Body>
+                  <Card.Title>
+                    {summary.customers && summary.customers[0]
+                      ? summary.customers[0].numCustomers
+                      : 0}
+                  </Card.Title>
+                  <Card.Text> Clientes</Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={2}>
               <Card>
                 <Card.Body>
                   <Card.Title>
@@ -120,35 +142,68 @@ export default function DashboardScreen() {
                       ? summary.users[0].numUsers
                       : 0}
                   </Card.Title>
-                  <Card.Text> Users</Card.Text>
+                  <Card.Text> Usuarios</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
-            <Col md={4}>
+
+            {(summary.orders.length === 0 ) ? (
+            <Col md={3}>
+              <Card>
+              <Card.Body>
+                <Card.Title>
+                  <MessageBox>Sin Facturas</MessageBox>
+                  </Card.Title>
+                </Card.Body>
+              </Card>
+              </Col>
+            ) : (
+            <Col md={3}>
               <Card>
                 <Card.Body>
                   <Card.Title>
-                    {summary.orders && summary.users[0]
-                      ? summary.orders[0].numOrders
-                      : 0}
+                    {summary.orders[0].numOrders}
                   </Card.Title>
-                  <Card.Text> Orders</Card.Text>
+                  <Card.Text> Facturas</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
-            <Col md={4}>
+            )}
+
+            {(summary.orders.length === 0 ) ? (
+            <Col md={3}>
+              <Card>
+              <Card.Body>
+                <Card.Title>
+                  <MessageBox>Sin Facturas</MessageBox>
+                  </Card.Title>
+                </Card.Body>
+              </Card>
+              </Col>
+            ) : (
+            <Col md={3}>
               <Card>
                 <Card.Body>
                   <Card.Title>
                     $
-                    {summary.orders && summary.users[0]
-                      ? summary.orders[0].totalSales.toFixed(2)
-                      : 0}
+                    {summary.orders[0].totalSales.toFixed(2)}
                   </Card.Title>
-                  <Card.Text> Orders</Card.Text>
+                  <Card.Text> Importe</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
+            )}
+            <Col md={2} className="col text-end">
+          <div>
+            <Button type="button"
+                    variant="primary"
+                    onClick={parametros}
+                  >
+              Ver Filtros
+            </Button>
+            </div>
+        </Col>
+
           </Row>
           <Row>
             {summary.dailyOrders.length === 0 ? (

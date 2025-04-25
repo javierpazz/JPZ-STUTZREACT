@@ -65,7 +65,7 @@ export default function SalePointScreen() {
     nameSup : 'Todos',
     desPro : 'Todos',
     nameCom : 'Todos',
-    // desVal : 'Todos',
+    desVal : 'Todos',
     nameEnc : 'Todos',
     order : 'newest',
   };
@@ -122,6 +122,9 @@ export default function SalePointScreen() {
     userInfo.configurationObj = configurationObj
 
       userInfo.filtro = filtro;
+      userInfo.filtro.codCon = codCon;
+      userInfo.filtro.nameCon = name;
+
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
       navigate(redirect);
 

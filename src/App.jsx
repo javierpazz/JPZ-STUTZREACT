@@ -328,7 +328,7 @@ function App() {
                   {userInfo && userInfo.role=="admin" && (
                     <NavDropdown title="Configuracion" id="admin-nav-dropdown">
                       <LinkContainer to="/admin/filtros">
-                        <NavDropdown.Item>Filtros</NavDropdown.Item>
+                        <NavDropdown.Item>Informes y Filtros</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/products">
                         <NavDropdown.Item>Productos</NavDropdown.Item>

@@ -89,11 +89,12 @@ export default function AccountCustomerScreen() {
   const [invDat, setInvDat] = useState('');
 
   const params = useParams();
-  const { id: userId } = params;
+  const { id: custId } = params;
 
   const fech1 = userInfo.filtro.firstDat;
   const fech2 = userInfo.filtro.lastDat;
   const codCom = userInfo.filtro.codCom;
+  const codCon = userInfo.filtro.codCon;
   const codCus = userInfo.filtro.codCus;
   const codSup = userInfo.filtro.codSup;
   const codPro = userInfo.filtro.codPro;
@@ -104,7 +105,7 @@ export default function AccountCustomerScreen() {
   const order = userInfo.filtro.order;
   
  
-  const [id_config, setId_config] = useState(userInfo.codCon);
+  // const [id_config, setId_config] = useState(userInfo.codCon);
   // userInfo.filtro.codCon ? setId_config(userInfo.filtro.codCon) : setId_config(userInfo.codCon);
 
 
@@ -113,12 +114,13 @@ export default function AccountCustomerScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'TOTAL_FETCH_REQUEST' });
-        // const { data } = await axios.get(`${API}/api/invoices/ctaS/${userId}?id_config=${id_config} `, {
-           const { data } = await axios.get(`${API}/api/invoices/ctaS/${userId}?configuracion=${id_config}&order=${order}&fech1=${fech1}&fech2=${fech2}`, {
+        // const { data } = await axios.get(`${API}/api/invoices/ctaS/${custId}?id_config=${id_config} `, {
+           const { data } = await axios.get(`${API}/api/invoices/ctaS/${custId}?configuracion=${codCon}&order=${order}&fech1=${fech1}&fech2=${fech2}&usuario=${codUse}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
+        console.log(data);
         dispatch({ type: 'TOTAL_FETCH_SUCCESS', payload: data });
-        // //        let kiki = data?.filter((data) => data.user === userId);
+        // //        let kiki = data?.filter((data) => data.user === custId);
         // const sortedList = data.sort((a, b) => (a.docDat > b.docDat ? -1 : 0));
         // setInvoices(sortedList);
 console.log(data);
@@ -233,7 +235,7 @@ console.log(data);
     }
   };
   const parametros = async () => {
-    navigate(`/admin/filtros?redirect=/admin/customer/cta/${userId}`);
+    navigate(`/admin/filtros?redirect=/admin/customer/cta/${custId}`);
   };
 
   const createHandler = async () => {
@@ -362,7 +364,7 @@ console.log(data);
                       <Button
                         type="button"
                         title="Consulta Recibo"
-                        onClick={() => handleConsultaRec(receipt._id)}
+                        onClick={() => handleConsultaRec(invoice._id)}
                         >
                         <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                       </Button>

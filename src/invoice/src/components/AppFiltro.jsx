@@ -1,4 +1,4 @@
-import { useContext, useState, useRef, useEffect, useReducer } from 'react';
+import { useContext, useState, useEffect, useReducer } from 'react';
 import { useLocation, useNavigate  } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -90,18 +90,6 @@ const [
 
   const { userInfo } = state;
 
-  const input1Ref = useRef(null);
-  const input2Ref = useRef(null);
-  const input3Ref = useRef(null);
-  const input4Ref = useRef(null);
-  const input5Ref = useRef(null);
-  const input6Ref = useRef(null);
-  const input7Ref = useRef(null);
-  const input8Ref = useRef(null);
-  const input0Ref = useRef(null);
-  
-  const input20Ref = useRef(null);
-  const input21Ref = useRef(null);
 
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
   const [id_config, setId_config] = useState(userInfo.codCon);
@@ -146,7 +134,7 @@ const [
   const [showVal, setShowVal] = useState(false);
   const [codValo, setCodValo] = useState('');
   const [codVal, setCodVal] = useState('');
-  const [desval, setDesval] = useState('');
+  const [desVal, setDesVal] = useState('');
   const [valuees, setValuees] = useState([]);
   const [valueeR, setValueeR] = useState({});
   
@@ -154,6 +142,7 @@ const [
   const [firstDat, setFirstDat] = useState(today);
   const [lastDat, setLastDat] = useState(today);
   const [order, setOrder] = useState('newest');
+  const [informe, setInforme] = useState('/admin/invoicesCajIngEgr');
 
   // const [userss, setUserss] = useState([]);
   const [customers, setCustomers] = useState([]);
@@ -163,10 +152,19 @@ const [
   const [showInvoice, setShowInvoice] = useState(false);
 
   const [isPaying, setIsPaying] = useState(false);
+  const getTodayInGMT3 = () => {
+    const now = new Date();
+    // Convertimos a la hora de Argentina (GMT-3)
+    const offset = now.getTimezoneOffset(); // En minutos
+    const localDate = new Date(now.getTime() - (offset + 180) * 60 * 1000); // 180 = 3 horas
+    
+    return localDate.toISOString().split("T")[0];
+  };
+
 
   const filtroCero = {
-    firstDat : '',
-    lastDat : '',
+    firstDat : getTodayInGMT3(),
+    lastDat : getTodayInGMT3(),
     codCus : '',
     codSup : '',
     codPro : '',
@@ -181,7 +179,7 @@ const [
     nameSup : 'Todos',
     desPro : 'Todos',
     nameCom : 'Todos',
-    // desVal : 'Todos',
+    desVal : 'Todos',
     nameEnc : 'Todos',
     order : 'newest',
   };
@@ -227,8 +225,10 @@ const [
       setNameEnc(userInfo.filtro.nameEnc);
       setCodUse(userInfo.filtro.codUse);
       setNameUse(userInfo.filtro.nameUse);
-      setCodCon(userInfo.filtro.codCon);
+      setCodCon(userInfo.filtro.codCon);  
       setNameCon(userInfo.filtro.nameCon);
+      setCodVal(userInfo.filtro.codVal);
+      setDesVal(userInfo.filtro.desVal);
       setOrder(userInfo.filtro.order);
     }else{
       setFirstDat('Todos');
@@ -247,13 +247,13 @@ const [
       setNameUse('Todos');
       // setCodCon('Todos');
       setNameCon('Todos');
+      setDesVal('Todos');
       setOrder('newest');
     }
     ;
 }, []);
 
 useEffect(() => {
-  input8Ref.current.focus()
   const fetchData = async () => {
     try {
       const { data } = await axios.get(`${API}/api/valuees/`, {
@@ -323,7 +323,6 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
-    input1Ref.current.focus()
     const fetchDataVal = async () => {
       try {
         const { data } = await axios.get(`${API}/api/suppliers/`, {
@@ -338,7 +337,6 @@ useEffect(() => {
 
 
   useEffect(() => {
-    input1Ref.current.focus()
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`${API}/api/customers/`, {
@@ -388,7 +386,6 @@ useEffect(() => {
   const submitHandlerVal = async (e) => {
     e.preventDefault();
     setShowVal(false)
-    input8Ref.current.focus()
   };
 
 
@@ -397,7 +394,7 @@ useEffect(() => {
     setValueeR(valueeR);
     setCodVal(valueeR._id);
     setCodValo(valueeR.codVal);
-    setDesval(valueeR.desVal);
+    setDesVal(valueeR.desVal);
   };
 
   const ayudaVal = (e) => {
@@ -414,12 +411,12 @@ useEffect(() => {
         setValueeR({});
         setCodVal('');
         setCodValo('');
-        setDesval('Elija un Valor');
+        setDesVal('Todos');
       }else{
         setValueeR(valueeR);
         setCodVal(valueeR._id);
         setCodValo(valueeR.codValo);
-        setDesval(valueeR.desVal);
+        setDesVal(valueeR.desVal);
     };
   };
 
@@ -430,7 +427,6 @@ useEffect(() => {
   };
   const handleShowVal = () => {
     setShowVal(true);
-    input22Ref.current.focus();
   };
 
 
@@ -470,12 +466,11 @@ useEffect(() => {
         if (!configurationRow) {
             setCodCon('');
             setCodConp('');
-            setNameCon('Elija Punto Venta');
+            setNameCon('Todos');
         }else{
           setCodCon(configurationRow._id);
           setCodConp(configurationRow.codCon);
           setNameCon(configurationRow.name);
-          input3Ref.current.focus();
           };
       };
     
@@ -514,12 +509,11 @@ useEffect(() => {
         if (!userRow) {
             setCodUse('');
             setCodUsep('');
-            setNameUse('Elija Usuario');
+            setNameUse('Todos');
         }else{
           setCodUse(userRow._id);
           setCodUsep(userRow.codUse);
           setNameUse(userRow.name);
-          input3Ref.current.focus();
           };
       };
     
@@ -559,12 +553,11 @@ useEffect(() => {
         if (!encargadoRow) {
             setCodEnc('');
             setCodEncp('');
-            setNameEnc('Elija Encargado');
+            setNameEnc('Todos');
         }else{
           setCodEnc(encargadoRow._id);
           setCodEncp(encargadoRow.codEnc);
           setNameEnc(encargadoRow.name);
-          input3Ref.current.focus();
           };
       };
     
@@ -584,7 +577,6 @@ useEffect(() => {
   const submitHandlerPro = async (e) => {
     e.preventDefault();
     setShowPro(false)
-    input8Ref.current.focus()
   };
 
 
@@ -610,7 +602,7 @@ useEffect(() => {
     if (!productRow) {
         setCodPro('');
         setCodProd('');
-        setDesPro('Elija un Producto');
+        setDesPro('Todos');
         setProductR({});
       }else{
         setProductR(productRow);
@@ -655,12 +647,11 @@ useEffect(() => {
     if (!supplierRow) {
         setCodSup('');
         setCodSupp('');
-        setNameSup('Elija Proovedor');
+        setNameSup('Todos');
     }else{
       setCodSup(supplierRow._id);
       setCodSupp(supplierRow.codSup);
       setNameSup(supplierRow.name);
-      input3Ref.current.focus();
       };
   };
 
@@ -672,7 +663,6 @@ useEffect(() => {
 
   const handleShowCus = () => {
     setShowCus(true);
-    input21Ref.current.focus();
   };
 
 
@@ -698,13 +688,12 @@ useEffect(() => {
         setCustObj({});
         setCodCus('');
         setCodCust('');
-        setName('Elija Cliente');
+        setName('Todos');
     }else{
       setCodCus(usersRow._id);
       setCodCust(usersRow.codCus);
       setCustObj(usersRow);
       setName(usersRow.nameCus);
-      input3Ref.current.focus();
       };
   };
 
@@ -748,7 +737,7 @@ useEffect(() => {
     if (!comprobantesRow) {
         setCodCom('');
         setCodComp('');
-        setNameCom('Elija Documento');
+        setNameCom('Todos');
     }else{
       setCodCom(comprobantesRow._id);
       setCodComp(comprobantesRow.codCom);
@@ -756,7 +745,6 @@ useEffect(() => {
       setNoDisc(comprobantesRow.noDisc);
       setToDisc(comprobantesRow.toDisc);
       setItDisc(comprobantesRow.itDisc);
-      input2Ref.current.focus();
 
     };
   };
@@ -768,7 +756,10 @@ useEffect(() => {
   const placeLimpiaFiltro = async () => {
     if (window.confirm('Esta seguro de Grabar Parametros?')) {
       userInfo.filtro = filtroCero;
-    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+      userInfo.filtro.codCon = userInfo.codCon;
+      userInfo.filtro.nameCon = userInfo.nameCon;
+
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
     navigate(redirect);
     };
   };
@@ -799,12 +790,38 @@ useEffect(() => {
     };  
   };
 
+  const parametros = async () => {
+    if (window.confirm('Esta seguro de Grabar Parametros?')) {
+      filtro.firstDat = firstDat;
+      filtro.lastDat = lastDat;
+      filtro.codCus = codCus;
+      filtro.nameCus = name;
+      filtro.codPro = codPro;
+      filtro.desPro = desPro;
+      filtro.codSup = codSup;
+      filtro.nameSup = nameSup;
+      filtro.codCom = codCom;
+      filtro.nameCom = nameCom;
+      filtro.codEnc = codEnc;
+      filtro.nameEnc = nameEnc;
+      filtro.codUse = codUse;
+      filtro.nameUse = nameUse;
+      filtro.codCon = codCon;
+      filtro.nameCon = nameCon;
+      filtro.order = order;
+
+        userInfo.filtro = filtro
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+        navigate(informe);
+    };  
+
+  };
 
 
   return (
     <>
       <Helmet>
-        <title>Filtros Parametros</title>
+        <title>Informes y Filtros</title>
       </Helmet>
 
       <main>
@@ -834,7 +851,7 @@ useEffect(() => {
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              PARAMETROS DE FILTRO
+                              INFORMES Y FILTROS
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -854,12 +871,11 @@ useEffect(() => {
                         <Form.Label>Desde Fecha</Form.Label>
                         <Form.Control
                         className="input"
-                        ref={input5Ref}
                         type="date"
                         placeholder="Desde Fecha"
                         value={firstDat}
                         onChange={(e) => setFirstDat(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && input6Ref.current.focus()}
+                        onKeyDown={(e) => e.key === "Enter"}
                         // required
                         />
                     </Form.Group>
@@ -874,19 +890,18 @@ useEffect(() => {
                         <Form.Label>Hasta Fecha</Form.Label>
                         <Form.Control
                         className="input"
-                        ref={input5Ref}
                         type="date"
                         placeholder="Hasta Fecha"
                         value={lastDat}
                         onChange={(e) => setLastDat(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && input6Ref.current.focus()}
+                        onKeyDown={(e) => e.key === "Enter"}
                         // required
                         />
                     </Form.Group>
                     </Card.Title>
                 </Card.Body>
                 </Col>
-                <Col md={3}>
+                <Col md={2}>
                   <Card.Body>
                         <Card.Title>
                           <Form.Group className="input" controlId="name">
@@ -906,6 +921,37 @@ useEffect(() => {
                       </Card.Title>
                   </Card.Body>
                 </Col>
+                <Col md={4}>
+                  <Card.Body>
+                        <Card.Title>
+                          <Form.Group className="input" controlId="name">
+                            Elija Informe a generar
+                            <select
+                              className="input"
+                              value={informe}
+                              onChange={(e) => setInforme(e.target.value)}
+                              >
+                              <option value="/admin/invoicesCajIngEgr">Caja</option>
+                              <option value="caja1">Caja1</option>
+                              <option value="caja12">Caja12</option>
+                              <option value="caja13">Caja13</option>
+
+                            </select>
+                          </Form.Group>
+                      </Card.Title>
+                  </Card.Body>
+                </Col>
+                <Col className="col text-end">
+          <div>
+            <Button type="button"
+                    variant="primary"
+                    onClick={parametros}
+                  >
+              Genera Informe
+            </Button>
+            </div>
+        </Col>
+
 
                 </Row>
 
@@ -917,7 +963,6 @@ useEffect(() => {
                           <Form.Label>Codigo Pto Venta</Form.Label>
                           <Form.Control
                             className="input"
-                            ref={input2Ref}
                             placeholder="Codigo Pto Venta"
                             value={codConp}
                             onChange={(e) => setCodConp(e.target.value)}
@@ -940,7 +985,7 @@ useEffect(() => {
                     </Button>
                   </Col>
 
-                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                  <Col md={3} className="mt-1 text-black py-1 px-1 rounded ">
                       <Card.Body>
                         <Card.Title>
                           <ListGroup.Item>
@@ -951,9 +996,7 @@ useEffect(() => {
                         </Card.Title>
                       </Card.Body>
                     </Col>
-                </Row>
 
-                <Row>
                   <Col md={2}>
                     <Card.Body>
                       <Card.Title>
@@ -984,7 +1027,7 @@ useEffect(() => {
                     </Button>
                   </Col>
 
-                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                  <Col md={3} className="mt-1 text-black py-1 px-1 rounded ">
                       <Card.Body>
                         <Card.Title>
                           <ListGroup.Item>
@@ -1003,11 +1046,10 @@ useEffect(() => {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Tipo Comprobante</Form.Label>
+                          <Form.Label>Codigo Comprobante</Form.Label>
                           <Form.Control
                             className="input"
-                            ref={input1Ref}
-                            placeholder="Tipo Comprobante"
+                            placeholder="Codigo Comprobante"
                             value={codComp}
                             onChange={(e) => setCodComp(e.target.value)}
                             // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCom(codComp)}
@@ -1029,7 +1071,7 @@ useEffect(() => {
                     </Button>
                   </Col>
 
-                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                  <Col md={3} className="mt-1 text-black py-1 px-1 rounded ">
                       <Card.Body>
                         <Card.Title>
                           <ListGroup.Item>
@@ -1041,11 +1083,6 @@ useEffect(() => {
                       </Card.Body>
                     </Col>
 
-
-                </Row>
-
-
-                <Row>
                   <Col md={2}>
                     <Card.Body>
                       <Card.Title>
@@ -1053,7 +1090,6 @@ useEffect(() => {
                           <Form.Label>Codigo Cliente</Form.Label>
                           <Form.Control
                             className="input"
-                            ref={input2Ref}
                             placeholder="Codigo Cliente"
                             value={codCust}
                             onChange={(e) => setCodCust(e.target.value)}
@@ -1076,7 +1112,7 @@ useEffect(() => {
                     </Button>
                   </Col>
 
-                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                  <Col md={3} className="mt-1 text-black py-1 px-1 rounded ">
                       <Card.Body>
                         <Card.Title>
                           <ListGroup.Item>
@@ -1098,7 +1134,6 @@ useEffect(() => {
                           <Form.Label>Codigo Proovedor</Form.Label>
                           <Form.Control
                             className="input"
-                            ref={input2Ref}
                             placeholder="Codigo Proovedor"
                             value={codSupp}
                             onChange={(e) => setCodSupp(e.target.value)}
@@ -1121,7 +1156,7 @@ useEffect(() => {
                     </Button>
                   </Col>
 
-                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                  <Col md={3} className="mt-1 text-black py-1 px-1 rounded ">
                       <Card.Body>
                         <Card.Title>
                           <ListGroup.Item>
@@ -1132,16 +1167,14 @@ useEffect(() => {
                         </Card.Title>
                       </Card.Body>
                     </Col>
-                </Row>
-                <Row>
+
             <Col md={2}>
               <Card.Body>
                 <Card.Title>
                   <Form.Group className="input" controlId="name">
-                    <Form.Label>Producto Codigo</Form.Label>
+                    <Form.Label>Codigo Producto</Form.Label>
                     <Form.Control
                       className="input"
-                      ref={input8Ref}
                       placeholder="Codigo Producto"
                       value={codProd}
                       onChange={(e) => setCodProd(e.target.value)}
@@ -1165,7 +1198,7 @@ useEffect(() => {
                     </Button>
                   </Col>
 
-                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                  <Col md={3} className="mt-1 text-black py-1 px-1 rounded ">
                       <Card.Body>
                         <Card.Title>
                           <ListGroup.Item>
@@ -1186,7 +1219,6 @@ useEffect(() => {
                           <Form.Label>Codigo Encargado</Form.Label>
                           <Form.Control
                             className="input"
-                            ref={input2Ref}
                             placeholder="Codigo Encargado"
                             value={codEncp}
                             onChange={(e) => setCodEncp(e.target.value)}
@@ -1209,7 +1241,7 @@ useEffect(() => {
                     </Button>
                   </Col>
 
-                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                  <Col md={3} className="mt-1 text-black py-1 px-1 rounded ">
                       <Card.Body>
                         <Card.Title>
                           <ListGroup.Item>
@@ -1220,8 +1252,6 @@ useEffect(() => {
                         </Card.Title>
                       </Card.Body>
                     </Col>
-                </Row>
-                <Row>
 
                   <Col md={2}>
                       <Card.Body>
@@ -1230,7 +1260,6 @@ useEffect(() => {
                             <Form.Label>Codigo Valor</Form.Label>
                             <Form.Control
                               className="input"
-                              ref={input8Ref}
                               placeholder="Codigo Valor"
                               value={codValo}
                               onChange={(e) => setCodValo(e.target.value)}
@@ -1254,12 +1283,12 @@ useEffect(() => {
                             </Button>
                           </Col>
 
-                  <Col md={4} className="mt-1 text-black py-1 px-1 rounded ">
+                  <Col md={3} className="mt-1 text-black py-1 px-1 rounded ">
                       <Card.Body>
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              {desval}
+                              {desVal}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -1290,7 +1319,7 @@ useEffect(() => {
                           type="button"
                           onClick={placeLimpiaFiltro}
                           >
-                          LIMPIA FILTRO
+                          RESETEA FILTRO
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -1300,7 +1329,6 @@ useEffect(() => {
                       <div className="d-grid">
                         <Button
                           type="button"
-                          ref={input0Ref}
                           onClick={placeInvoiceHandler}
                           >
                           GRABA PARAMETROS
@@ -1315,7 +1343,6 @@ useEffect(() => {
                 </div>
 
                 <Modal
-                  // input20Ref={input20Ref}
                   size="md"
                   show={showCom}
                   onHide={() => setShowCom(false)}
@@ -1347,7 +1374,7 @@ useEffect(() => {
                               </Form.Group>
                               <Form.Group className="mb-3" controlId="name">
                               <Form.Control
-                                placeholder="Tipo Comprobante"
+                                placeholder="Codigo Comprobante"
                                 value={nameCom}
                                 disabled={true}
                                 required
@@ -1355,7 +1382,6 @@ useEffect(() => {
                             </Form.Group>
                               <div className="mb-3">
                                 <Button type="submit"
-                                  // ref={input20Ref}
                                   disabled={nameCom ? false : true}
                                   >Continuar</Button>
                               </div>
@@ -1367,7 +1393,6 @@ useEffect(() => {
                 </Modal>
 
                 <Modal
-                  // input21Ref={input21Ref}
                   size="md"
                   show={showCus}
                   onHide={() => setShowCus(false)}
@@ -1407,7 +1432,6 @@ useEffect(() => {
                             </Form.Group>
                               <div className="mb-3">
                                 <Button type="submit"
-                                  // ref={input21Ref}
                                   disabled={name ? false : true}
                                   >Continuar</Button>
                               </div>
@@ -1458,7 +1482,6 @@ useEffect(() => {
                             </Form.Group>
                               <div className="mb-3">
                                 <Button type="submit"
-                                  // ref={input21Ref}
                                   disabled={nameSup ? false : true}
                                   >Continuar</Button>
                               </div>
@@ -1469,7 +1492,6 @@ useEffect(() => {
                   </Modal.Body>
                 </Modal>
                 <Modal
-            // input22Ref={input22Ref}
             size="md"
             show={showPro}
             onHide={() => setShowPro(false)}
@@ -1511,7 +1533,6 @@ useEffect(() => {
                             </Form.Group>
                               <div className="mb-3">
                                 <Button type="submit"
-                                  // ref={input22Ref}
                                   disabled={desPro ? false : true}
                                   >Continuar</Button>
                               </div>
@@ -1565,7 +1586,6 @@ useEffect(() => {
                             </Form.Group>
                               <div className="mb-3">
                                 <Button type="submit"
-                                  // ref={input21Ref}
                                   disabled={nameEnc ? false : true}
                                   >Continuar</Button>
                               </div>
@@ -1616,7 +1636,6 @@ useEffect(() => {
                             </Form.Group>
                               <div className="mb-3">
                                 <Button type="submit"
-                                  // ref={input21Ref}
                                   disabled={nameUse ? false : true}
                                   >Continuar</Button>
                               </div>
@@ -1667,7 +1686,6 @@ useEffect(() => {
                             </Form.Group>
                               <div className="mb-3">
                                 <Button type="submit"
-                                  // ref={input21Ref}
                                   disabled={nameCon ? false : true}
                                   >Continuar</Button>
                               </div>
@@ -1714,7 +1732,7 @@ useEffect(() => {
                     <Form.Group className="mb-3" controlId="name">
                       <Form.Control
                         placeholder="Valor"
-                        value={desval}
+                        value={desVal}
                         disabled={true}
                         required
                         />
@@ -1722,7 +1740,7 @@ useEffect(() => {
                       <div className="mb-3">
                         <Button type="submit"
                           // ref={input22Ref}
-                          disabled={desval ? false : true}
+                          disabled={desVal ? false : true}
                           >Continuar</Button>
                       </div>
                       </Form>
