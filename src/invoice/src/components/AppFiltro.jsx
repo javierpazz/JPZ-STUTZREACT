@@ -932,9 +932,9 @@ useEffect(() => {
                               onChange={(e) => setInforme(e.target.value)}
                               >
                               <option value="/admin/invoicesCajIngEgr">Caja</option>
-                              <option value="caja1">Caja1</option>
-                              <option value="caja12">Caja12</option>
-                              <option value="caja13">Caja13</option>
+                              <option value="/admin/informe/IngEgr">Caja Control Ingresos y Retiros Por Encargado</option>
+                              <option value="/admin/informe/ctacus">Cta Cte Clientes</option>
+                              <option value="/admin/informe/ctasup">Cta Cte Proovedores</option>
 
                             </select>
                           </Form.Group>

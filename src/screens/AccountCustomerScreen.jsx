@@ -118,12 +118,10 @@ export default function AccountCustomerScreen() {
            const { data } = await axios.get(`${API}/api/invoices/ctaS/${custId}?configuracion=${codCon}&order=${order}&fech1=${fech1}&fech2=${fech2}&usuario=${codUse}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        console.log(data);
         dispatch({ type: 'TOTAL_FETCH_SUCCESS', payload: data });
         // //        let kiki = data?.filter((data) => data.user === custId);
         // const sortedList = data.sort((a, b) => (a.docDat > b.docDat ? -1 : 0));
         // setInvoices(sortedList);
-console.log(data);
         setInvoices(data);
       } catch (err) {
         dispatch({

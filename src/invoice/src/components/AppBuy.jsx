@@ -113,6 +113,7 @@ function AppBuy() {
 
   const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
   const [id_config, setId_config] = useState(userInfo.codCon);
+  const [isHaber, setIsHaber] = useState();
   const [noDisc, setNoDisc] = useState(false);
   const [toDisc, setToDisc] = useState(true);
   const [itDisc, setItDisc] = useState(false);
@@ -355,6 +356,7 @@ function AppBuy() {
     setCodCom(comprobantesRow._id);
     setCodComp(comprobantesRow.codCom);
     setNameCom(comprobantesRow.nameCom);
+    setIsHaber(comprobantesRow.isHaber);
     setNoDisc(comprobantesRow.noDisc);
     setToDisc(comprobantesRow.toDisc);
     setItDisc(comprobantesRow.itDisc);
@@ -377,6 +379,7 @@ function AppBuy() {
       setCodCom(comprobantesRow._id);
       setCodComp(comprobantesRow.codCom);
       setNameCom(comprobantesRow.nameCom);
+      setIsHaber(comprobantesRow.isHaber);
       setNoDisc(comprobantesRow.noDisc);
       setToDisc(comprobantesRow.toDisc);
       setItDisc(comprobantesRow.itDisc);
@@ -431,6 +434,7 @@ function AppBuy() {
           invoice.user = userInfo._id,
           invoice.codConNum = codConNum;
           invoice.codCom = codCom;
+          invoice.isHaber = isHaber;
           invoice.remNum = remNum;
           invoice.remDat = invDat;
           invoice.invNum = invNum;
@@ -569,6 +573,7 @@ function AppBuy() {
           user: userInfo._id,
           codConNum: invoice.codConNum,
           codCom: invoice.codCom,
+          isHaber: invoice.isHaber,
           
           remNum: invoice.remNum,
           remDat: invoice.remDat,

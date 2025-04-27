@@ -53,7 +53,7 @@ const reducer = (state, action) => {
       return state;
   }
 };
-export default function CajaIngEgrListScreen() {
+export default function IngEgrListScreen() {
   const [
     {
       loading,
@@ -107,7 +107,7 @@ export default function CajaIngEgrListScreen() {
         // const { data } = await axios.get(`${API}/api/receipts/cajaS?page=${page}&id_config=${id_config} `, {
         //   headers: { Authorization: `Bearer ${userInfo.token}` },
         // });
-        const { data } = await axios.get(`${API}/api/receipts/searchcajSB?fech1=${fech1}&fech2=${fech2}&configuracion=${codCon}&usuario=${codUse}&encargado=${codEnc}`,{
+        const { data } = await axios.get(`${API}/api/receipts/searchingegrSB?fech1=${fech1}&fech2=${fech2}&configuracion=${codCon}&usuario=${codUse}&encargado=${codEnc}`,{
           headers: { Authorization: `Bearer ${userInfo.token}` },
       });
         dispatch({ type: 'FETCH_SUCCESS', payload: data.resultado });
@@ -138,7 +138,7 @@ export default function CajaIngEgrListScreen() {
 
 
   const parametros = async () => {
-    navigate('/admin/filtros?redirect=/admin/invoicesCajIngEgr');
+    navigate('/admin/filtros?redirect=/admin/informe/IngEgr');
   };
    const printRef = useRef();
   
@@ -172,7 +172,7 @@ export default function CajaIngEgrListScreen() {
         <div ref={printRef}>
           <div className="p-4 space-y-10">
             <h1 className="text-2xl font-bold mb-6">
-              Consulta Caja - Total General: ${saldoTotalGeneral.toFixed(2)}
+              Consulta Ingresos / Retiros Caja - Total General: ${saldoTotalGeneral.toFixed(2)}
             </h1>
   
             {cuentas.map((cuenta) => (
@@ -187,7 +187,8 @@ export default function CajaIngEgrListScreen() {
                       <th className="p-2 border">Fecha</th>
                       <th className="p-2 border">Comprobante</th>
                       <th className="p-2 border">Numero</th>
-                      <th className="p-2 border">Descripcion</th>
+                      <th className="p-2 border">Usuario</th>
+                      <th className="p-2 border">Pto.Venta</th>
                       <th className="p-2 border">Ingresos</th>
                       <th className="p-2 border">Egresos</th>
                       <th className="p-2 border">Saldo Acumulado</th>
@@ -199,7 +200,8 @@ export default function CajaIngEgrListScreen() {
                         <td className="p-2 border">{mov.fecha.substring(0, 10)}</td>
                         <td className="p-2 border">{mov.compDes}</td>
                         <td className="p-2 border text-end">{mov.compNum}</td>
-                        <td className="p-2 border">{mov.descripcion}</td>
+                        <td className="p-2 border">{mov.nameCus}</td>
+                        <td className="p-2 border">{mov.nameCon}</td>
                         <td className="p-2 border text-end">${mov.total.toFixed(2)}</td>
                         <td className="p-2 border text-end">${mov.totalBuy.toFixed(2)}</td>
                         <td className="p-2 border text-end font-semibold">${mov.saldoAcumulado.toFixed(2)}</td>
@@ -208,7 +210,7 @@ export default function CajaIngEgrListScreen() {
                   </tbody>
                   <tfoot>
                     <tr className="bg-gray-100 font-bold">
-                      <td className="p-2 border" colSpan={6}>Saldo Total</td>
+                      <td className="p-2 border" colSpan={7}>Saldo Total</td>
                       <td className="p-2 border text-end">${cuenta.saldoTotal.toFixed(2)}</td>
                     </tr>
                   </tfoot>

@@ -194,11 +194,11 @@ try {
   return (
     <div>
       <Helmet>
-        <title>Facturas Compra</title>
+        <title>Comprobantes Compra</title>
       </Helmet>
       <Row>
         <Col>
-          <h1>Facturas Compra</h1>
+          <h1>Comprobantes Compra</h1>
         </Col>
         <Col className="col text-end">
           <div>
@@ -230,7 +230,8 @@ try {
           <table className="table">
             <thead>
               <tr>
-                <th className="text-center">FACTURA</th>
+                <th className="text-center">COMPRONATE</th>
+                <th className="text-center">NUMERO</th>
                 <th className="text-center">FECHA</th>
                 <th className="text-center">REMITO</th>
                 <th className="text-center">PEDIDO</th>
@@ -245,6 +246,7 @@ try {
             <tbody>
               {invoices?.map((invoice) => (
                 <tr key={invoice._id}>
+                  <td className="text-end">{invoice.codCom.nameCom}</td>
                   <td className="text-end">{invoice.invNum ? invoice.invNum : 'REMITO S/F'}</td>
                   <td className="text-center">{invoice.invDat ? invoice.invDat.substring(0, 10): ''}</td>
                   <td className="text-end">{invoice.remNum}</td>

@@ -45,6 +45,9 @@ import RemitBuypvListScreen from './screens/RemitBuypvListScreen';
 import ReceiptListScreen from './screens/ReceiptListScreen';
 import CajaIngListScreen from './screens/CajaIngListScreen';
 import CajaIngEgrListScreen from './screens/CajaIngEgrListScreen';
+import IngEgrListScreen from './screens/IngEgrListScreen';
+import CtaCusListScreen from './screens/CtaCusListScreen';
+import CtaSupListScreen from './screens/CtaSupListScreen';
 import CajaEgrListScreen from './screens/CajaEgrListScreen';
 import ReceiptBuyListScreen from './screens/ReceiptBuyListScreen';
 import OrderListScreen from './screens/OrderListScreen';
@@ -617,6 +620,30 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <CustomerEditScreen />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/informe/ctasup"
+                element={
+                  <ProtectedRoute>
+                    <CtaSupListScreen />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/informe/ctacus"
+                element={
+                  <ProtectedRoute>
+                    <CtaCusListScreen />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/informe/IngEgr"
+                element={
+                  <ProtectedRoute>
+                    <IngEgrListScreen />
                   </ProtectedRoute>
                 }
               ></Route>

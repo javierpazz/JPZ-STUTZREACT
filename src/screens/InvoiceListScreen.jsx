@@ -243,11 +243,11 @@ try {
   return (
     <div>
       <Helmet>
-        <title>Facturas Venta</title>
+        <title>Comprobantes Venta</title>
       </Helmet>
       <Row>
         <Col>
-          <h1>Facturas Venta</h1>
+          <h1>Comprobantes Venta</h1>
         </Col>
         {/* <ListGroup.Item>
                   <div className="d-grid">
@@ -291,7 +291,8 @@ try {
           <table className="table">
             <thead>
               <tr>
-              <th className="text-center">FACTURA</th>
+              <th className="text-center">COMPROBANTE</th>
+                <th className="text-center">NUMERO</th>
                 <th className="text-center">FECHA</th>
                 <th className="text-center">REMITO</th>
                 <th className="text-center">PEDIDO</th>
@@ -306,12 +307,13 @@ try {
             <tbody>
               {invoices?.map((invoice) => (
                 <tr key={invoice._id}>
+                  <td className="text-end">{invoice.codCom.nameCom}</td>
                   <td className="text-end">{invoice.invNum ? invoice.invNum : 'REMITO S/F'}</td>
                   <td className="text-center">{invoice.invDat ? invoice.invDat.substring(0, 10): ''}</td>
                   <td className="text-end">{invoice.remNum}</td>
                       {invoice.ordYes === 'Y' ? <td className="text-end">{invoice._id}</td> : <td></td>}
                   <td className="text-end">{invoice.recNum}</td>
-                  <td>{invoice.id_client ? invoice.id_client.nameCus : 'DELETED USER'}</td>
+                  <td>{invoice.id_client ? invoice.id_client.nameCus : 'CLIENTE BORRADO'}</td>
                   <td className="text-center">{invoice.recNum ? invoice.recDat.substring(0, 10) : 'No'}</td>
                   <td>{invoice.desVal}</td>
                   <td className="text-end">{invoice.total.toFixed(2)}</td>
