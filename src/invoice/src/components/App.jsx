@@ -382,7 +382,12 @@ function App() {
         unloadpayment();
       } else {
         if (invDat && codCus) {
-          orderItems.map((item) => stockHandler({ item }));
+          if (isHaber) {
+          orderItems.map((item) => stockHandlerL({ item }))
+          } else {
+            orderItems.map((item) => stockHandlerM({ item }))
+          };
+
           const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
           invoice.subTotal = round2(
             invoice.orderItems.reduce((a, c) => a + c.quantity * c.price, 0)
@@ -505,13 +510,37 @@ function App() {
 
   /////////////////////////////////////////////
 
-  const stockHandler = async (item) => {
+  const stockHandlerL = async (item) => {
     // console.log(item.item._id);
 
     try {
       dispatch({ type: 'CREATE_REQUEST' });
       await axios.put(
         `${API}/api/products/downstock/${item.item._id}`,
+        {
+          quantitys: item.item.quantity,
+          id_config: id_config,
+        },
+        { 
+          headers: {
+            authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+      dispatch({ type: 'CREATE_SUCCESS' });
+    } catch (err) {
+      dispatch({ type: 'CREATE_FAIL' });
+      toast.error(getError(err));
+    }
+  };
+
+  const stockHandlerM = async (item) => {
+    // console.log(item.item._id);
+
+    try {
+      dispatch({ type: 'CREATE_REQUEST' });
+      await axios.put(
+        `${API}/api/products/upstock/${item.item._id}`,
         {
           quantitys: item.item.quantity,
           id_config: id_config,
@@ -620,7 +649,7 @@ function App() {
   return (
     <>
       <Helmet>
-        <title>Facturas de Venta</title>
+        <title>Comprobantes de Venta</title>
       </Helmet>
 
       <main>
@@ -726,12 +755,12 @@ function App() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Factura N°</Form.Label>
+                          <Form.Label>Comprobante N°</Form.Label>
                           <Form.Control
                             className="input"
                             type="number"
                             ref={input3Ref}
-                            placeholder="Factura N°"
+                            placeholder="Comprobante N°"
                             value={invNum}
                             onChange={(e) => setInvNum(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input4Ref.current.focus()}
@@ -746,12 +775,12 @@ function App() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Fecha Factura</Form.Label>
+                          <Form.Label>Fecha Comprobante</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input4Ref}
                             type="date"
-                            placeholder="Fecha Factura"
+                            placeholder="Fecha Comprobante"
                             value={invDat}
                             onChange={(e) => setInvDat(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
@@ -906,12 +935,12 @@ function App() {
                           className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                           disabled={
                             orderItems.length === 0 ||
-                            !invNum ||
+                            // !invNum ||
                             !invDat ||
                             !codCus
                           }
                         >
-                          {isPaying ? 'Not Payment' : 'Carga Pago'}
+                          {isPaying ? 'Not Payment' : 'Carga Cobro'}
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -962,7 +991,7 @@ function App() {
                             !codCus
                           }
                           >
-                          GRABA FACTURA
+                          GRABA COMPROBANTE
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -1127,7 +1156,7 @@ function App() {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
-            <Button onClick={() => clearitems()}>Nueva Factura</Button>
+            <Button onClick={() => clearitems()}>Nuevo Comprobante</Button>
 
             {/* Invoice Preview */}
 

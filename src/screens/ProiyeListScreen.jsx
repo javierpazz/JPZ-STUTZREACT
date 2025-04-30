@@ -4,6 +4,7 @@ import ReactToPrint from "react-to-print";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { toast } from 'react-toastify';
+import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import {
   AiOutlineDelete,
@@ -53,7 +54,7 @@ const reducer = (state, action) => {
       return state;
   }
 };
-export default function CajaIngEgrListScreen() {
+export default function ProiyeListScreen() {
   const [
     {
       loading,
@@ -83,6 +84,7 @@ export default function CajaIngEgrListScreen() {
   const [recNum, setRecNum] = useState('');
   const [recDat, setRecDat] = useState('');
   const [userId, setUserId] = useState('');
+  const [isDet, setIsDet] = useState(true);
 
   
   const fech1 = userInfo.filtro.firstDat;
@@ -107,8 +109,9 @@ export default function CajaIngEgrListScreen() {
         // const { data } = await axios.get(`${API}/api/receipts/cajaS?page=${page}&id_config=${id_config} `, {
         //   headers: { Authorization: `Bearer ${userInfo.token}` },
         // });
-        const { data } = await axios.get(`${API}/api/receipts/searchcajSB?fech1=${fech1}&fech2=${fech2}&configuracion=${codCon}&usuario=${codUse}&encargado=${codEnc}`,{
-          headers: { Authorization: `Bearer ${userInfo.token}` },
+        // const { data } = await axios.get(`${API}/api/receipts/searchingegrSB?fech1=${fech1}&fech2=${fech2}&configuracion=${codCon}&usuario=${codUse}&encargado=${codEnc}`,{
+           const { data } = await axios.get(`${API}/api/invoices/proiye/?configuracion=${codCon}&order=${order}&fech1=${fech1}&fech2=${fech2}&usuario=${codUse}&customer=${codCus}&producto=${codPro}`, {
+                headers: { Authorization: `Bearer ${userInfo.token}` },
       });
         dispatch({ type: 'FETCH_SUCCESS', payload: data.resultado });
         setCuentas(data.resultado);
@@ -138,7 +141,7 @@ export default function CajaIngEgrListScreen() {
 
 
   const parametros = async () => {
-    navigate('/admin/filtros?redirect=/admin/invoicesCajIngEgr');
+    navigate('/admin/filtros?redirect=/admin/informe/proiye');
   };
    const printRef = useRef();
   
@@ -163,7 +166,6 @@ export default function CajaIngEgrListScreen() {
                 <Button type="button"
                         variant="primary"
                         onClick={parametros}
-                        disabled={!userInfo.isAdmin}
                         >
                   Ver Filtros
                 </Button>
@@ -171,52 +173,52 @@ export default function CajaIngEgrListScreen() {
 
         {/* Contenido que se imprime */}
         <div ref={printRef}>
-          <div className="p-4 space-y-10">
-            <h1 className="text-2xl font-bold mb-6">
-              Consulta Caja - Total General: ${saldoTotalGeneral.toFixed(2)}
-            </h1>
-  
-            {cuentas.map((cuenta) => (
-              <div key={cuenta.id_client} className="border rounded-xl p-4 shadow-md">
-                <h2 className="text-xl font-semibold text-blue-700 mb-4">
-                  {cuenta.nombreCliente}
-                </h2>
-  
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="p-2 border">Fecha</th>
-                      <th className="p-2 border">Comprobante</th>
-                      <th className="p-2 border">Numero</th>
-                      <th className="p-2 border">Descripcion</th>
-                      <th className="p-2 border">Ingresos</th>
-                      <th className="p-2 border">Egresos</th>
-                      <th className="p-2 border">Saldo Acumulado</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cuenta.movimientos.map((mov, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
-                        <td className="p-2 border">{mov.fecha.substring(0, 10)}</td>
-                        <td className="p-2 border">{mov.compDes}</td>
-                        <td className="p-2 border text-end">{mov.compNum}</td>
-                        <td className="p-2 border">{mov.descripcion}</td>
-                        <td className="p-2 border text-end">${mov.total.toFixed(2)}</td>
-                        <td className="p-2 border text-end">${mov.totalBuy.toFixed(2)}</td>
-                        <td className="p-2 border text-end font-semibold">${mov.saldoAcumulado.toFixed(2)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                  <tfoot>
+        <h1 className="text-2xl font-bold mb-4"> Productos - Ventas y Compras</h1>
+        <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+                {cuentas.map((client) => (
+                <div key={client.clientId} style={{ marginBottom: '30px' }}>
+                    <h2 style={{ fontWeight: 'bold', marginBottom: '10px' }}>
+                    {client.clientcodCus || 'Sin Codigo'} -  {client.clientNameCus || 'Sin Nombre'}
+                    </h2>
+                    <thead>
+                          <tr className="bg-gray-100">
+                            <th className="p-2 border" >Producto</th>
+                            <th className="p-2 border" >--------------- </th>
+                            <th className="p-2 border">Cant.Vendida</th>
+                            <th className="p-2 border">Importe sin IVA</th>
+                            <th className="p-2 border">Cant.Comprada</th>
+                            <th className="p-2 border">Importe sin IVA</th>
+                            <th className="p-2 border">Ganancia</th>
+                          </tr>
+                        </thead>
+                <tbody>
+                        {client.products.map((product, index) => (
+                    // <div key={index} style={{ marginLeft: '20px', marginBottom: '5px' }}>
+                    //     {product.totalQuantity.toFixed(2)} {product.title}  ➔ Total Sin IVA  ${product.totalAmount.toFixed(2)}
+                    // </div>
+
+                    <tr key={index} className="hover:bg-gray-50">
+                    <td className="border" colSpan={2}>{product.title}</td>
+                    <td className="border text-end" >{product.totalIngreso.toFixed(2)}</td>
+                    <td className="border text-end" >${product.totalMontoIngreso.toFixed(2)}</td>
+                    <td className="border text-end" >{product.totalEgreso.toFixed(2)}</td>
+                    <td className="border text-end" >${product.totalMontoEgreso.toFixed(2)}</td>
+                    <td className="border text-end" >${product.saldo.toFixed(2)}</td>
+                  </tr>
+      
+                  ))}
+                </tbody>
+                <tfoot>
                     <tr className="bg-gray-100 font-bold">
-                      <td className="p-2 border" colSpan={6}>Saldo Total</td>
-                      <td className="p-2 border text-end">${cuenta.saldoTotal.toFixed(2)}</td>
+                      <td className="border"  colSpan={3}>TOTAL {client.clientNameCus}</td>
+                      <td className="border text-end"  >${client.totalAmountClient.toFixed(2)}</td>
+                      <td className="border text-end" colSpan={2} >${client.totalAmountClientBuy.toFixed(2)}</td>
+                      <td className="border text-end" >${(client.totalAmountClient-client.totalAmountClientBuy).toFixed(2)}</td>
                     </tr>
                   </tfoot>
-                </table>
-              </div>
-            ))}
-          </div>
+                  </div>
+                ))}
+            </div>
         </div>
       </div>
     );

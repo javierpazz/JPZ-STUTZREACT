@@ -410,9 +410,13 @@ function AppBuy() {
         unloadpayment();
       } else {
         if (invNum && invDat && codSup) {
-          //    list.map((item) => stockHandler({ item }));
-          orderItems.map((item) => stockHandler({ item }));
 
+          if (isHaber) {
+            orderItems.map((item) => stockHandlerM({ item }))
+            } else {
+              orderItems.map((item) => stockHandlerL({ item }))
+            };
+  
           const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
           invoice.subTotal = round2(
             invoice.orderItems.reduce((a, c) => a + c.quantity * c.price, 0)
@@ -531,11 +535,32 @@ function AppBuy() {
 
   /////////////////////////////////////////////
 
-  const stockHandler = async (item) => {
+  const stockHandlerM = async (item) => {
     try {
       dispatch({ type: 'CREATE_REQUEST' });
       await axios.put(
         `${API}/api/products/upstock/${item.item._id}`,
+        {
+          quantitys: item.item.quantity,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+      dispatch({ type: 'CREATE_SUCCESS' });
+    } catch (err) {
+      dispatch({ type: 'CREATE_FAIL' });
+      toast.error(getError(err));
+    }
+  };
+
+  const stockHandlerL = async (item) => {
+    try {
+      dispatch({ type: 'CREATE_REQUEST' });
+      await axios.put(
+        `${API}/api/products/downstock/${item.item._id}`,
         {
           quantitys: item.item.quantity,
         },
@@ -640,7 +665,7 @@ function AppBuy() {
   return (
     <>
       <Helmet>
-        <title>Factura de Compra</title>
+        <title>Comprobante de Compra</title>
       </Helmet>
 
       <main>
@@ -743,12 +768,12 @@ function AppBuy() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Factura N°</Form.Label>
+                          <Form.Label>Comp. N°</Form.Label>
                           <Form.Control
                             className="input"
                             type="number"
                             ref={input3Ref}
-                            placeholder="Factura N°"
+                            placeholder="Comp. N°"
                             value={invNum}
                             onChange={(e) => setInvNum(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input4Ref.current.focus()}
@@ -763,12 +788,12 @@ function AppBuy() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Fecha Factura</Form.Label>
+                          <Form.Label>Fecha Comprobante</Form.Label>
                           <Form.Control
                             className="input"
                             ref={input4Ref}
                             type="date"
-                            placeholder="Fecha Factura"
+                            placeholder="Fecha Comprobante"
                             value={invDat}
                             onChange={(e) => setInvDat(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
@@ -981,7 +1006,7 @@ function AppBuy() {
                             !codSup
                           }
                         >
-                          GRABA FACTURA
+                          GRABA COMPROBANTE
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -1143,7 +1168,7 @@ function AppBuy() {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
-            <Button onClick={() => clearitems()}>Nueva Factura</Button>
+            <Button onClick={() => clearitems()}>Nuevo Comprobante</Button>
 
             {/* Invoice Preview */}
 

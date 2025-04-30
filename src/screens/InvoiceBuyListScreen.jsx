@@ -131,10 +131,16 @@ export default function InvoiceBuyListScreen() {
   
 //do
 const controlStockHandler = async (invoice) => {
-  invoice.orderItems.map((item) => stockHandler({ item }));
+
+  if (invoice.isHaber) {
+    invoice.orderItems.map((item) => stockHandlerM({ item }))
+    } else {
+      invoice.orderItems.map((item) => stockHandlerL({ item }))
+    };
+  // invoice.orderItems.map((item) => stockHandler({ item }));
 };
 
-const stockHandler = async (item) => {
+const stockHandlerL = async (item) => {
 try {
   dispatch({ type: 'CREATE_REQUEST' });
   await axios.put(
@@ -154,7 +160,27 @@ try {
   toast.error(getError(err));
 }
 };
-
+const stockHandlerM = async (item) => {
+  try {
+    dispatch({ type: 'CREATE_REQUEST' });
+    await axios.put(
+      `${API}/api/products/upstock/${item.item._id}`,
+      {
+        quantitys: item.item.quantity,
+      },
+      {
+        headers: {
+          authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+    );
+    dispatch({ type: 'CREATE_SUCCESS' });
+  } catch (err) {
+    dispatch({ type: 'CREATE_FAIL' });
+    toast.error(getError(err));
+  }
+  };
+  
 //do
 
 
@@ -200,16 +226,19 @@ try {
         <Col>
           <h1>Comprobantes Compra</h1>
         </Col>
-        <Col className="col text-end">
+        {userInfo.isAdmin && (
+          <Col className="col text-end">
           <div>
             <Button type="button"
                     variant="primary"
                     onClick={parametros}
-                  >
+                    disabled={!userInfo.isAdmin}
+                    >
               Ver Filtros
             </Button>
             </div>
         </Col>
+                  )}
 
         <Col className="col text-end">
           <div>
@@ -246,7 +275,7 @@ try {
             <tbody>
               {invoices?.map((invoice) => (
                 <tr key={invoice._id}>
-                  <td className="text-end">{invoice.codCom.nameCom}</td>
+                  <td>{invoice.codCom.nameCom}</td>
                   <td className="text-end">{invoice.invNum ? invoice.invNum : 'REMITO S/F'}</td>
                   <td className="text-center">{invoice.invDat ? invoice.invDat.substring(0, 10): ''}</td>
                   <td className="text-end">{invoice.remNum}</td>

@@ -935,6 +935,13 @@ useEffect(() => {
                               <option value="/admin/informe/IngEgr">Caja Control Ingresos y Retiros Por Encargado</option>
                               <option value="/admin/informe/ctacus">Cta Cte Clientes</option>
                               <option value="/admin/informe/ctasup">Cta Cte Proovedores</option>
+                              <option value="/admin/informe/cuspro">Clientes - Productos Vendidos</option>
+                              <option value="/admin/informe/suppro">Proovedores - Productos Comprados</option>
+                              <option value="/admin/informe/procus">Productos - Clientes a los que Vendimos</option>
+                              <option value="/admin/informe/prosup">Productos - Proovedores a los que Compramos</option>
+                              <option value="/admin/informe/proiye">Productos Ingresos / Egresos</option>
+                              <option value="/admin/informe/proiye">Productos Lista de Precios</option>
+                              <option value="/admin/informe/proiye">Productos con Stock Minimo</option>
 
                             </select>
                           </Form.Group>

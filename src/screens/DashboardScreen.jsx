@@ -193,16 +193,19 @@ export default function DashboardScreen() {
               </Card>
             </Col>
             )}
-            <Col md={2} className="col text-end">
+        {userInfo.isAdmin && (
+          
+          <Col md={2} className="col text-end">
           <div>
             <Button type="button"
                     variant="primary"
                     onClick={parametros}
-                  >
+                    >
               Ver Filtros
             </Button>
             </div>
         </Col>
+                  )}
 
           </Row>
           <Row>

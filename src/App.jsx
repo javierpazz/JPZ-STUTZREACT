@@ -31,6 +31,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import DashboardScreen from './screens/DashboardScreen';
 import AdminRoute from './components/AdminRoute';
 import ProductListScreen from './screens/ProductListScreen';
+import ProductListPrint from './screens/ProductListPrint';
 import ProductEditScreen from './screens/ProductEditScreen';
 
 import AccountUserScreen from './screens/AccountUserScreen';
@@ -48,6 +49,11 @@ import CajaIngEgrListScreen from './screens/CajaIngEgrListScreen';
 import IngEgrListScreen from './screens/IngEgrListScreen';
 import CtaCusListScreen from './screens/CtaCusListScreen';
 import CtaSupListScreen from './screens/CtaSupListScreen';
+import CusProListScreen from './screens/CusProListScreen';
+import ProiyeListScreen from './screens/ProiyeListScreen';
+import SupProListScreen from './screens/SupProListScreen';
+import ProCusListScreen from './screens/ProCusListScreen';
+import ProSupListScreen from './screens/ProSupListScreen';
 import CajaEgrListScreen from './screens/CajaEgrListScreen';
 import ReceiptBuyListScreen from './screens/ReceiptBuyListScreen';
 import OrderListScreen from './screens/OrderListScreen';
@@ -80,6 +86,7 @@ import InvoicesBuyRemCon from './invoice/src/InvoicesBuyRemCon';
 import InvoicesBuyRempvCon from './invoice/src/InvoicesBuyRempvCon';
 import Invoices from './invoice/src/Invoices';
 import Filtros from './invoice/src/Filtros';
+import Precios from './invoice/src/Precios';
 import Remits from './invoice/src/Remits';
 import Remitspv from './invoice/src/Remitspv';
 import InvoicesRec from './invoice/src/InvoicesRec';
@@ -208,7 +215,7 @@ function App() {
                   {userInfo && (
                     <NavDropdown title="Ventas" id="sales-nav-dropdown">
                       <LinkContainer to="/admin/invoicer">
-                        <NavDropdown.Item>Facturas de Venta</NavDropdown.Item>
+                        <NavDropdown.Item>Comprobantes de Venta</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/invoicerRec">
                         <NavDropdown.Item>Recibos</NavDropdown.Item>
@@ -233,7 +240,7 @@ function App() {
                   {userInfo && (
                     <NavDropdown title="Compras" id="buys-nav-dropdown">
                       <LinkContainer to="/admin/invoicerBuy">
-                        <NavDropdown.Item>Facturas de Compra</NavDropdown.Item>
+                        <NavDropdown.Item>Comprobantes de Compra</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/invoicerBuyRec">
                         <NavDropdown.Item>Ordenes de Pago</NavDropdown.Item>
@@ -286,7 +293,8 @@ function App() {
                     </NavDropdown>
                   )}
 
-                  {userInfo && userInfo.role=="admin" && (
+                  {/* {userInfo && userInfo.role=="admin" && ( */}
+                  {userInfo && (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
                       <LinkContainer to="/admin/dashboard">
                         <NavDropdown.Item>Dashboard</NavDropdown.Item>
@@ -295,7 +303,7 @@ function App() {
                         <NavDropdown.Item>Remitos de Venta</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/invoices">
-                        <NavDropdown.Item>Facturas de Ventas</NavDropdown.Item>
+                        <NavDropdown.Item>Comprobantes de Ventas</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/invoicesRec">
                         <NavDropdown.Item>Recibos </NavDropdown.Item>
@@ -304,7 +312,7 @@ function App() {
                         <NavDropdown.Item>Remitos de Compra</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/invoicesBuy">
-                        <NavDropdown.Item>Facturas de Compras</NavDropdown.Item>
+                        <NavDropdown.Item>Comprobantes de Compras</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/invoicesBuyRec">
                         <NavDropdown.Item>Ordenes de Pago</NavDropdown.Item>
@@ -374,6 +382,9 @@ function App() {
                       </LinkContainer>
                       <LinkContainer to="/admin/suppliers">
                         <NavDropdown.Item>Proveedores</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/productsList">
+                        <NavDropdown.Item>Productos</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/profile">
                         <NavDropdown.Item>PerFil de Usuario</NavDropdown.Item>
@@ -498,89 +509,89 @@ function App() {
               <Route
                 path="/admin/dashboard"
                 element={
-                  <AdminRoute>
+                  <ProtectedRoute>
                     <DashboardScreen />
-                  </AdminRoute>
+                  </ProtectedRoute>
                 }
               ></Route>
               <Route
                 path="/admin/invoices"
                 element={
-                  <AdminRoute>
+                  <ProtectedRoute>
                     <InvoiceListScreen />
-                  </AdminRoute>
+                  </ProtectedRoute>
                 }
               ></Route>
               <Route
                 path="/admin/remits"
                 element={
-                  <AdminRoute>
+                  <ProtectedRoute>
                     <RemitListScreen />
-                  </AdminRoute>
+                  </ProtectedRoute>
                 }
               ></Route>
               <Route
                 path="/admin/remitspv"
                 element={
-                  <AdminRoute>
+                  <ProtectedRoute>
                     <RemitpvListScreen />
-                  </AdminRoute>
+                  </ProtectedRoute>
                 }
               ></Route>
               <Route
                 path="/admin/invoicesBuy"
                 element={
-                  <AdminRoute>
+                  <ProtectedRoute>
                     <InvoiceBuyListScreen />
-                  </AdminRoute>
+                  </ProtectedRoute>
                 }
               ></Route>
               <Route
                 path="/admin/remitsBuy"
                 element={
-                  <AdminRoute>
+                  <ProtectedRoute>
                     <RemitBuyListScreen />
-                  </AdminRoute>
+                  </ProtectedRoute>
                 }
               ></Route>
               <Route
                 path="/admin/remitsBuypv"
                 element={
-                  <AdminRoute>
+                  <ProtectedRoute>
                     <RemitBuypvListScreen />
-                  </AdminRoute>
+                  </ProtectedRoute>
                 }
               ></Route>
               <Route
                 path="/admin/invoicesRec"
                 element={
-                  <AdminRoute>
+                  <ProtectedRoute>
                     <ReceiptListScreen />
-                  </AdminRoute>
+                  </ProtectedRoute>
                 }
               ></Route>
               <Route
                 path="/admin/invoicesCajIng"
                 element={
-                  <AdminRoute>
+                  <ProtectedRoute>
                     <CajaIngListScreen />
-                  </AdminRoute>
+                  </ProtectedRoute>
                 }
               ></Route>
               <Route
                 path="/admin/invoicesCajEgr"
                 element={
-                  <AdminRoute>
+                  <ProtectedRoute>
                     <CajaEgrListScreen />
-                  </AdminRoute>
+                  </ProtectedRoute>
                 }
               ></Route>
               <Route
                 path="/admin/invoicesBuyRec"
                 element={
-                  <AdminRoute>
+                  <ProtectedRoute>
                     <ReceiptBuyListScreen />
-                  </AdminRoute>
+                  </ProtectedRoute>
                 }
               ></Route>
               <Route
@@ -620,6 +631,46 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <CustomerEditScreen />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/informe/proiye"
+                element={
+                  <ProtectedRoute>
+                    <ProiyeListScreen />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/informe/prosup"
+                element={
+                  <ProtectedRoute>
+                    <ProSupListScreen />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/informe/procus"
+                element={
+                  <ProtectedRoute>
+                    <ProCusListScreen />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/informe/suppro"
+                element={
+                  <ProtectedRoute>
+                    <SupProListScreen />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/informe/cuspro"
+                element={
+                  <ProtectedRoute>
+                    <CusProListScreen />
                   </ProtectedRoute>
                 }
               ></Route>
@@ -696,10 +747,26 @@ function App() {
                 }
               ></Route>
               <Route
+                path="/admin/productsList"
+                element={
+                  <ProtectedRoute>
+                    <ProductListPrint />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
                 path="/admin/filtros"
                 element={
                   <AdminRoute>
                     <Filtros />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/precios"
+                element={
+                  <AdminRoute>
+                    <Precios />
                   </AdminRoute>
                 }
               ></Route>

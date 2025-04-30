@@ -259,16 +259,19 @@ try {
         <Col>
           <h1>Entregas a Pto de Venta</h1>
         </Col>
-        <Col className="col text-end">
+        {userInfo.isAdmin && (
+          <Col className="col text-end">
           <div>
             <Button type="button"
                     variant="primary"
                     onClick={parametros}
-                  >
+                    disabled={!userInfo.isAdmin}
+                    >
               Ver Filtros
             </Button>
             </div>
         </Col>
+)}
 
 
         <Col className="col text-end">

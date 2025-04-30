@@ -253,6 +253,7 @@ export default function ComprobanteEditScreen() {
             <Form.Label>Nro. Ultimo Conprobante</Form.Label>
             <Form.Control
             className="mb-3"
+            type="number"
             label="Nro. Ultimo Conprobante"
             value={numInt}
             onChange={(e) => setNumInt(e.target.value)}

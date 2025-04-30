@@ -263,16 +263,19 @@ try {
         <Col>
           <h1>Remitos de Venta</h1>
         </Col>
+        {userInfo.isAdmin && (
         <Col className="col text-end">
           <div>
-            <Button type="button"
-                    variant="primary"
-                    onClick={parametros}
-                  >
-              Ver Filtros
-            </Button>
+          <Button type="button"
+                        variant="primary"
+                        onClick={parametros}
+                        >
+                  Ver Filtros
+                </Button>
+
             </div>
         </Col>
+          )}
 
         <Col className="col text-end">
           <div>

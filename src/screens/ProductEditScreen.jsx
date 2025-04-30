@@ -7,15 +7,33 @@ import { getError, API } from '../utils';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import { BiFileFind } from "react-icons/bi";
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
+import Card from 'react-bootstrap/Card';
 import { Helmet } from 'react-helmet-async';
+import Modal from 'react-bootstrap/Modal';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import Button from 'react-bootstrap/Button';
 
 const reducer = (state, action) => {
   switch (action.type) {
+
+    case 'SUPPLIER_FETCH_REQUEST':
+      return { ...state, loading: true };
+    case 'SUPPLIER_FETCH_SUCCESS':
+      return {
+        ...state,
+        products: action.payload.products,
+        page: action.payload.page,
+        pages: action.payload.pages,
+        loading: false,
+      };
+    case 'SUPPLIER_FETCH_FAIL':
+      return { ...state, loading: false, error: action.payload };
+
+
     case 'FETCH_REQUEST':
       return { ...state, loading: true };
     case 'FETCH_SUCCESS':
@@ -56,7 +74,13 @@ export default function ProductEditScreen() {
       loading: true,
       error: '',
     });
-
+    const [showSup, setShowSup] = useState(false);
+    const [suppObj, setSuppObj] = useState({});
+    const [codSup, setCodSup] = useState('');
+    const [codSupp, setCodSupp] = useState('');
+    const [nameSup, setNameSup] = useState('');
+    const [suppliers, setSuppliers] = useState([]);
+  
   const [codPro, setCodPro] = useState('');
   const [codigoPro, setCodigoPro] = useState('');
   const [title, setTitle] = useState('');
@@ -71,6 +95,20 @@ export default function ProductEditScreen() {
   const [porIva, setPorIva] = useState(0);
   const [brand, setBrand] = useState('');
   const [description, setDescription] = useState('');
+
+  useEffect(() => {
+    const fetchDataVal = async () => {
+      try {
+        const { data } = await axios.get(`${API}/api/suppliers/`, {
+          headers: { Authorization: `Bearer ${userInfo.token}` },
+        });
+        setSuppliers(data);
+        dispatch({ type: 'SUPPLIER_FETCH_SUCCESS', payload: data });
+      } catch (err) {}
+    };
+    fetchDataVal();
+  }, []);
+
 
   useEffect(() => {
     if (productId === "0") {
@@ -106,6 +144,52 @@ export default function ProductEditScreen() {
   };
   }, [productId]);
 
+  const handleShowSup = () => {
+    setShowSup(true);
+  };
+
+  const submitHandlerSup = async (e) => {
+    e.preventDefault();
+    setShowSup(false)
+  };
+
+  const handleChangeSup = (e) => {
+    searchSup(e.target.value);
+  };
+
+
+  const searchSup = (codSup) => {
+    const supplierRow = suppliers.find((row) => row._id === codSup);
+    setSuppObj(supplierRow);
+    setCodSup(supplierRow._id);
+    setCodSupp(supplierRow.codSup);
+    setNameSup(supplierRow.name);
+  };
+
+
+  const ayudaSup = (e) => {
+    e.key === "Enter" && buscarPorCodSup(codSupp);
+    e.key === "F2" && handleShowSup(codSup);
+    e.key === "Tab" && buscarPorCodSup(codSupp);
+  };
+  
+
+  const buscarPorCodSup = (codSupp) => {
+    const supplierRow = suppliers.find((row) => row.codSup === codSupp);
+    if (!supplierRow) {
+        setCodSup('');
+        setCodSupp('');
+        setNameSup('Elija un Proovedor');
+    }else{
+      setCodSup(supplierRow._id);
+      setCodSupp(supplierRow.codSup);
+      setNameSup(supplierRow.name);
+      };
+  };
+
+
+
+
   const submitHandler = async (e) => {
     e.preventDefault();
     if (productId === "0") {
@@ -129,6 +213,7 @@ export default function ProductEditScreen() {
             minStock,
             porIva,
             description,
+            codSup,
           },
           {
             headers: { Authorization: `Bearer ${userInfo.token}` },
@@ -168,6 +253,7 @@ export default function ProductEditScreen() {
             minStock,
             porIva,
             description,
+            codSup,
           },
           {
             headers: { Authorization: `Bearer ${userInfo.token}` },
@@ -218,7 +304,7 @@ export default function ProductEditScreen() {
     toast.success('Image removed successfully. click Update to apply it');
   };
   return (
-    <Container className="small-container">
+    <Container>
       <Helmet>
         <title>Edit Producto</title>
       </Helmet>
@@ -229,8 +315,55 @@ export default function ProductEditScreen() {
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
-        <Form onSubmit={submitHandler}>
-        <Row>
+        <>
+
+<div>
+      <Row>
+
+          <Col md={2}>
+
+              <Form.Group className="mb-3" controlId="inStock">
+                <Form.Label>Codigo Proovedor</Form.Label>
+                <Form.Control
+                  value={codSupp}
+                  onChange={(e) => setCodSupp(e.target.value)}
+                  // onKeyDown={(e) => e.key === "Enter" && buscarPorCodSup(codSupp)}
+                  onKeyDown={(e) => ayudaSup(e)}
+                  // buscarPorCodSup
+                />
+              </Form.Group>
+              </Col>
+          <Col >
+              <Button
+            className="mt-4 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
+            type="button"
+            title="Buscador"
+            onClick={() => handleShowSup()}
+            >
+            <BiFileFind className="text-blue-500 font-bold text-xl" />
+          </Button>
+              </Col>
+          <Col md={9}>
+            <Card.Body className="mt-4 mb-1">
+              <Card.Title>
+                <ListGroup.Item>
+                  <h3>
+                    {nameSup}
+                  </h3>
+                </ListGroup.Item>
+              </Card.Title>
+            </Card.Body>
+          </Col>
+
+        </Row>
+        </div>
+
+        {/* name, address, email, phone, bank name, bank account number, website client name, client address, invoice number, Fecha Factura, Fecha Vencimiento, notes */}
+        <div>
+
+       <Row>
+
+
         <Col md={6}>
 
 
@@ -279,6 +412,7 @@ export default function ProductEditScreen() {
             <Form.Label>Precio</Form.Label>
             <Form.Control
               value={price}
+              type='number'
               onChange={(e) => setPrice(e.target.value)}
               required
               />
@@ -287,6 +421,7 @@ export default function ProductEditScreen() {
             <Form.Label>Precio Costo</Form.Label>
             <Form.Control
               value={priceBuy}
+              type='number'
               onChange={(e) => setPriceBuy(e.target.value)}
               required
               />
@@ -354,6 +489,7 @@ export default function ProductEditScreen() {
             <Form.Label>Stock</Form.Label>
             <Form.Control
               value={inStock}
+              type='number'
               onChange={(e) => setInStock(e.target.value)}
               required
               />
@@ -361,6 +497,7 @@ export default function ProductEditScreen() {
           <Form.Group className="mb-3" controlId="inStock">
             <Form.Label>Stock Minimo</Form.Label>
             <Form.Control
+              type='number'
               value={minStock}
               onChange={(e) => setMinStock(e.target.value)}
               required
@@ -369,6 +506,7 @@ export default function ProductEditScreen() {
           <Form.Group className="mb-3" controlId="inStock">
             <Form.Label>% IVA</Form.Label>
             <Form.Control
+              type='number'
               value={porIva}
               onChange={(e) => setPorIva(e.target.value)}
               required
@@ -376,15 +514,75 @@ export default function ProductEditScreen() {
           </Form.Group>
 
           <div className="mb-3 text-end">
-          <Button disabled={loadingUpdate} type="submit">
+          {/* <Button disabled={loadingUpdate} type="submit"> */}
+            <Button type="button"
+                    variant="primary"
+                    onClick={submitHandler}
+                  >
               Graba
             </Button>
             {loadingUpdate && <LoadingBox></LoadingBox>}
             </div>
       </Col>
       </Row>
-        </Form>
-      )}
+
+
+      <Modal
+                  size="md"
+                  show={showSup}
+                  onHide={() => setShowSup(false)}
+                  aria-labelledby="example-modal-sizes-title-lg"
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title id="example-modal-sizes-title-lg">
+                    Elija un Proovedor
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                  <Col md={12}>
+                    <Card.Body>
+                      <Card.Title>
+                      <Form onSubmit={submitHandlerSup}>
+                          <Form.Group className="mb-3" controlId="name">
+                          {/* <Form.Group className="input" controlId="name"> */}
+                          <Form.Label>Proveedor</Form.Label>
+                          <Form.Select
+                            className="input"
+                            onClick={(e) => handleChangeSup(e)}
+                          >
+                            {suppliers.map((elemento) => (
+                              <option key={elemento._id} value={elemento._id}>
+                                {elemento.name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="name">
+                              <Form.Control
+                                placeholder="Proveedor"
+                                value={nameSup}
+                                disabled={true}
+                                required
+                                />
+                            </Form.Group>
+                              <div className="mb-3">
+                                <Button type="submit"
+                                  disabled={nameSup ? false : true}
+                                  >Continuar</Button>
+                              </div>
+                              </Form>
+                      </Card.Title>
+                    </Card.Body>
+                  </Col>
+                  </Modal.Body>
+                </Modal>
+            </div>
+          </>
+
+
+)}
     </Container>
-  );
+
+
+);
 }

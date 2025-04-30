@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
 import { Store } from '../Store';
@@ -96,6 +97,12 @@ export default function ProductListScreen() {
     }
   }, [page, userInfo, successDelete]);
 
+  const parametros = async () => {
+    navigate('/admin/precios?redirect=/admin/products');
+  };
+  const listado = async () => {
+    navigate('/admin/productsList?redirect=/admin/products');
+  };
   const createHandler = async () => {
         navigate(`/admin/product/0`);
   };
@@ -122,6 +129,26 @@ export default function ProductListScreen() {
       <Row>
         <Col>
           <h1>Productos</h1>
+        </Col>
+        <Col className="col text-end">
+          <div>
+            <Button type="button"
+                    variant="primary"
+                    onClick={parametros}
+                  >
+              Modifica Precios
+            </Button>
+            </div>
+        </Col>
+        <Col className="col text-end">
+          <div>
+            <Button type="button"
+                    variant="primary"
+                    onClick={listado}
+                  >
+              Listar
+            </Button>
+            </div>
         </Col>
         <Col className="col text-end">
           <div>
@@ -166,21 +193,27 @@ export default function ProductListScreen() {
                   <td>{product.minStock}</td>
                   <td>{product.porIva}</td>
                   <td>
+
                     <Button
                       type="button"
-                      variant="light"
+                      title="Edit"
                       onClick={() => navigate(`/admin/product/${product._id}`)}
                     >
-                      Edit
+                      <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                     </Button>
+
+
                     &nbsp;
                     <Button
                       type="button"
-                      variant="light"
+                      title="Delete"
                       onClick={() => deleteHandler(product)}
                     >
-                      Delete
+                      <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                     </Button>
+
+
+
                   </td>
                 </tr>
               ))}

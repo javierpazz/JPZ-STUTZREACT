@@ -204,16 +204,19 @@ const prodeleteReceipt = (receipt) => {
         <Col>
           <h1>Ingresos de Caja</h1>
         </Col>
-        <Col className="col text-end">
+        {userInfo.isAdmin && (
+          <Col className="col text-end">
           <div>
             <Button type="button"
                     variant="primary"
                     onClick={parametros}
-                  >
+                    disabled={!userInfo.isAdmin}
+                    >
               Ver Filtros
             </Button>
             </div>
         </Col>
+                  )}
 
         <Col className="col text-end">
           <div>

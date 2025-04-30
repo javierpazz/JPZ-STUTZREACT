@@ -124,6 +124,8 @@ export default function SalePointScreen() {
       userInfo.filtro = filtro;
       userInfo.filtro.codCon = codCon;
       userInfo.filtro.nameCon = name;
+      userInfo.filtro.codUse = userInfo._id;
+      userInfo.filtro.nameUse = userInfo.name;
 
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
       navigate(redirect);

@@ -261,6 +261,7 @@ try {
                   </div>
                 </ListGroup.Item> */}
 
+        {userInfo.isAdmin && (
         <Col className="col text-end">
           <div>
             <Button type="button"
@@ -271,6 +272,7 @@ try {
             </Button>
             </div>
         </Col>
+        )}
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
@@ -307,7 +309,7 @@ try {
             <tbody>
               {invoices?.map((invoice) => (
                 <tr key={invoice._id}>
-                  <td className="text-end">{invoice.codCom.nameCom}</td>
+                  <td >{invoice.codCom.nameCom}</td>
                   <td className="text-end">{invoice.invNum ? invoice.invNum : 'REMITO S/F'}</td>
                   <td className="text-center">{invoice.invDat ? invoice.invDat.substring(0, 10): ''}</td>
                   <td className="text-end">{invoice.remNum}</td>
