@@ -1,5 +1,5 @@
 import { useContext, useState, useRef, useEffect, useReducer } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams  } from 'react-router-dom';
 import axios from 'axios';
 import ClientDetails from './ClientDetails';
 import Dates from './Dates';
@@ -14,6 +14,8 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import LoadingBox from '../../../components/LoadingBox';
+import MessageBox from '../../../components/MessageBox';
 import { BiFileFind } from "react-icons/bi";
 import { Store } from '../../../Store';
 import ReactToPrint from 'react-to-print';
@@ -21,7 +23,6 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { Helmet } from 'react-helmet-async';
-import LoadingBox from '../../../components/LoadingBox';
 import { getError, API } from '../../../utils';
 
 const reducer = (state, action) => {
@@ -68,6 +69,11 @@ case 'TOTAL_FETCH_REC_FAIL':
 };
 
 function AppRecCon() {
+  const navigate = useNavigate();
+  const { search } = useLocation();
+  const redirectInUrl = new URLSearchParams(search).get('redirect');
+  const redirect = redirectInUrl ? redirectInUrl : '/';
+
   const [
     { loading, error, recibo, values, pages, loadingDelete, successDelete },
     dispatch,
@@ -84,65 +90,8 @@ function AppRecCon() {
 
   const params = useParams();
   const { id: reciboId } = params;
-
-  const input1Ref = useRef(null);
-  const input2Ref = useRef(null);
-  const input3Ref = useRef(null);
-  const input4Ref = useRef(null);
-  const input5Ref = useRef(null);
-  const input6Ref = useRef(null);
-  const input7Ref = useRef(null);
-  const input8Ref = useRef(null);
-  const input0Ref = useRef(null);
-
-  
-  const input20Ref = useRef(null);
-  const input21Ref = useRef(null);
-
-  // const [poriva, setPorIva] = useState(userInfo.configurationObj.poriva);
-  const [poriva, setPorIva] = useState(21);
-  const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
-
-  const [showCus, setShowCus] = useState(false);
-
-  const [codUse, setCodUse] = useState('');
-  const [codCus, setCodCus] = useState('');
-  const [codCust, setCodCust] = useState('');
-  const [name, setName] = useState('');
-  const [userObj, setUserObj] = useState({});
-  const [remNum, setRemNum] = useState('');
-  const [invNum, setInvNum] = useState('');
-  const [invDat, setInvDat] = useState('');
-  const [recNum, setRecNum] = useState('');
-  const [recNumImp, setRecNumImp] = useState('');
-  const today = new Date().toISOString().split("T")[0];
-  const [recDat, setRecDat] = useState(today);
-  const [codVal, setCodVal] = useState('');
-  const [desval, setDesval] = useState('');
-  const [receiptss, setReceiptss] = useState([]);
-  // const [userss, setUserss] = useState([]);
-  const [customers, setCustomers] = useState([]);
-  const [valuess, setValuess] = useState([]);
-  const [codPro, setCodPro] = useState('');
-  const [codPro1, setCodPro1] = useState('');
-  const [address, setAddress] = useState('Direccion Usuario');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [bankName, setBankName] = useState('');
-  const [bankAccount, setBankAccount] = useState('');
-  const [website, setWebsite] = useState('');
-  const [clientName, setClientName] = useState('');
-  const [clientAddress, setClientAddress] = useState('');
-  const [dueDat, setDueDat] = useState('');
-  const [notes, setNotes] = useState('');
-  const [desPro, setDesPro] = useState('');
-  const [quantity, setQuantity] = useState(0);
-  const [price, setPrice] = useState('');
-  const [amountval, setAmountval] = useState(0);
-  const [list, setList] = useState([]);
-  const [total, setTotal] = useState(0);
   const [width] = useState(641);
-  const [showReceipt, setShowReceipt] = useState(false);
+  const [showReceipt, setShowReceipt] = useState(true);
 
 
   const config = {
@@ -164,75 +113,12 @@ function AppRecCon() {
     window.print();
   };
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      dispatch({ type: 'TOTAL_FETCH_REC_REQUEST' });
-      const { data } = await axios.get(`${API}/api/receipts/S`, {
-        headers: { Authorization: `Bearer ${userInfo.token}` },
-      });
-      dispatch({ type: 'TOTAL_FETCH_REC_SUCCESS', payload: data });
-      setReceiptss(data);
-    } catch (err) {
-      dispatch({
-        type: 'TOTAL_FETCH_REC_FAIL',
-        payload: getError(err),
-      });
-    }
-  };
-  fetchData();
-}, []);
-//
-//cr/
-
-
-  useEffect(() => {
-    clearitems();
-    input2Ref.current.focus()
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(`${API}/api/customers/`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
-        setCustomers(data);
-        dispatch({ type: 'FETCH_SUCCESS', payload: data });
-      } catch (err) {}
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchDataVal = async () => {
-      try {
-        const { data } = await axios.get(`${API}/api/valuees/`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
-        setValuess(data);
-        dispatch({ type: 'VALUE_FETCH_SUCCESS', payload: data });
-      } catch (err) {}
-    };
-    fetchDataVal();
-  }, []);
-
-  useEffect(() => {
-    const calculateAmountval = (amountval) => {
-      setAmountval(
-        recibo.total
-      );
-    };
-    calculateAmountval(amountval);
-  }, [ recNum, recDat]);
-
 
   useEffect(() => {
     if (window.innerWidth < width) {
       alert('Place your phone in landscape mode for the best experience');
     }
   }, [width]);
-
-  const getTotal = () => {
-    return recibo.receiptItems.reduce((acc, item) => acc + item.amountval, 0);
-  };
 
 
   useEffect(() => {
@@ -243,13 +129,13 @@ useEffect(() => {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'RECIBO_FETCH_SUCCESS', payload: data });
-        setCodUse(data.user);
-        // setCodComp(invoice.codCom);
-        // setCodCust(invoice.codCus);
-        // setName(invoice.supplier.name);
-        // setNameCom(invoice.nameCom);
+        // setCodUse(data.user);
+        // // setCodComp(invoice.codCom);
+        // // setCodCust(invoice.codCus);
+        // // setName(invoice.supplier.name);
+        // // setNameCom(invoice.nameCom);
   
-        setInvNum(recibo.recNum);
+        // setInvNum(recibo.recNum);
       } catch (err) {
         dispatch({ type: 'RECIBO_FETCH_FAIL', payload: getError(err) });
       }
@@ -257,97 +143,21 @@ useEffect(() => {
     fetchOrder();
   }, []);
 
-  const handleShowCus = () => {
-    setShowCus(true);
-    input21Ref.current.focus();
-  };
-
-
-  const searchUser = (codCus) => {
-    const customersRow = customers.find((row) => row._id === codCus);
-    setCodCus(customersRow._id);
-    setCodCust(customersRow.codCus);
-    setName(customersRow.nameCus);
-  };
-
-    
-  const ayudaCus = (e) => {
-    e.key === "Enter" && buscarPorCodCus(codCust);
-    e.key === "F2" && handleShowCus(codCus);
-    e.key === "Tab" && buscarPorCodCus(codCust);
-  };
- 
-
-
-  const buscarPorCodCus = (codCust) => {
-    const usersRow = customers.find((row) => row.codCus === codCust);
-    if (!usersRow) {
-        setUserObj({});
-        setCodCus('');
-        setCodCust('');
-        setName('Elija Cliente');
-    }else{
-      setCodCus(usersRow._id);
-      setCodCust(usersRow.codCust);
-      setUserObj(usersRow);
-      setName(usersRow.nameCus);
-      input3Ref.current.focus();
-      };
-  };
-
-
-//cr/
-//
-const RecControl = (e) => {
-  // const oldRecipt = receiptss.filter((row) => row.recNum === Number(recNum));
-  // if (oldRecipt.length > 0) {
-  if (false) {
-      toast.error(`This N° ${(recNum)} Receipt Exist, use other Number Please!`);
-      setRecNum(e.target.value)
-    } else {
-      setRecNum(e.target.value)}
-    }
-
-//
-//cr/
-
-
-  const handleChange = (e) => {
-    searchUser(e.target.value);
-  };
-
-  const submitHandlerCus = async (e) => {
-    e.preventDefault();
-    setShowCus(false)
-  };
-
-  const searchValue = (codVal) => {
-    const valuesRow = valuess.find((row) => row._id === codVal);
-    setCodVal(valuesRow.codVal);
-    setDesval(valuesRow.desVal);
-  };
-
-  const handleValueChange = (e) => {
-    searchValue(e.target.value);
-  };
-
-  const placeCancelReceiptHandler = async () => {};
 
   const placeReceiptHandler = async () => {
     setShowReceipt(true);
 
   };
 
-  /////////////////////////////////////////////
 
   const clearitems = () => {
     ctxDispatch({ type: 'RECEIPT_CLEAR' });
     dispatch({ type: 'CREATE_SUCCESS' });
     localStorage.removeItem('receiptItems');
     setShowReceipt(false);
+    navigate(redirect);
   };
 
-  /////////////////////////////////////////////
 
   return (
     <>
@@ -355,220 +165,16 @@ const RecControl = (e) => {
         <title>Recibos</title>
       </Helmet>
 
+      {loading ? (
+        <LoadingBox></LoadingBox>
+      ) : error ? (
+        <MessageBox variant="danger">{error}</MessageBox>
+      ) : (
+        <>
+
       <main>
         {!showReceipt ? (
           <>
-            {/* name, address, email, phone, bank name, bank account number, website client name, client address, Numero, Fecha, Fecha Vencimiento, notes */}
-            <div>
-              <div className="bordeTable">
-              <Row>
-                  <Col md={4}>
-                    <Card.Body>
-                      <Card.Title>
-                      <ListGroup.Item>
-                            <h3>
-                              
-                            </h3>
-                          </ListGroup.Item>
-
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-
-                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
-                      <Card.Body>
-                        <Card.Title>
-                          <ListGroup.Item>
-                            <h3>
-                              RECIBO Nro.: {recibo.codConNum +'-'+recibo.recNum}
-                            </h3>
-                          </ListGroup.Item>
-                        </Card.Title>
-                      </Card.Body>
-                    </Col>
-
-
-                </Row>
-                <Row>
-                  <Col md={2}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Codigo Cliente</Form.Label>
-                          <Form.Control
-                            className="input"
-                            ref={input2Ref}
-                            placeholder="Codigo Cliente"
-                            value={codCust}
-                            onChange={(e) => setCodCust(e.target.value)}
-                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCus(codCust)}
-                            onKeyDown={(e) => ayudaCus(e)}
-                            required
-                            />
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-                  <Col md={1}>
-                    <Button
-                      className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
-                      type="button"
-                      title="Buscador"
-                      onClick={() => handleShowCus()}
-                      >
-                      <BiFileFind className="text-blue-500 font-bold text-xl" />
-                    </Button>
-                  </Col>
-
-                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
-                      <Card.Body>
-                        <Card.Title>
-                          <ListGroup.Item>
-                            <h3>
-                              {name}
-                            </h3>
-                          </ListGroup.Item>
-                        </Card.Title>
-                      </Card.Body>
-                    </Col>
-
-                </Row>
-
-                <Row>
-                  <Col md={2}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Numero</Form.Label>
-                          <Form.Control
-                            className="input"
-                            ref={input3Ref}
-                            placeholder="Numero"
-                            value={recNum}
-                            onChange={(e) => RecControl(e)}
-                            onKeyDown={(e) => e.key === "Enter" && input4Ref.current.focus()}
-                            // onChange={(e) => setRecNum(e.target.value)}
-                            required
-                          />
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-                  <Col md={2}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Fecha</Form.Label>
-                          <Form.Control
-                            className="input"
-                            ref={input4Ref}
-                            type="date"
-                            placeholder="Fecha"
-                            value={recDat}
-                            onChange={(e) => setRecDat(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
-                            required
-                          />
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-                  <Col md={8}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Observaciones</Form.Label>
-                          <textarea
-                            className="input"
-                            ref={input5Ref}
-                            placeholder="Observaciones "
-                            value={notes}
-                            onChange={(e) => setNotes(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && input8Ref.current.focus()}
-                          ></textarea>
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-                </Row>
-              </div>
-              <div className="bordeTable">
-                <div className="bordeTableinput">
-                  <Row>
-                    <Col md={4} sm={3} xs={12}>
-                      <div className="d-grid">
-                        <Button
-                          type="button"
-                          onClick={placeCancelReceiptHandler}
-                          // disabled={
-                          //   receiptItems.length === 0 ||
-                          //   !recDat ||
-                          //   !codCus
-                          // }
-                          >
-                          CANCELA
-                        </Button>
-                      </div>
-                      {loading && <LoadingBox></LoadingBox>}
-                    </Col>
-
-                    <Col md={4} sm={3} xs={12}>
-                      <div className="d-grid">
-                        <Button
-                          type="button"
-                          ref={input0Ref}
-                          onClick={placeReceiptHandler}
-                          // disabled={
-                          //   receiptItems.length === 0 ||
-                          //   !recDat ||
-                          //   !codCus
-                          // }
-                          >
-                        IMPRIME
-                        </Button>
-                      </div>
-                      {loading && <LoadingBox></LoadingBox>}
-                    </Col>
-
-                    <Col md={4} sm={3} xs={12}>
-                      <Card.Body>
-                        <Card.Title>
-                          <ListGroup.Item>
-                            <h3>
-                              Total: $
-                              {(+recibo.total).toFixed(2)}
-                            </h3>
-                          </ListGroup.Item>
-                        </Card.Title>
-                      </Card.Body>
-                    </Col>
-                  </Row>
-                </div>
-
-                {/* This is our table form */}
-                <article>
-                  <TableFormRecCon
-                    input0Ref={input0Ref}
-                    input8Ref={input8Ref}
-                    codVal={codVal}
-                    setCodVal={setCodVal}
-                    desval={desval}
-                    setDesval={setDesval}
-                    quantity={quantity}
-                    setQuantity={setQuantity}
-                    price={price}
-                    setPrice={setPrice}
-                    amountval={amountval}
-                    setAmountval={setAmountval}
-                    list={list}
-                    setList={setList}
-                    total={total}
-                    setTotal={setTotal}
-                    receiptItems={recibo.receiptItems}
-                  />
-                </article>
-              </div>
-            </div>
           </>
         ) : (
           <>
@@ -663,6 +269,10 @@ const RecControl = (e) => {
           </>
         )}
       </main>
+      </>
+      )}
+
+
     </>
   );
 }

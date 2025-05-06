@@ -323,10 +323,17 @@ const [
 
 
 
+const unloadpayment = async () => {
+if (window.confirm('El porcentaje tiene que ser mayor a Cero')) {
+}
+};
+
+
+
 
   const disminuyeHandler = async () => {
-        if (window.confirm('Confirma los Datos?')) {
-      
+    if (porcen <= 0) {unloadpayment();} else {
+    if (window.confirm('Confirma los Datos?')) {
             try {
             const { data } = await axios.put(`${API}/api/products/dispre/?configuracion=${id_config}&codProd1=${codProd1}&codProd2=${codProd2}&porcen=${porcen}`, {
               headers: { Authorization: `Bearer ${userInfo.token}` },
@@ -342,10 +349,11 @@ const [
           };  
 
   };
+};
   
   const aumentaHandler = async () => {
-    if (window.confirm('Confirma los Datos?')) {
-
+    if (porcen <= 0) {unloadpayment();} else {
+      if (window.confirm('Confirma los Datos?')) {
       try {
       const { data } = await axios.put(`${API}/api/products/aumpre/?configuracion=${id_config}&category=${category}&codSup=${codSup}&codProd1=${codProd1}&codProd2=${codProd2}&porcen=${porcen}`, {
         headers: { Authorization: `Bearer ${userInfo.token}` },
@@ -360,7 +368,7 @@ const [
         // navigate(redirect);
     };  
   };
-
+  };
 
 
   return (
@@ -541,6 +549,7 @@ const [
                     <Col md={4} sm={3} xs={12}>
                       <div className="d-grid">
                         <Button
+                          className="mt-4 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                           type="button"
                           onClick={disminuyeHandler}
                           >
@@ -564,7 +573,7 @@ const [
                     <Col md={4} sm={3} xs={12}>
                       <div className="d-grid">
                         <Button
-                          type="button"
+                          className="mt-4 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                           onClick={aumentaHandler}
                           >
                           AUMENTAR

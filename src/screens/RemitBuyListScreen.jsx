@@ -128,8 +128,8 @@ export default function RemitBuyListScreen() {
   };
 
   const handleConsulta = (invoiceId) => {
-    navigate(`/admin/invoicerBuyRemCon/${invoiceId}`);
-  };
+    // navigate(`/admin/invoicerBuyRemCon/${invoiceId}`);
+    navigate(`/admin/invoicerBuyRemCon/${invoiceId}?redirect=/admin/remitsBuy`);  };
 
 //do
 const controlStockHandler = async (invoice) => {

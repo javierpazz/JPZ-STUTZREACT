@@ -133,7 +133,8 @@ export default function InvoiceListScreen() {
     setShow(true);
   };
   const handleConsulta = (invoiceId) => {
-    navigate(`/admin/invoicerCon/${invoiceId}`);
+    // navigate(`/admin/invoicerCon/${invoiceId}`);
+    navigate(`/admin/invoicerCon/${invoiceId}?redirect=/admin/invoices`);
   };
 
 //do
@@ -276,7 +277,7 @@ try {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Factura Venta
+              Create Comprobante Venta
             </Button>
           </div>
         </Col>
@@ -316,7 +317,7 @@ try {
                       {invoice.ordYes === 'Y' ? <td className="text-end">{invoice._id}</td> : <td></td>}
                   <td className="text-end">{invoice.recNum}</td>
                   <td>{invoice.id_client ? invoice.id_client.nameCus : 'CLIENTE BORRADO'}</td>
-                  <td className="text-center">{invoice.recNum ? invoice.recDat.substring(0, 10) : 'No'}</td>
+                  <td className="text-center">{invoice.recDat ? invoice.recDat.substring(0, 10) : 'No'}</td>
                   <td>{invoice.desVal}</td>
                   <td className="text-end">{invoice.total.toFixed(2)}</td>
 
@@ -343,7 +344,7 @@ try {
                     &nbsp; */}
                     <Button
                       type="button"
-                      title="Consulta Factura"
+                      title="Consulta Comprobante"
                       onClick={() => handleConsulta(invoice._id)}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />

@@ -462,6 +462,7 @@ function AppRempv() {
 
           codCon2: invoice.codCon2,
           codCon: invoice.codCon,
+          user: userInfo._id,
           codConNum: invoice.codConNum,
 
           //        codSup: invoice.codSup,

@@ -126,7 +126,8 @@ export default function InvoiceBuyListScreen() {
   };
 
   const handleConsulta = (invoiceId) => {
-    navigate(`/admin/invoicerBuyCon/${invoiceId}`);
+    // navigate(`/admin/invoicerBuyCon/${invoiceId}`);
+    navigate(`/admin/invoicerBuyCon/${invoiceId}?redirect=/admin/invoicesBuy`);
   };
   
 //do
@@ -183,10 +184,21 @@ const stockHandlerM = async (item) => {
   
 //do
 
+const noDelInvoice = async () => {
+  if (
+    window.confirm(
+      'El Comprobante tiene una Orden de Pago Aplicada, Debe borrar la Orden de Pago Antes'
+    )
+  ) {
+  }
+};
 
   const deleteHandler = async (invoice) => {
     if (window.confirm('Are you sure to delete?')) {
-      controlStockHandler(invoice);
+      if (invoice.recNum) {
+        noDelInvoice();
+      } else {
+        controlStockHandler(invoice);
       try {
         dispatch({ type: 'DELETE_REQUEST' });
         await axios.delete(`${API}/api/invoices/${invoice._id}`, {
@@ -200,6 +212,9 @@ const stockHandlerM = async (item) => {
           type: 'DELETE_FAIL',
         });
       }
+
+      }
+
     }
   };
 
@@ -243,7 +258,7 @@ const stockHandlerM = async (item) => {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Factura Compra
+              Create Comprobante Compra
             </Button>
           </div>
         </Col>
@@ -286,7 +301,7 @@ const stockHandlerM = async (item) => {
                       ? invoice.supplier.name
                       : 'DELETED SUPPLIER'}
                   </td>
-                  <td className="text-center">{invoice.recNum ? invoice.recDat.substring(0, 10) : 'No'}</td>
+                  <td className="text-center">{invoice.recDat ? invoice.recDat.substring(0, 10) : 'No'}</td>
                   <td>{invoice.desVal}</td>
                   <td className="text-end">{invoice.totalBuy.toFixed(2)}</td>
 
@@ -313,7 +328,7 @@ const stockHandlerM = async (item) => {
                     &nbsp; */}
                     <Button
                       type="button"
-                      title="Consulta Factura"
+                      title="Consulta Comprobante"
                       onClick={() => handleConsulta(invoice._id)}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />

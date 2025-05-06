@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -16,6 +16,7 @@ import Modal from 'react-bootstrap/Modal';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import Button from 'react-bootstrap/Button';
+import ProductSelector from './ProductSelector';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -109,6 +110,58 @@ export default function ProductEditScreen() {
     fetchDataVal();
   }, []);
 
+//////modal
+const [modalOpen, setModalOpen] = useState(false);
+const [selectedProduct, setSelectedProduct] = useState(null);
+const modalRef = useRef(null);
+
+const handleSelect = (supplier) => {
+setSelectedProduct(supplier);
+
+setCodSup(supplier._id);
+setCodSupp(supplier.codSup);
+setNameSup(supplier.name);
+
+setModalOpen(false);
+};
+
+// Cerrar con Escape
+useEffect(() => {
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      setModalOpen(false);
+    }
+  };
+
+  if (modalOpen) {
+    document.addEventListener('keydown', handleKeyDown);
+  }
+
+  return () => {
+    document.removeEventListener('keydown', handleKeyDown);
+  };
+}, [modalOpen]);
+
+// Cerrar al hacer clic fuera del modal
+const handleClickOutside = (e) => {
+  if (modalRef.current && !modalRef.current.contains(e.target)) {
+    setModalOpen(false);
+  }
+};
+
+useEffect(() => {
+  if (modalOpen) {
+    document.addEventListener('mousedown', handleClickOutside);
+  } else {
+    document.removeEventListener('mousedown', handleClickOutside);
+  }
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+  };
+}, [modalOpen]);
+//////modal
+
+
 
   useEffect(() => {
     if (productId === "0") {
@@ -132,6 +185,9 @@ export default function ProductEditScreen() {
         setPorIva(data.porIva);
         setBrand(data.brand);
         setDescription(data.description);
+        setCodSup(data.supplier._id);
+        setCodSupp(data.supplier.codSup);
+        setNameSup(data.supplier.name);
         dispatch({ type: 'FETCH_SUCCESS' });
       } catch (err) {
         dispatch({
@@ -145,7 +201,8 @@ export default function ProductEditScreen() {
   }, [productId]);
 
   const handleShowSup = () => {
-    setShowSup(true);
+    // setShowSup(true);
+    setModalOpen(true)
   };
 
   const submitHandlerSup = async (e) => {
@@ -303,6 +360,12 @@ export default function ProductEditScreen() {
     setImages(images.filter((x) => x !== fileName));
     toast.success('Image removed successfully. click Update to apply it');
   };
+
+  const positivo = (e) => {
+    const number = Math.abs(Number(e.target.value));
+    setValue(number);
+  };
+
   return (
     <Container>
       <Helmet>
@@ -338,6 +401,7 @@ export default function ProductEditScreen() {
             className="mt-4 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
             type="button"
             title="Buscador"
+            // onClick={() => handleShowSup()}
             onClick={() => handleShowSup()}
             >
             <BiFileFind className="text-blue-500 font-bold text-xl" />
@@ -413,7 +477,12 @@ export default function ProductEditScreen() {
             <Form.Control
               value={price}
               type='number'
-              onChange={(e) => setPrice(e.target.value)}
+              inputMode="decimal"
+              min="0"
+              defaultValue="0"
+              // onChange={(e) => setPrice(e.target.value)}
+              onChange={(e) => setPrice(positivo)}
+              // onChange={positivo}
               required
               />
           </Form.Group>
@@ -527,6 +596,32 @@ export default function ProductEditScreen() {
       </Row>
 
 
+      {modalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0, left: 0, right: 0, bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex', justifyContent: 'center', alignItems: 'center',
+            zIndex: 1000
+          }}
+        >
+          <div
+            ref={modalRef}
+            style={{
+              backgroundColor: '#fff',
+              width: '400px',
+              borderRadius: '8px',
+              boxShadow: '0 0 10px rgba(0,0,0,0.3)'
+            }}
+          >
+            <div style={{ padding: '10px', borderBottom: '1px solid #ccc', textAlign: 'right' }}>
+              <button onClick={() => setModalOpen(false)} style={{ fontWeight: 'bold' }}>X</button>
+            </div>
+            <ProductSelector  onSelect={handleSelect} suppliers={suppliers}  />
+          </div>
+        </div>
+      )}
       <Modal
                   size="md"
                   show={showSup}

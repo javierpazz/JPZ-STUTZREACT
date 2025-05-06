@@ -1,5 +1,5 @@
 import { useContext, useState, useRef, useEffect, useReducer } from 'react';
-import { useNavigate, useParams  } from 'react-router-dom';
+import { useLocation, useNavigate, useParams  } from 'react-router-dom';
 import axios from 'axios';
 import ClientDetails from './ClientDetails';
 import Dates from './Dates';
@@ -14,6 +14,8 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import LoadingBox from '../../../components/LoadingBox';
+import MessageBox from '../../../components/MessageBox';
 import { BiFileFind } from "react-icons/bi";
 import { Store } from '../../../Store';
 import ReactToPrint from 'react-to-print';
@@ -21,7 +23,6 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { Helmet } from 'react-helmet-async';
-import LoadingBox from '../../../components/LoadingBox';
 import { getError, API } from '../../../utils';
 
 const reducer = (state, action) => {
@@ -65,7 +66,13 @@ const reducer = (state, action) => {
 };
 
 function AppRempvCon() {
-    const [
+  const navigate = useNavigate();
+  const { search } = useLocation();
+  const redirectInUrl = new URLSearchParams(search).get('redirect');
+  const redirect = redirectInUrl ? redirectInUrl : '/';
+
+
+  const [
         { loading, error, invoice, values, pages, loadingDelete, successDelete },
         dispatch,
       ] = useReducer(reducer, {
@@ -75,82 +82,16 @@ function AppRempvCon() {
         error: '',
       });
     
-  const navigate = useNavigate();
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
-  const {
-    receipt: { receiptItems },
-  } = state;
 
-  const { receipt, userInfo } = state;
+  const { userInfo } = state;
 
   const params = useParams();
   const { id: invoiceId } = params;
 
-
-  const input1Ref = useRef(null);
-  const input2Ref = useRef(null);
-  const input3Ref = useRef(null);
-  const input4Ref = useRef(null);
-  const input5Ref = useRef(null);
-  const input6Ref = useRef(null);
-  const input7Ref = useRef(null);
-  const input8Ref = useRef(null);
-  const input9Ref = useRef(null);
-  const input0Ref = useRef(null);
-
-  const input20Ref = useRef(null);
-  const input21Ref = useRef(null);
-
-  const [codConNum, setCodConNum] = useState(userInfo.configurationObj.codCon);
-  const [showCus, setShowCus] = useState(false);
-
-  const [codUse, setCodUse] = useState('');
-  const [codCus, setCodCus] = useState('');
-  const [codCust, setCodCust] = useState('');
-  const [codCon2, setCodCon2] = useState('');
-  const [codCon2t, setCodCon2t] = useState('');
-
-  const [name, setName] = useState('');
-  const [userObj, setUserObj] = useState({});
-  const [movpvNum, setMovpvNum] = useState('');
-  const [movpvNumImp, setMovpvNumImp] = useState('');
-  const today = new Date().toISOString().split("T")[0];
-  const [remDat, setRemDat] = useState(today);
-  const [invNum, setInvNum] = useState('');
-  const [invDat, setInvDat] = useState('');
-  const [recNum, setRecNum] = useState('');
-  const [recDat, setRecDat] = useState(today);
-  const [codVal, setCodVal] = useState('');
-  const [codval, setCodval] = useState('');
-  const [desval, setDesval] = useState('');
-  const [valueeR, setValueeR] = useState('');
-  const [desVal, setDesVal] = useState('');
-  const [numval, setNumval] = useState(' ');
-  // const [userss, setUserss] = useState([]);
-  const [customers, setCustomers] = useState([]);
-  const [valuess, setValuess] = useState([]);
-  const [codPro, setCodPro] = useState('');
-  const [address, setAddress] = useState('Direccion Usuario');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [bankName, setBankName] = useState('');
-  const [bankAccount, setBankAccount] = useState('');
-  const [website, setWebsite] = useState('');
-  const [clientName, setClientName] = useState('');
-  const [clientAddress, setClientAddress] = useState('');
-  const [dueDat, setDueDat] = useState(today);
-  const [notes, setNotes] = useState('');
-  const [desPro, setDesPro] = useState('');
-  const [quantity, setQuantity] = useState(0);
-  const [price, setPrice] = useState(0);
-  const [porIva, setPorIva] = useState(0);
-  const [amount, setAmount] = useState(0);
-  const [amountval, setAmountval] = useState(0);
-  const [list, setList] = useState([]);
-  const [total, setTotal] = useState(0);
   const [width] = useState(641);
-  const [showInvoice, setShowInvoice] = useState(false);
+  const [showInvoice, setShowInvoice] = useState(true);
 
   const [isPaying, setIsPaying] = useState(false);
 
@@ -174,36 +115,6 @@ function AppRempvCon() {
   };
 
   useEffect(() => {
-    const calculateAmountval = (amountval) => {
-      setAmountval(
-        invoice.total
-      );
-    };
-    if (numval === '') {
-      setNumval(' ');
-    }
-    setCodCus(codCus);
-    setDesVal(desVal);
-    calculateAmountval(amountval);
-    addToCartHandler(valueeR);
-  }, [numval, desval, recNum, recDat]);
-
-  useEffect(() => {
-    clearitems();
-    input2Ref.current.focus()
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(`${API}/api/customers/`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
-        setCustomers(data);
-        dispatch({ type: 'FETCH_SUCCESS', payload: data });
-      } catch (err) {}
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
     const fetchOrder = async () => {
       try {
         dispatch({ type: 'ORDER_FETCH_REQUEST' });
@@ -211,12 +122,12 @@ function AppRempvCon() {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'ORDER_FETCH_SUCCESS', payload: data });
-        setCodUse(data.user);
-        // setCodComp(invoice.codCom);
-        // setCodCust(invoice.codCus);
-        // setName(invoice.supplier.name);
+        // setCodUse(data.user);
+        // // setCodComp(invoice.codCom);
+        // // setCodCust(invoice.codCus);
+        // // setName(invoice.supplier.name);
   
-        setMovpvNum(invoice.movpvNum);
+        // setMovpvNum(invoice.movpvNum);
       } catch (err) {
         dispatch({ type: 'ORDER_FETCH_FAIL', payload: getError(err) });
       }
@@ -227,250 +138,15 @@ function AppRempvCon() {
 
 
   useEffect(() => {
-    const fetchDataVal = async () => {
-      try {
-        const { data } = await axios.get(`${API}/api/valuees/`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
-        setValuess(data);
-        dispatch({ type: 'VALUE_FETCH_SUCCESS', payload: data });
-      } catch (err) {}
-    };
-    fetchDataVal();
-  }, []);
-
-  useEffect(() => {
     if (window.innerWidth < width) {
       alert('Place your phone in landscape mode for the best experience');
     }
   }, [width]);
 
 
-  const handleShowCus = () => {
-    setShowCus(true);
-    input21Ref.current.focus();
-  };
-
-  const handleShowCon2 = () => {
-    setShowCon2(true);
-    input21Ref.current.focus();
-  };
-
-  const searchUser = (codCus) => {
-    const usersRow = customers.find((row) => row._id === codCus);
-    setUserObj(usersRow);
-    setCodCus(usersRow._id);
-    setCodCust(usersRow.codCus);
-    setName(usersRow.nameCus);
-  };
-
-  
-  const ayudaCus = (e) => {
-    e.key === "Enter" && buscarPorCodCus(codCust);
-    e.key === "F2" && handleShowCus(codCus);
-    e.key === "Tab" && buscarPorCodCus(codCust);
-  };
-  
-
-  const buscarPorCodCus = (codCust) => {
-    const usersRow = customers.find((row) => row.codCus === codCust);
-    if (!usersRow) {
-        setCodCus('');
-        setCodCust('');
-        setName('Elija Cliente');
-    }else{
-      setCodCus(usersRow._id);
-      setCodCust(usersRow.codCust);
-      setUserObj(usersRow);
-      setName(usersRow.nameCus);
-      input6Ref.current.focus();
-      };
-  };
-
-  const handleChange = (e) => {
-    searchUser(e.target.value);
-  };
-  const submitHandlerCus = async (e) => {
-    e.preventDefault();
-    setShowCus(false)
-  };
-
-
-  const searchValue = (codVal) => {
-    const valuesRow = valuess.find((row) => row._id === codVal);
-    setValueeR(valuesRow);
-    setCodVal(valuesRow.codVal);
-    setDesVal(valuesRow.desVal);
-  };
-
-  const handleValueChange = (e) => {
-    searchValue(e.target.value);
-  };
-
-  const placeCancelInvoiceHandler = async () => {};
 
   const placeInvoiceHandler = async () => {
     setShowInvoice(true);
-  };
-
-  /////////////////////////////////////////////
-
-  const addToCartHandler = async (itemVal) => {
-    ctxDispatch({
-      type: 'RECEIPT_CLEAR',
-    });
-    localStorage.removeItem('receiptItems');
-    ctxDispatch({
-      type: 'RECEIPT_ADD_ITEM',
-      payload: { ...itemVal, desval, amountval, numval },
-    });
-  };
-
-  /////////////////////////////////////////////
-
-  const receiptHandler = async () => {
-    try {
-      dispatch({ type: 'CREATE_REQUEST' });
-      const { data } = await axios.post(
-        `${API}/api/receipts`,
-        {
-          receiptItems: receipt.receiptItems,
-          shippingAddress: receipt.shippingAddress,
-          paymentMethod: receipt.paymentMethod,
-          subTotal: receipt.subTotal,
-          shippingPrice: receipt.shippingPrice,
-          tax: receipt.tax,
-          total: receipt.total,
-          totalBuy: receipt.totalBuy,
-
-          codCus: receipt.codCus,
-          codCon: receipt.codCon,
-          codConNum: receipt.codConNum,
-
-          //          codSup: receipt.codSup,
-
-          remNum: receipt.remNum,
-          invNum: receipt.invNum,
-          invDat: receipt.invDat,
-          recNum: receipt.recNum,
-          recDat: receipt.recDat,
-          desval: receipt.desval,
-          notes: receipt.notes,
-          salbuy: 'SALE',
-        },
-        {
-          headers: {
-            authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
-      ctxDispatch({ type: 'RECEIPT_CLEAR' });
-      dispatch({ type: 'CREATE_SUCCESS' });
-      localStorage.removeItem('receiptItems');
-      //navigate(`/order/${data.order._id}`);
-    } catch (err) {
-      dispatch({ type: 'CREATE_FAIL' });
-      toast.error(getError(err));
-    }
-  };
-
-  /////////////////////////////////////////////
-
-  const stockHandler = async (item) => {
-    // console.log(item.item._id);
-
-    try {
-      dispatch({ type: 'CREATE_REQUEST' });
-      await axios.put(
-        `${API}/api/products/downstock/${item.item._id}`,
-        {
-          quantitys: item.item.quantity,
-        },
-        {
-          headers: {
-            authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
-      dispatch({ type: 'CREATE_SUCCESS' });
-    } catch (err) {
-      dispatch({ type: 'CREATE_FAIL' });
-      toast.error(getError(err));
-    }
-  };
-
-  const orderHandler = async () => {
-    try {
-      dispatch({ type: 'CREATE_REQUEST' });
-      const { data } = await axios.post(
-        `${API}/api/invoices/rem`,
-
-        {
-          orderItems: invoice.orderItems,
-          shippingAddress: invoice.shippingAddress,
-          paymentMethod: invoice.paymentMethod,
-          subTotal: invoice.subTotal,
-          shippingPrice: invoice.shippingPrice,
-          tax: invoice.tax,
-          total: invoice.total,
-          totalBuy: invoice.totalBuy,
-
-          codCus: invoice.codCus,
-          codCon: invoice.codCon,
-          codConNum: invoice.codConNum,
-
-          //        codSup: invoice.codSup,
-
-          remNum: invoice.remNum,
-          remDat: invoice.remDat,
-          invNum: invoice.invNum,
-          invDat: invoice.invDat,
-          recNum: invoice.recNum,
-          recDat: invoice.recDat,
-          desVal: invoice.desVal,
-          notes: invoice.notes,
-          salbuy: 'SALE',
-        },
-        {
-          headers: {
-            authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
-      //ctxDispatch({ type: 'INVOICE_CLEAR' });
-      //      dispatch({ type: 'CREATE_SUCCESS' });
-      //      localStorage.removeItem('orderItems');
-      setIsPaying(false);
-      setDesval('');
-      setDesVal('');
-      setMovpvNumImp(data.invoice.movpvNum);
-      setRecNum('');
-      setRecDat('');
-      setNumval(' ');
-      setAmountval(0);
-      //navigate(`/order/${data.order._id}`);
-    } catch (err) {
-      dispatch({ type: 'CREATE_FAIL' });
-      toast.error(getError(err));
-    }
-  };
-
-  /////////////////////////////////////////////
-  const Paying = () => {
-    setIsPaying(!isPaying);
-    if (isPaying) {
-      setDesval('');
-      setDesVal('');
-      setRecNum('');
-      setRecDat('');
-      setNumval(' ');
-      setAmountval(0);
-    }
-  };
-
-  const unloadpayment = async () => {
-    if (window.confirm('Are you fill all Dates?')) {
-    }
   };
 
   const clearitems = () => {
@@ -479,6 +155,7 @@ function AppRempvCon() {
     localStorage.removeItem('orderItems');
     localStorage.removeItem('receiptItems');
     setShowInvoice(false);
+    navigate(redirect);
   };
 
   return (
@@ -487,408 +164,16 @@ function AppRempvCon() {
         <title>Remitos de Venta</title>
       </Helmet>
 
+      {loading ? (
+        <LoadingBox></LoadingBox>
+      ) : error ? (
+        <MessageBox variant="danger">{error}</MessageBox>
+      ) : (
+        <>
+
       <main>
         {!showInvoice ? (
           <>
-            {/* name, address, email, phone, bank name, bank account number, website client name, client address, invoice number, Fecha Factura, Fecha Vencimiento, notes */}
-            <div>
-              <div className="bordeTable">
-              <Row>
-                  <Col md={3}>
-                    <Card.Body>
-                      <Card.Title>
-                      <ListGroup.Item>
-                            <h3>
-                              
-                            </h3>
-                          </ListGroup.Item>
-
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-
-                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
-                      <Card.Body>
-                        <Card.Title>
-                          <ListGroup.Item>
-                            <h3>
-                              REMITO DE VENTA Nro.: {invoice.codConNum +'-'+invoice.movpvNum}
-                            </h3>
-                          </ListGroup.Item>
-                        </Card.Title>
-                      </Card.Body>
-                    </Col>
-
-
-                </Row>
-
-                <Row>
-                  <Col md={2}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Codigo Pto Venta</Form.Label>
-                          <Form.Control
-                            className="input"
-                            ref={input2Ref}
-                            placeholder="Codigo Pto Venta"
-                            value={codCon2t}
-                            onChange={(e) => setCodCon2t(e.target.value)}
-                            // onKeyDown={(e) => e.key === "Enter" && buscarPorCodCon2(codCon2t)}
-                            onKeyDown={(e) => ayudaCon2(e)}
-                            required
-                            />
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-                  <Col md={1}>
-                    <Button
-                      className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
-                      type="button"
-                      title="Buscador"
-                      onClick={() => handleShowCon2()}
-                      >
-                      <BiFileFind className="text-blue-500 font-bold text-xl" />
-                    </Button>
-                  </Col>
-
-                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
-                      <Card.Body>
-                        <Card.Title>
-                          <ListGroup.Item>
-                            <h3>
-                              {name}
-                            </h3>
-                          </ListGroup.Item>
-                        </Card.Title>
-                      </Card.Body>
-                    </Col>
-
-                </Row>
-
-                <Row>
-                <Col md={1}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Remito N°</Form.Label>
-                          <Form.Control
-                            className="input"
-                            ref={input6Ref}
-                            placeholder="Remito N°"
-                            value={movpvNum}
-                            onChange={(e) => setMovpvNum(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && input9Ref.current.focus()}
-                            required
-                          />
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-
-                  <Col md={2}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Fecha Remito</Form.Label>
-                          <Form.Control
-                            className="input"
-                            ref={input9Ref}
-                            type="date"
-                            placeholder="Fecha Remito"
-                            value={remDat}
-                            onChange={(e) => setRemDat(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && input5Ref.current.focus()}
-                            required
-                          />
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-                  <Col md={2}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Fecha Vencimiento</Form.Label>
-                          <Form.Control
-                            className="input"
-                            ref={input5Ref}
-                            type="date"
-                            placeholder="Fecha Vencimiento"
-                            value={dueDat}
-                            onChange={(e) => setDueDat(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && input7Ref.current.focus()}
-                            required
-                          />
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-                  <Col md={6}>
-                    <Card.Body>
-                      <Card.Title>
-                        <Form.Group className="input" controlId="name">
-                          <Form.Label>Observaciones</Form.Label>
-                          <textarea
-                            className="input"
-                            ref={input7Ref}
-                            placeholder="Observaciones "
-                            value={notes}
-                            onChange={(e) => setNotes(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && input8Ref.current.focus()}
-                          ></textarea>
-                        </Form.Group>
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-                </Row>
-
-                <div className="bordeTable">
-                  <Row>
-                    <Col md={2}>
-                      <Card.Body>
-                        <Card.Title>
-                          <Form.Group className="input" controlId="name">
-                            <Form.Label>Values</Form.Label>
-                            <Form.Select
-                              className="input"
-                              onClick={(e) => handleValueChange(e)}
-                              disabled={!isPaying}
-                            >
-                              {valuess.map((elementoV) => (
-                                <option
-                                  key={elementoV._id}
-                                  value={elementoV._id}
-                                >
-                                  {elementoV.desVal}
-                                </option>
-                              ))}
-                            </Form.Select>
-                          </Form.Group>
-                        </Card.Title>
-                      </Card.Body>
-                    </Col>
-
-                    <Col md={2}>
-                      <Card.Body>
-                        <Card.Title>
-                          <Form.Group className="input" controlId="name">
-                            <Form.Label>Valor N°</Form.Label>
-                            <Form.Control
-                              className="input"
-                              placeholder="Valor N°"
-                              value={numval}
-                              onChange={(e) => setNumval(e.target.value)}
-                              disabled={!isPaying}
-                              required
-                            />
-                          </Form.Group>
-                        </Card.Title>
-                      </Card.Body>
-                    </Col>
-                    <Col md={3}>
-                      <Card.Body>
-                        <Card.Title>
-                          <Form.Group className="input" controlId="name">
-                            <Form.Label>Fecha</Form.Label>
-                            <Form.Control
-                              className="input"
-                              type="date"
-                              placeholder="Fecha"
-                              value={recDat}
-                              onChange={(e) => setRecDat(e.target.value)}
-                              disabled={!isPaying}
-                              required
-                            />
-                          </Form.Group>
-                        </Card.Title>
-                      </Card.Body>
-                    </Col>
-
-                    <Col md={2}>
-                      <Card.Body>
-                        <Card.Title>
-                          <Form.Group className="input" controlId="name">
-                            <Form.Label>Recibo N°</Form.Label>
-                            <Form.Control
-                              className="input"
-                              placeholder="Recibo N°"
-                              value={recNum}
-                              onChange={(e) => setRecNum(e.target.value)}
-                              disabled={!isPaying}
-                              required
-                            />
-                          </Form.Group>
-                        </Card.Title>
-                      </Card.Body>
-                    </Col>
-                    <Col md={2}>
-                      <div className="d-grid">
-                        <Button
-                          type="button"
-                          onClick={Paying}
-                          className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
-                          disabled={true}
-                        >
-                          {isPaying ? 'Not Payment' : 'Carga Pago'}
-                        </Button>
-                      </div>
-                      {loading && <LoadingBox></LoadingBox>}
-                    </Col>
-                    <Col md={1}>
-                      <div
-                        className="d-grid mt-3 mb-1 py-1 px-1 transition-all
-                        duration-300"
-                      >
-                        {isPaying && desval && recNum && recDat
-                          ? 'Cargado'
-                          : 'No Cargado '}
-                      </div>
-                      {loading && <LoadingBox></LoadingBox>}
-                    </Col>
-                  </Row>
-                </div>
-              </div>
-              <div className="bordeTable">
-                <div className="bordeTableinput">
-                  <Row>
-                    <Col md={4} sm={3} xs={12}>
-                      <div className="d-grid">
-                        <Button
-                          type="button"
-                          onClick={placeCancelInvoiceHandler}
-                        //   disabled={
-                        //     orderItems.length === 0 ||
-                        //     !remDat ||
-                        //     !codCus
-                        //   }
-                        >
-                          CANCELA
-                        </Button>
-                      </div>
-                      {loading && <LoadingBox></LoadingBox>}
-                    </Col>
-
-                    <Col md={4} sm={3} xs={12}>
-                      <div className="d-grid">
-                        <Button
-                          type="button"
-                          ref={input0Ref}
-                          onClick={placeInvoiceHandler}
-                        //   disabled={
-                        //     orderItems.length === 0 ||
-                        //     !remDat ||
-                        //     !codCus
-                        //   }
-                        >
-                          IMPRIME
-                        </Button>
-                      </div>
-                      {loading && <LoadingBox></LoadingBox>}
-                    </Col>
-
-                    <Col md={4} sm={3} xs={12}>
-                      <Card.Body>
-                        <Card.Title>
-                          <ListGroup.Item>
-                            <h3>
-                            {(+invoice.total).toFixed(2)}
-                            </h3>
-                          </ListGroup.Item>
-                        </Card.Title>
-                      </Card.Body>
-                    </Col>
-                  </Row>
-                </div>
-
-                {/* This is our table form */}
-                <article>
-                  <TableFormCon
-                    input0Ref={input0Ref}
-                    input8Ref={input8Ref}
-                    codPro={codPro}
-                    setCodPro={setCodPro}
-                    desPro={desPro}
-                    setDesPro={setDesPro}
-                    quantity={quantity}
-                    setQuantity={setQuantity}
-                    price={price}
-                    setPrice={setPrice}
-                    porIva={porIva}
-                    setPorIva={setPorIva}
-                    amount={amount}
-                    setAmount={setAmount}
-                    list={list}
-                    setList={setList}
-                    total={total}
-                    setTotal={setTotal}
-                    valueeR={valueeR}
-                    desval={desval}
-                    numval={numval}
-                    isPaying={isPaying}
-                    orderItems={invoice.orderItems}
-                    //                    totInvwithTax={totInvwithTax}
-                    //                    setTotInvwithTax={setTotInvwithTax}
-                  />
-                </article>
-
-
-                <Modal
-                  // input21Ref={input21Ref}
-                  size="md"
-                  show={showCus}
-                  onHide={() => setShowCus(false)}
-                  aria-labelledby="example-modal-sizes-title-lg"
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title id="example-modal-sizes-title-lg">
-                    Elija un Cliente
-                    </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                  <Col md={12}>
-                    <Card.Body>
-                      <Card.Title>
-                      <Form onSubmit={submitHandlerCus}>
-                            <Form.Group className="mb-3" controlId="name">
-                            {/* <Form.Group className="input" controlId="name"> */}
-                          <Form.Label>Clientes</Form.Label>
-                          <Form.Select
-                            className="input"
-                            onClick={(e) => handleChange(e)}
-                          >
-                            {customers.map((elemento) => (
-                              <option key={elemento._id} value={elemento._id}>
-                                {elemento.nameCus}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="name">
-                              <Form.Control
-                                placeholder="Cliente"
-                                value={name}
-                                disabled={true}
-                                required
-                                />
-                            </Form.Group>
-                              <div className="mb-3">
-                                <Button type="submit"
-                                  // ref={input21Ref}
-                                  disabled={name ? false : true}
-                                  >Continuar</Button>
-                              </div>
-                              </Form>
-
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-                  </Modal.Body>
-                </Modal>
-
-              </div>
-            </div>
           </>
         ) : (
           <>
@@ -987,6 +272,10 @@ function AppRempvCon() {
           </>
         )}
       </main>
+      </>
+      )}
+
+
     </>
   );
 }

@@ -384,8 +384,14 @@ function AppBuy() {
       setToDisc(comprobantesRow.toDisc);
       setItDisc(comprobantesRow.itDisc);
       input2Ref.current.focus();
-
     };
+    const valores1 = valuess.find((row) => row.codVal === "1");
+    setValueeR(valores1);
+    // setCodval(valores1._id);
+    setDesval(valores1.desVal);
+    setCodVal(valores1._id);
+    setDesVal(valores1.desVal);
+
   };
 
 
@@ -406,7 +412,8 @@ function AppBuy() {
 
   const placeInvoiceHandler = async () => {
       if (window.confirm('Esta seguro de Grabar?')) {
-      if (isPaying && (!recNum || !recDat || !desVal)) {
+      // if (isPaying && (!recNum || !recDat || !desVal)) {
+      if (isPaying && (!recDat || !desVal)) {
         unloadpayment();
       } else {
         if (invNum && invDat && codSup) {
@@ -448,7 +455,13 @@ function AppBuy() {
           invoice.desVal = desVal;
           invoice.notes = notes;
 
-          if (recNum && recDat && desVal) {
+          // if (recNum && recDat && desVal) {
+          if (recDat && desVal) {
+            receipt.receiptItems[0].valuee = codVal,
+            receipt.receiptItems[0].desval = desval,
+            receipt.receiptItems[0].amountval = amountval.toFixed(2),
+            receipt.receiptItems[0].numVal = numval,
+
             receipt.total = invoice.total;
             receipt.totalBuy = invoice.totalBuy;
             receipt.codSup = invoice.codSup;
@@ -948,12 +961,12 @@ function AppBuy() {
                           className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                           disabled={
                             orderItems.length === 0 ||
-                            !invNum ||
+                            // !invNum ||
                             !invDat ||
                             !codSup
                           }
                         >
-                          {isPaying ? 'Not Payment' : 'Carga Pago'}
+                          {isPaying ? 'Cta Corriente' : 'Carga Pago'}
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -963,7 +976,8 @@ function AppBuy() {
                         className="d-grid mt-3 mb-1 py-1 px-1 transition-all
                         duration-300"
                       >
-                        {isPaying && desval && recNum && recDat
+                        {/* {isPaying && desval && recNum && recDat */}
+                        {isPaying && desval && recDat
                           ? 'Cargado'
                           : 'No Cargado '}
                       </div>

@@ -130,42 +130,15 @@ export default function CajaIngListScreen() {
 
   const handleConsulta = (receiptId) => {
     navigate(`/admin/invoicerCajIngCon/${receiptId}`);
+    navigate(`/admin/invoicerCajIngCon/${receiptId}?redirect=/admin/invoicesCajIng`);
   };
 
 
-//dr
 
-
-const unapplyReceipt = async (receipt) => {
-  try {
-    //          dispatch({ type: 'UPDATE_REQUEST' });
-    await axios.put(
-      `${API}/api/invoices/${receipt.recNum}/unapplyrecS`,
-      {
-        recNum: receipt.recNum,
-        user: receipt.user._id,
-      },
-      {
-        headers: { Authorization: `Bearer ${userInfo.token}` },
-      });    
-    //          dispatch({type: 'UPDATE_SUCCESS' });
-    // toast.success('Receipt Unapplied successfully');
-    //          navigate('/admin/products');
-  } catch (err) {
-    toast.error(getError(err));
-    //          dispatch({ type: 'UPDATE_FAIL' });
-  }
-};
-    // buscar todas loock at the invoices that have a receipt and modify de numRec by nul
-//dr
 
 const prodeleteReceipt = (receipt) => {
   if (window.confirm('Are you sure to delete?')) {
       deleteReceipt(receipt);
-      //dr
-      unapplyReceipt(receipt);
-      // buscar todas loock at the invoices that have a receipt and modify de numRec by nul
-      //dr
 
     }
   };
@@ -174,7 +147,7 @@ const prodeleteReceipt = (receipt) => {
       // buscar todas loock at the invoices that have a receipt and modify de numRec by null
       try {
         dispatch({ type: 'DELETE_REQUEST' });
-        await axios.delete(`${API}/api/receipts/${receipt._id}&id_config=${id_config}`, {
+        await axios.delete(`${API}/api/receipts/${receipt._id}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         toast.success('receipt deleted successfully');
@@ -294,7 +267,6 @@ const prodeleteReceipt = (receipt) => {
                       type="button"
                       title="Delete"
                       onClick={() => prodeleteReceipt(receipt)}
-                      disabled={true}
                     >
                       <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                     </Button>

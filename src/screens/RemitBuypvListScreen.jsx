@@ -128,7 +128,8 @@ export default function RemitBuypvListScreen() {
   };
 
   const handleConsulta = (invoiceId) => {
-    navigate(`/admin/invoicerBuyRempvCon/${invoiceId}`);
+    // navigate(`/admin/invoicerBuyRempvCon/${invoiceId}`);
+    navigate(`/admin/invoicerBuyRempvCon/${invoiceId}?redirect=/admin/remitsBuypv`);
   };
 
 //do
@@ -296,7 +297,6 @@ try {
                       type="button"
                       title="Delete"
                       onClick={() => deleteHandler(invoice)}
-                      disabled={true}
                     >
                       <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                     </Button>

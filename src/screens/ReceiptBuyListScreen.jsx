@@ -130,7 +130,9 @@ export default function ReceiptListScreen() {
   };
 
   const handleConsulta = (receiptId) => {
-    navigate(`/admin/invoicerBuyRecCon/${receiptId}`);
+    // navigate(`/admin/invoicerBuyRecCon/${receiptId}`);
+    navigate(`/admin/invoicerBuyRecCon/${receiptId}?redirect=/admin/invoicesBuyRec`);
+
   };
 
   
@@ -294,7 +296,6 @@ const prodeleteReceipt = (receipt) => {
                       type="button"
                       title="Delete"
                       onClick={() => prodeleteReceipt(receipt)}
-                      disabled={true}                      
                     >
                       <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                     </Button>

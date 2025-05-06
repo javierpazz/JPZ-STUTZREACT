@@ -129,7 +129,8 @@ export default function ReceiptListScreen() {
   };
 
   const handleConsulta = (receiptId) => {
-    navigate(`/admin/invoicerRecCon/${receiptId}`);
+    // navigate(`/admin/invoicerRecCon/${receiptId}`);
+    navigate(`/admin/invoicerRecCon/${receiptId}?redirect=/admin/invoicesRec`);
   };
 
 
@@ -143,7 +144,7 @@ const unapplyReceipt = async (receipt) => {
       `${API}/api/invoices/${receipt.recNum}/unapplyrecS`,
       {
         recNum: receipt.recNum,
-        user: receipt.user._id,
+        customer: receipt.id_client._id,
       },
       {
         headers: { Authorization: `Bearer ${userInfo.token}` },
@@ -295,7 +296,6 @@ const prodeleteReceipt = (receipt) => {
                       type="button"
                       title="Delete"
                       onClick={() => prodeleteReceipt(receipt)}
-                      disabled={true}
                     >
                       <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                     </Button>

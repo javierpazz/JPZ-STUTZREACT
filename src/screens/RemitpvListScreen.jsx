@@ -143,6 +143,7 @@ export default function RemitpvListScreen() {
 
   const handleConsulta = (invoiceId) => {
     navigate(`/admin/invoicerRempvCon/${invoiceId}`);
+    navigate(`/admin/invoicerRempvCon/${invoiceId}?redirect=/admin/remitspv`);
   };
 
 //do
@@ -187,11 +188,7 @@ try {
 
 
   const deleteHandler = async (invoice) => {
-    if (invoice.recNum) {
-      noDelInvoice();
-    } else {
-      if (!invoice.ordYes) {
-        //do
+    if (window.confirm('Are you sure to delete?')) {
         controlStockHandler(invoice);
         try {
           dispatch({ type: 'DELETE_REQUEST' });
@@ -206,34 +203,10 @@ try {
             type: 'DELETE_FAIL',
           });
         }
+    }
 
         //do
-      }
-      else {
-            if (window.confirm('Are you sure to delete?')) {
-              try {
-                dispatch({ type: 'UPDATE_REQUEST' });
-                await axios.put(
-                  `${API}/api/invoices/${invoice._id}/deleteinvoice`,
-                  {
-                    movpvNum: null,
-                    invNum: null,
-                  },
-                  {
-                    headers: { Authorization: `Bearer ${userInfo.token}` },
-                  }
-                );
-                dispatch({ type: 'UPDATE_SUCCESS' });
-                toast.success('Invoice deleted successfully');
-              } catch (err) {
-                toast.error(getError(error));
-                dispatch({
-                  type: 'UPDATE_FAIL',
-                });
-              }
-            }
-          }
-    }
+    
   };
 
   const calculatotal = () => {
@@ -348,7 +321,6 @@ try {
                       type="button"
                       title="Delete"
                       onClick={() => deleteHandler(invoice)}
-                      disabled={true}
                     >
                       <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                     </Button>

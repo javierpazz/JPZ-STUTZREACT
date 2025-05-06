@@ -118,9 +118,16 @@ export default function TableFormBuy({
     e.preventDefault();
     addToCartHandler();
   };
+  const unloadpayment = async () => {
+    if (window.confirm('El Importe tiene que ser mayor a Cero')) {
+    }
+    };
+    
+    
 
   const addToCartHandler = async (itemInv) => {
-    quantity = round2(quantity);
+    if (amount <= 0) {unloadpayment();} else {
+      quantity = round2(quantity);
     amount = round2(amount);
     price = round2(price);
     porIva = round2(porIva);
@@ -133,7 +140,7 @@ export default function TableFormBuy({
       });
     }
   };
-
+  };
   const removeItemHandler = (itemInv) => {
     input8Ref.current.focus()
     ctxDispatch({ type: 'INVOICE_REMOVE_ITEM', payload: itemInv });
@@ -312,7 +319,7 @@ export default function TableFormBuy({
               <Card.Body>
                 <Card.Title>
                   <Form.Group className="input">
-                    <Form.Label>Cantidad</Form.Label>
+                    <Form.Label>Total</Form.Label>
                     <p>{amount.toFixed(2)}</p>
                   </Form.Group>
                 </Card.Title>
@@ -405,7 +412,7 @@ export default function TableFormBuy({
             <td className="font-bold">Descripcion Producto </td>
             <td className="font-bold">Cantidad</td>
             <td className="font-bold">Precio</td>
-            <td className="font-bold">Cantidad</td>
+            <td className="font-bold">Total</td>
             <td className="font-bold">Options</td>
           </tr>
         </thead>

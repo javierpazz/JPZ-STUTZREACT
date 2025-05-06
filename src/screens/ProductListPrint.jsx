@@ -74,7 +74,7 @@ const ProductListPrint = () => {
   const filteredProducts = products.filter(p =>
     (categoryFilter ? p.category === categoryFilter : true) &&
     (supplierFilter ? p.supplier === supplierFilter : true) &&
-    (isMin) ? +p.inStock <= +p.minStock : true
+    ((isMin) ? +p.inStock <= +p.minStock : true)
 );
 
   const allProducts = Object.values(groupByCategory(filteredProducts)).flat();
@@ -110,14 +110,15 @@ const ProductListPrint = () => {
           ))}
         </select>
 
-        <Form.Check
-            type="checkbox"
-            id="isMin"
-            label="Ver solo con Stock Minimo"
-            checked={isMin}
-            onChange={(e) => setIsMin(e.target.checked)}
-            />
-
+        <label style={{ marginLeft: '1rem' }}>
+          <input
+              type="checkbox"
+              id="isMin"
+              checked={isMin}
+              onChange={(e) => setIsMin(e.target.checked)}
+              />
+            Ver solo con Stock Minimo
+        </label>
 
       </div>
 
@@ -151,8 +152,8 @@ const ProductListPrint = () => {
               <td>{p.supplier}</td>
               <td className="text-end">${p.price}</td>
               <td className="text-end">${p.priceBuy}</td>
-              <td className="text-end">${p.inStock}</td>
-              <td className="text-end">${p.minStock}</td>
+              <td className="text-end">{p.inStock}</td>
+              <td className="text-end">{p.minStock}</td>
               <td className="text-end">{p.porIva}</td>
             </tr>
           ))}

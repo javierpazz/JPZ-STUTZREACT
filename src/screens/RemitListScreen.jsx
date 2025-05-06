@@ -145,7 +145,8 @@ export default function RemitListScreen() {
   };
 
   const handleConsulta = (invoiceId) => {
-    navigate(`/admin/invoicerRemCon/${invoiceId}`);
+    // navigate(`/admin/invoicerRemCon/${invoiceId}`);
+    navigate(`/admin/invoicerRemCon/${invoiceId}?redirect=/admin/remits`);
   };
 
 //do
@@ -361,7 +362,6 @@ try {
                       type="button"
                       title="Delete"
                       onClick={() => deleteHandler(invoice)}
-                      disabled={true}
                     >
                       <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                     </Button>

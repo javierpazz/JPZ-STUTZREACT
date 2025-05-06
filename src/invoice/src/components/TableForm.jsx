@@ -120,8 +120,14 @@ export default function TableForm({
     e.preventDefault();
     addToCartHandler();
   };
-
+  const unloadpayment = async () => {
+    if (window.confirm('El Importe tiene que ser mayor a Cero')) {
+    }
+    };
+    
+    
   const addToCartHandler = async (itemInv) => {
+    if (amount <= 0) {unloadpayment();} else {
     quantity = round2(quantity);
     amount = round2(amount);
     price = round2(price);
@@ -135,7 +141,7 @@ export default function TableForm({
       });
     }
   };
-
+  };
   const removeItemHandler = (itemInv) => {
     input8Ref.current.focus()
     ctxDispatch({ type: 'INVOICE_REMOVE_ITEM', payload: itemInv });

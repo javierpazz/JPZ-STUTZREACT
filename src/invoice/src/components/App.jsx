@@ -23,6 +23,7 @@ import Modal from 'react-bootstrap/Modal';
 import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../../../components/LoadingBox';
 import { getError, API } from '../../../utils';
+import { FormCheck } from 'react-bootstrap';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -165,6 +166,8 @@ function App() {
   const [totalImp, setTotalImp] = useState(0);
   const [width] = useState(641);
   const [showInvoice, setShowInvoice] = useState(false);
+  const [geRem, setGeRem] = useState(false);
+  const [recAux, setRecAux] = useState(0);
 
   const [isPaying, setIsPaying] = useState(false);
 
@@ -358,6 +361,13 @@ function App() {
       input2Ref.current.focus();
 
     };
+    const valores1 = valuess.find((row) => row.codVal === "1");
+    setValueeR(valores1);
+    setCodval(valores1._id);
+    setDesval(valores1.desVal);
+    setCodVal(valores1._id);
+    setDesVal(valores1.desVal);
+
   };
 
 
@@ -378,15 +388,16 @@ function App() {
 
   const placeInvoiceHandler = async () => {
     if (window.confirm('Esta seguro de Grabar?')) {
-      if (isPaying && (!recNum || !recDat || !desVal)) {
+      // if (isPaying && (!recNum || !recDat || !desVal)) {
+      if (!isPaying && ( !recDat || !desVal)) {
         unloadpayment();
       } else {
         if (invDat && codCus) {
-          if (isHaber) {
-          orderItems.map((item) => stockHandlerL({ item }))
-          } else {
-            orderItems.map((item) => stockHandlerM({ item }))
-          };
+          // if (isHaber) {
+          // orderItems.map((item) => stockHandlerL({ item }))
+          // } else {
+          //   orderItems.map((item) => stockHandlerM({ item }))
+          // };
 
           const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
           invoice.subTotal = round2(
@@ -411,8 +422,9 @@ function App() {
           invoice.codConNum = codConNum;
           invoice.codCom = codCom;
           invoice.isHaber = isHaber;
+          invoice.geRem = geRem;
 
-          invoice.codSup = '0';
+          invoice.codSup = null;
           invoice.remNum = remNum;
           invoice.remDat = invDat;
           invoice.invNum = invNum;
@@ -421,8 +433,15 @@ function App() {
           invoice.recDat = recDat;
           invoice.desVal = desVal;
           invoice.notes = notes;
+          invoice.salbuy = 'SALE';
 
-          if (recNum && recDat && desVal) {
+          // if (recNum && recDat && desVal) {
+            // if ( recDat && desVal) {
+            receipt.receiptItems[0].valuee = codval,
+            receipt.receiptItems[0].desval = desval,
+            receipt.receiptItems[0].amountval = amountval.toFixed(2),
+            receipt.receiptItems[0].numVal = numval,
+
             receipt.subTotal = invoice.subTotal;
             receipt.total = invoice.total;
             receipt.totalBuy = invoice.totalBuy;
@@ -430,14 +449,15 @@ function App() {
             receipt.codCon = invoice.codCon;
             receipt.user = userInfo._id,
             receipt.codConNum = invoice.codConNum;
-            receipt.codSup = '0';
-            receipt.recNum = invoice.recNum;
-            receipt.recDat = invoice.recDat;
-            receipt.desVal = invoice.desVal;
+            receipt.codSup = null;
+            receipt.recNum = recNum;
+            receipt.recDat = recDat;
+            receipt.desVal = desVal;
             receipt.notes = invoice.notes;
+            receipt.salbuy = 'SALE';
 
-            receiptHandler();
-          }
+            // receiptHandler();
+          // }
           orderHandler();
           setShowInvoice(true);
           //      handlePrint();
@@ -498,8 +518,14 @@ function App() {
           },
         }
       );
-      ctxDispatch({ type: 'RECEIPT_CLEAR' });
-      dispatch({ type: 'CREATE_SUCCESS' });
+      console.log(data.receipt.recNum);
+      setRecNum(1212);
+      // console.log("1");
+      // console.log(recAux);
+      // console.log("2");
+      console.log(recNum);
+      invoice.recNum = recNum;
+      // dispatch({ type: 'CREATE_SUCCESS' });
       localStorage.removeItem('receiptItems');
       //navigate(`/order/${data.order._id}`);
     } catch (err) {
@@ -510,89 +536,93 @@ function App() {
 
   /////////////////////////////////////////////
 
-  const stockHandlerL = async (item) => {
-    // console.log(item.item._id);
+  // const stockHandlerL = async (item) => {
+  //   // console.log(item.item._id);
 
-    try {
-      dispatch({ type: 'CREATE_REQUEST' });
-      await axios.put(
-        `${API}/api/products/downstock/${item.item._id}`,
-        {
-          quantitys: item.item.quantity,
-          id_config: id_config,
-        },
-        { 
-          headers: {
-            authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
-      dispatch({ type: 'CREATE_SUCCESS' });
-    } catch (err) {
-      dispatch({ type: 'CREATE_FAIL' });
-      toast.error(getError(err));
-    }
-  };
+  //   try {
+  //     dispatch({ type: 'CREATE_REQUEST' });
+  //     await axios.put(
+  //       `${API}/api/products/downstock/${item.item._id}`,
+  //       {
+  //         quantitys: item.item.quantity,
+  //         id_config: id_config,
+  //       },
+  //       { 
+  //         headers: {
+  //           authorization: `Bearer ${userInfo.token}`,
+  //         },
+  //       }
+  //     );
+  //     dispatch({ type: 'CREATE_SUCCESS' });
+  //   } catch (err) {
+  //     dispatch({ type: 'CREATE_FAIL' });
+  //     toast.error(getError(err));
+  //   }
+  // };
 
-  const stockHandlerM = async (item) => {
-    // console.log(item.item._id);
+  // const stockHandlerM = async (item) => {
+  //   // console.log(item.item._id);
 
-    try {
-      dispatch({ type: 'CREATE_REQUEST' });
-      await axios.put(
-        `${API}/api/products/upstock/${item.item._id}`,
-        {
-          quantitys: item.item.quantity,
-          id_config: id_config,
-        },
-        { 
-          headers: {
-            authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
-      dispatch({ type: 'CREATE_SUCCESS' });
-    } catch (err) {
-      dispatch({ type: 'CREATE_FAIL' });
-      toast.error(getError(err));
-    }
-  };
+  //   try {
+  //     dispatch({ type: 'CREATE_REQUEST' });
+  //     await axios.put(
+  //       `${API}/api/products/upstock/${item.item._id}`,
+  //       {
+  //         quantitys: item.item.quantity,
+  //         id_config: id_config,
+  //       },
+  //       { 
+  //         headers: {
+  //           authorization: `Bearer ${userInfo.token}`,
+  //         },
+  //       }
+  //     );
+  //     dispatch({ type: 'CREATE_SUCCESS' });
+  //   } catch (err) {
+  //     dispatch({ type: 'CREATE_FAIL' });
+  //     toast.error(getError(err));
+  //   }
+  // };
 
   const orderHandler = async () => {
+    const invoiceAux = invoice;
+    const receiptAux = receipt;
     try {
       dispatch({ type: 'CREATE_REQUEST' });
       const { data } = await axios.post(
         `${API}/api/invoices`,
 
-        {
-          orderItems: invoice.orderItems,
-          shippingAddress: invoice.shippingAddress,
-          paymentMethod: invoice.paymentMethod,
-          subTotal: invoice.subTotal,
-          shippingPrice: invoice.shippingPrice,
-          tax: invoice.tax,
-          total: invoice.total,
-          totalBuy: invoice.totalBuy,
+        {invoiceAux, receiptAux },
+        // {
+          // orderItems: invoice.orderItems,
+          // shippingAddress: invoice.shippingAddress,
+          // paymentMethod: invoice.paymentMethod,
+          // subTotal: invoice.subTotal,
+          // shippingPrice: invoice.shippingPrice,
+          // tax: invoice.tax,
+          // total: invoice.total,
+          // totalBuy: invoice.totalBuy,
 
-          codCus: invoice.codCus,
-          codCon: invoice.codCon,
-          user: userInfo._id,
-          codConNum: invoice.codConNum,
-          codCom: invoice.codCom,
-          isHaber: invoice.isHaber,
+          // codCus: invoice.codCus,
+          // codCon: invoice.codCon,
+          // user: userInfo._id,
+          // codConNum: invoice.codConNum,
+          // codCom: invoice.codCom,
+          // isHaber: invoice.isHaber,
+          // geRem: invoice.geRem,
 
-          //        codSup: invoice.codSup,
+          // //        codSup: invoice.codSup,
 
-          remNum: invoice.remNum,
-          remDat: invoice.remDat,
-          invNum: invoice.invNum,
-          invDat: invoice.invDat,
-          recNum: invoice.recNum,
-          recDat: invoice.recDat,
-          desVal: invoice.desVal,
-          notes: invoice.notes,
-          salbuy: 'SALE',
-        },
+          // remNum: invoice.remNum,
+          // remDat: invoice.remDat,
+          // invNum: invoice.invNum,
+          // invDat: invoice.invDat,
+          // recNum: invoice.recNum,
+          // recDat: invoice.recDat,
+          // desVal: invoice.desVal,
+          // notes: invoice.notes,
+          // salbuy: 'SALE',
+        // },
         {
           headers: {
             authorization: `Bearer ${userInfo.token}`,
@@ -630,6 +660,21 @@ function App() {
       setRecDat('');
       setNumval(' ');
       setAmountval(0);
+      setDesval(valueeR.desVal);
+      setDesVal(valueeR.desVal);
+      setRecDat(invDat);
+    }
+    if (!isPaying) {
+      // setDesval('JUJU');
+      // setDesVal('JUJU');
+      setDesval('');
+      setDesVal('');
+      setRecNum('');
+      setRecDat('');
+      setNumval(' ');
+      setAmountval(0);
+
+
     }
   };
 
@@ -689,7 +734,7 @@ function App() {
                     </Button>
                   </Col>
 
-                  <Col md={8} className="mt-1 text-black py-1 px-1 rounded ">
+                  <Col md={7} className="mt-1 text-black py-1 px-1 rounded ">
                       <Card.Body>
                         <Card.Title>
                           <ListGroup.Item>
@@ -700,8 +745,15 @@ function App() {
                         </Card.Title>
                       </Card.Body>
                     </Col>
-
-
+                    <Col md={1} className="mt-4 text-black py-1 px-1 rounded ">
+                    <Form.Check
+                          type="checkbox"
+                          id="geRem"
+                          label="Genera Remito"
+                          checked={geRem}
+                          onChange={(e) => setGeRem(e.target.checked)}
+                          />
+                     </Col>
                 </Row>
 
 
@@ -755,7 +807,7 @@ function App() {
                     <Card.Body>
                       <Card.Title>
                         <Form.Group className="input" controlId="name">
-                          <Form.Label>Comprobante N°</Form.Label>
+                          <Form.Label>Comp. N°</Form.Label>
                           <Form.Control
                             className="input"
                             type="number"
@@ -857,7 +909,7 @@ function App() {
                             <Form.Select
                               className="input"
                               onClick={(e) => handleValueChange(e)}
-                              disabled={!isPaying}
+                              disabled={isPaying}
                             >
                               {valuess.map((elementoV) => (
                                 <option
@@ -883,7 +935,7 @@ function App() {
                               placeholder="Valor N°"
                               value={numval}
                               onChange={(e) => setNumval(e.target.value)}
-                              disabled={!isPaying}
+                              disabled={isPaying}
                               required
                             />
                           </Form.Group>
@@ -901,7 +953,7 @@ function App() {
                               placeholder="Fecha"
                               value={recDat}
                               onChange={(e) => setRecDat(e.target.value)}
-                              disabled={!isPaying}
+                              disabled={isPaying}
                               required
                             />
                           </Form.Group>
@@ -920,7 +972,7 @@ function App() {
                               type="number"
                               value={recNum}
                               onChange={(e) => setRecNum(e.target.value)}
-                              disabled={!isPaying}
+                              disabled={isPaying}
                               required
                             />
                           </Form.Group>
@@ -940,7 +992,7 @@ function App() {
                             !codCus
                           }
                         >
-                          {isPaying ? 'Not Payment' : 'Carga Cobro'}
+                          {!isPaying ? 'No Cargar Cobro' : 'Carga Cobro'}
                         </Button>
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
@@ -950,9 +1002,10 @@ function App() {
                         className="d-grid mt-3 mb-1 py-1 px-1 transition-all
                         duration-300"
                       >
-                        {isPaying && desval && recNum && recDat
-                          ? 'Cargado'
-                          : 'No Cargado '}
+                        {/* {isPaying && desval && recNum && recDat */}
+                        {  !isPaying
+                          ? 'COBRANDO'
+                          : 'CUENTA CORRIENTE'}
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
                     </Col>
