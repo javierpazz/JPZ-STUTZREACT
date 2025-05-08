@@ -97,6 +97,10 @@ export default function ValueeListScreen() {
     }
   }, [page, userInfo, successDelete]);
 
+  const listado = async () => {
+    navigate('/admin/valueeList?redirect=/admin/valuees');
+  };
+
   const createHandler = async () => {
         navigate(`/admin/valuee/0`);
   };
@@ -123,6 +127,16 @@ export default function ValueeListScreen() {
       <Row>
         <Col>
           <h1>Valores</h1>
+        </Col>
+        <Col className="col text-end">
+          <div>
+            <Button type="button"
+                    variant="primary"
+                    onClick={listado}
+                  >
+              Listar
+            </Button>
+            </div>
         </Col>
         <Col className="col text-end">
           <div>

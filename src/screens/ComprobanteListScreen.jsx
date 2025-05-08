@@ -99,6 +99,9 @@ export default function ComprobanteListScreen() {
     }
   }, [page, userInfo, successDelete]);
 
+  const listado = async () => {
+    navigate('/admin/comprobanteList?redirect=/admin/comprobantes');
+  };
   const createHandler = async () => {
         navigate(`/admin/comprobante/0`);
   };
@@ -125,6 +128,16 @@ export default function ComprobanteListScreen() {
       <Row>
         <Col>
           <h1>Comprobantes</h1>
+        </Col>
+        <Col className="col text-end">
+          <div>
+            <Button type="button"
+                    variant="primary"
+                    onClick={listado}
+                  >
+              Listar
+            </Button>
+            </div>
         </Col>
         <Col className="col text-end">
           <div>

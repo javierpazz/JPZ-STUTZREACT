@@ -492,9 +492,9 @@ function AppRem() {
       setDesval('');
       setDesVal('');
       setRemNumImp(data.invoice.remNum);
-      setTotalSubImp(data.invoice.subTotal),
-      setTaxImp(data.invoice.tax),
-      setTotalImp(data.invoice.total),
+      setTotalSubImp(data.invoice.subTotal);
+      setTaxImp(data.invoice.tax);
+      setTotalImp(data.invoice.total);
       setRecNum('');
       setRecDat('');
       setNumval(' ');
@@ -1006,6 +1006,7 @@ function AppRem() {
                     <th>#</th>
                     <th>Descripción</th>
                     <th className="text-end">Cantidad</th>
+                    <th className="text-end">Unidad</th>
                     <th className="text-end">Precio</th>
                     <th className="text-end">Subtotal</th>
                     <th className="text-end">IVA (%)</th>
@@ -1018,6 +1019,7 @@ function AppRem() {
                       <td>{index + 1}</td>
                       <td>{item.title}</td>
                       <td className="text-end">{item.quantity}</td>
+                      <td>{item.medPro}</td>
                       <td className="text-end">${item.price}</td>
                       <td className="text-end">${(item.quantity * item.price).toFixed(2)}</td>
                       <td className="text-end">%{item.porIva}</td>

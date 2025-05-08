@@ -92,6 +92,11 @@ function App() {
   const input7Ref = useRef(null);
   const input8Ref = useRef(null);
   const input0Ref = useRef(null);
+  const input11Ref = useRef(null);
+  const input12Ref = useRef(null);
+  const input13Ref = useRef(null);
+  const input14Ref = useRef(null);
+  const input15Ref = useRef(null);
   
   const input20Ref = useRef(null);
   const input21Ref = useRef(null);
@@ -132,6 +137,8 @@ function App() {
   const [invDat, setInvDat] = useState(getTodayInGMT3());
   const [recNum, setRecNum] = useState('');
   const [recDat, setRecDat] = useState(getTodayInGMT3());
+  const [showVal, setShowVal] = useState(false);
+  const [codValo, setCodValo] = useState('');
   const [codVal, setCodVal] = useState('');
   const [codval, setCodval] = useState('');
   const [desval, setDesval] = useState('');
@@ -140,7 +147,7 @@ function App() {
   const [numval, setNumval] = useState(' ');
   // const [userss, setUserss] = useState([]);
   const [customers, setCustomers] = useState([]);
-  const [valuess, setValuess] = useState([]);
+  const [valuees, setValuees] = useState([]);
   const [comprobantes, setComprobantes] = useState([]);
   const [codPro, setCodPro] = useState('');
   const [address, setAddress] = useState('Direccion Usuario');
@@ -225,7 +232,7 @@ function App() {
         const { data } = await axios.get(`${API}/api/valuees/`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        setValuess(data);
+        setValuees(data);
         dispatch({ type: 'VALUE_FETCH_SUCCESS', payload: data });
       } catch (err) {}
     };
@@ -361,28 +368,91 @@ function App() {
       input2Ref.current.focus();
 
     };
-    const valores1 = valuess.find((row) => row.codVal === "1");
+    const valores1 = valuees.find((row) => row.codVal === "1");
     setValueeR(valores1);
     setCodval(valores1._id);
+    setCodValo(valores1.codVal);
     setDesval(valores1.desVal);
     setCodVal(valores1._id);
     setDesVal(valores1.desVal);
 
   };
 
-
-  const searchValue = (codVal) => {
-    const valuesRow = valuess.find((row) => row._id === codVal);
-    setValueeR(valuesRow);
-    setCodVal(valuesRow.codVal);
-    setCodval(valuesRow.codVal);
-    setDesVal(valuesRow.desVal);
-    setDesval(valuesRow.desVal);
+  const submitHandlerVal = async (e) => {
+    e.preventDefault();
+    setShowVal(false)
   };
 
-  const handleValueChange = (e) => {
-    searchValue(e.target.value);
+
+  const searchValuee = (codVal) => {
+    const valueeR = valuees.find((row) => row._id === codVal);
+    setValueeR(valueeR);
+    setCodVal(valueeR._id);
+    setCodValo(valueeR.codVal);
+    setDesVal(valueeR.desVal);
+    setDesval(valueeR.desVal);
+
+  //   const valuesRow = valuess.find((row) => row._id === codVal);
+  //   setValueeR(valuesRow);
+  //   setCodVal(valuesRow.codVal);
+  //   setCodval(valuesRow.codVal);
+  //   setDesVal(valuesRow.desVal);
+  //   setDesval(valuesRow.desVal);
+
+
   };
+
+  const ayudaVal = (e) => {
+    e.key === "Enter" && buscarPorCodVal(codValo);
+    e.key === "F2" && handleShowVal(codVal);
+    e.key === "Tab" && buscarPorCodVal(codValo);
+  };
+  
+
+  const buscarPorCodVal = (codValo) => {
+    const valueeR = valuees.find((row) => row.codVal === codValo);
+
+    if (!valueeR) {
+        setValueeR({});
+        setCodVal('');
+        setCodValo('');
+        setDesVal('');
+        setDesval('');
+        input12Ref.current.focus()
+      }else{
+        setValueeR(valueeR);
+        setCodVal(valueeR._id);
+        setCodValo(valueeR.codValo);
+        setDesVal(valueeR.desVal);
+        setDesval(valueeR.desVal);
+        input12Ref.current.focus()
+    };
+  };
+
+
+
+  const handleChangeVal = (e) => {
+    searchValuee(e.target.value);
+  };
+  const handleShowVal = () => {
+    setShowVal(true);
+  };
+
+
+
+
+  // const searchValue = (codVal) => {
+  //   const valuesRow = valuess.find((row) => row._id === codVal);
+  //   setValueeR(valuesRow);
+  //   setCodVal(valuesRow.codVal);
+  //   setCodval(valuesRow.codVal);
+  //   setDesVal(valuesRow.desVal);
+  //   setDesval(valuesRow.desVal);
+  // };
+
+  // const handleValueChange = (e) => {
+  //   searchValue(e.target.value);
+  // };
 
   const placeCancelInvoiceHandler = async () => {};
 
@@ -437,6 +507,13 @@ function App() {
 
           // if (recNum && recDat && desVal) {
             // if ( recDat && desVal) {
+            if (!isPaying) {
+              receipt.recNum = recNum;
+              receipt.recDat = recDat;
+            } else {
+              receipt.recNum = null;
+              receipt.recDat = null;
+            }
             receipt.receiptItems[0].valuee = codval,
             receipt.receiptItems[0].desval = desval,
             receipt.receiptItems[0].amountval = amountval.toFixed(2),
@@ -450,8 +527,6 @@ function App() {
             receipt.user = userInfo._id,
             receipt.codConNum = invoice.codConNum;
             receipt.codSup = null;
-            receipt.recNum = recNum;
-            receipt.recDat = recDat;
             receipt.desVal = desVal;
             receipt.notes = invoice.notes;
             receipt.salbuy = 'SALE';
@@ -478,63 +553,6 @@ function App() {
       payload: { ...itemVal, desval, amountval, numval },
     });
   };
-
-  /////////////////////////////////////////////
-
-  const receiptHandler = async () => {
-    try {
-      dispatch({ type: 'CREATE_REQUEST' });
-      const { data } = await axios.post(
-        `${API}/api/receipts`,
-        {
-          receiptItems: receipt.receiptItems,
-          shippingAddress: receipt.shippingAddress,
-          paymentMethod: receipt.paymentMethod,
-          subTotal: receipt.subTotal,
-          shippingPrice: receipt.shippingPrice,
-          tax: receipt.tax,
-          total: receipt.total,
-          totalBuy: receipt.totalBuy,
-
-          codCus: receipt.codCus,
-          codCon: receipt.codCon,
-          user: userInfo._id,
-          codConNum: receipt.codConNum,
-
-          //          codSup: receipt.codSup,
-
-          remNum: receipt.remNum,
-          invNum: receipt.invNum,
-          invDat: receipt.invDat,
-          recNum: receipt.recNum,
-          recDat: receipt.recDat,
-          desval: receipt.desval,
-          notes: receipt.notes,
-          salbuy: 'SALE',
-        },
-        {
-          headers: {
-            authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
-      console.log(data.receipt.recNum);
-      setRecNum(1212);
-      // console.log("1");
-      // console.log(recAux);
-      // console.log("2");
-      console.log(recNum);
-      invoice.recNum = recNum;
-      // dispatch({ type: 'CREATE_SUCCESS' });
-      localStorage.removeItem('receiptItems');
-      //navigate(`/order/${data.order._id}`);
-    } catch (err) {
-      dispatch({ type: 'CREATE_FAIL' });
-      toast.error(getError(err));
-    }
-  };
-
-  /////////////////////////////////////////////
 
   // const stockHandlerL = async (item) => {
   //   // console.log(item.item._id);
@@ -634,15 +652,15 @@ function App() {
       //      localStorage.removeItem('orderItems');
       setIsPaying(false);
       setInvNumImp(data.invoice.invNum);
-      setTotalSubImp(data.invoice.subTotal),
-      setTaxImp(data.invoice.tax),
-      setTotalImp(data.invoice.total),
-      setDesval('');
-      setDesVal('');
-      setRecNum('');
-      setRecDat('');
-      setNumval(' ');
-      setAmountval(0);
+      setTotalSubImp(data.invoice.subTotal);
+      setTaxImp(data.invoice.tax);
+      setTotalImp(data.invoice.total);
+      // setDesval('');
+      // setDesVal('');
+      // setRecNum('');
+      // setRecDat('');
+      // setNumval(' ');
+      // setAmountval(0);
       //navigate(`/order/${data.order._id}`);
     } catch (err) {
       dispatch({ type: 'CREATE_FAIL' });
@@ -663,6 +681,7 @@ function App() {
       setDesval(valueeR.desVal);
       setDesVal(valueeR.desVal);
       setRecDat(invDat);
+      input11Ref.current.focus()
     }
     if (!isPaying) {
       // setDesval('JUJU');
@@ -673,7 +692,7 @@ function App() {
       setRecDat('');
       setNumval(' ');
       setAmountval(0);
-
+      input8Ref.current.focus()
 
     }
   };
@@ -901,15 +920,17 @@ function App() {
 
                 <div className="bordeTable">
                   <Row>
-                    <Col md={2}>
+                    {/* <Col md={2}>
                       <Card.Body>
                         <Card.Title>
                           <Form.Group className="input" controlId="name">
                             <Form.Label>Values</Form.Label>
                             <Form.Select
                               className="input"
+                              ref={input11Ref}
                               onClick={(e) => handleValueChange(e)}
-                              disabled={isPaying}
+                              onKeyDown={(e) => e.key === "Enter" && input12Ref.current.focus()}
+                              // disabled={isPaying}
                             >
                               {valuess.map((elementoV) => (
                                 <option
@@ -923,7 +944,51 @@ function App() {
                           </Form.Group>
                         </Card.Title>
                       </Card.Body>
+                    </Col> */}
+                  <Col md={1}>
+                      <Card.Body>
+                        <Card.Title>
+                          <Form.Group className="input" controlId="name">
+                            <Form.Label>Codigo Valor</Form.Label>
+                            <Form.Control
+                              className="input"
+                              ref={input11Ref}
+                              placeholder="Codigo Valor"
+                              value={codValo}
+                              onChange={(e) => setCodValo(e.target.value)}
+                              // onKeyDown={(e) => e.key === "Enter" && buscarPorCodVal(codValo)}
+                              onKeyDown={(e) => ayudaVal(e)}
+                              // required
+                              />
+                          </Form.Group>
+                        </Card.Title>
+                      </Card.Body>
                     </Col>
+
+                    <Col md={1}>
+                            <Button
+                              className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
+                              type="button"
+                              title="Buscador"
+                              onClick={() => handleShowVal()}
+                              >
+                              <BiFileFind className="text-blue-500 font-bold text-xl" />
+                            </Button>
+                          </Col>
+
+                  <Col md={4} className="mt-1 text-black py-1 px-1 rounded ">
+                      <Card.Body>
+                        <Card.Title>
+                          <ListGroup.Item>
+                            <h3>
+                              {desVal}
+                            </h3>
+                          </ListGroup.Item>
+                        </Card.Title>
+                      </Card.Body>
+                    </Col>
+
+
 
                     <Col md={2}>
                       <Card.Body>
@@ -932,28 +997,32 @@ function App() {
                             <Form.Label>Valor N°</Form.Label>
                             <Form.Control
                               className="input"
+                              ref={input12Ref}
                               placeholder="Valor N°"
                               value={numval}
                               onChange={(e) => setNumval(e.target.value)}
-                              disabled={isPaying}
+                              onKeyDown={(e) => e.key === "Enter" && input11Ref.current.focus()}
+                              // disabled={!isPaying}
                               required
                             />
                           </Form.Group>
                         </Card.Title>
                       </Card.Body>
                     </Col>
-                    <Col md={2}>
+                    {/* <Col md={2}>
                       <Card.Body>
                         <Card.Title>
                           <Form.Group className="input" controlId="name">
                             <Form.Label>Fecha</Form.Label>
                             <Form.Control
                               className="input"
+                              ref={input13Ref}
                               type="date"
                               placeholder="Fecha"
                               value={recDat}
                               onChange={(e) => setRecDat(e.target.value)}
-                              disabled={isPaying}
+                              onKeyDown={(e) => e.key === "Enter" && input14Ref.current.focus()}
+                              // disabled={!isPaying}
                               required
                             />
                           </Form.Group>
@@ -968,21 +1037,24 @@ function App() {
                             <Form.Label>Recibo N°</Form.Label>
                             <Form.Control
                               className="input"
+                              ref={input14Ref}
                               placeholder="Recibo N°"
                               type="number"
                               value={recNum}
                               onChange={(e) => setRecNum(e.target.value)}
-                              disabled={isPaying}
+                              onKeyDown={(e) => e.key === "Enter" && input11Ref.current.focus()}
+                              // disabled={!isPaying}
                               required
                             />
                           </Form.Group>
                         </Card.Title>
                       </Card.Body>
-                    </Col>
+                    </Col> */}
                     <Col md={2}>
                       <div className="d-grid">
                         <Button
                           type="button"
+                          ref={input15Ref}
                           onClick={Paying}
                           className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                           disabled={
@@ -997,15 +1069,28 @@ function App() {
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
                     </Col>
-                    <Col md={1}>
-                      <div
-                        className="d-grid mt-3 mb-1 py-1 px-1 transition-all
-                        duration-300"
-                      >
+                    <Col md={2}>
+                      <div>
                         {/* {isPaying && desval && recNum && recDat */}
                         {  !isPaying
-                          ? 'COBRANDO'
-                          : 'CUENTA CORRIENTE'}
+                          ? (
+                            <Button
+                            className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
+                            type="button"
+                            // disabled={true}
+                          >
+                            COBRANDO
+                          </Button>
+                          )
+                          :(
+                         <Button
+                         className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
+                         type="button"
+                          // disabled={true}
+                        >
+                          CUENTA CORRIENTE
+                        </Button>)
+}
                       </div>
                       {loading && <LoadingBox></LoadingBox>}
                     </Col>
@@ -1198,6 +1283,62 @@ function App() {
                   </Col>
                   </Modal.Body>
                 </Modal>
+                <Modal
+                            // input22Ref={input22Ref}
+                            size="md"
+                            show={showVal}
+                            onHide={() => setShowVal(false)}
+                            aria-labelledby="example-modal-sizes-title-lg"
+                          >
+                            <Modal.Header closeButton>
+                              <Modal.Title id="example-modal-sizes-title-lg">
+                              Elija un Valor
+                              </Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                            <Col md={12}>
+                              <Card.Body>
+                                <Card.Title>
+                                  <Card.Title>
+                                      <Form onSubmit={submitHandlerVal}>
+                                        <Form.Group className="mb-3" controlId="name">
+                                        {/* <Form.Group className="input" controlId="name"> */}
+                                        <Form.Label>Description de Valor</Form.Label>
+                                      <Form.Select
+                                        className="input"
+                                        onClick={(e) => handleChangeVal(e)}
+                                        // disabled={isPaying}
+                                      >
+                                        {valuees.map((elementoP) => (
+                                          <option key={elementoP._id} value={elementoP._id}>
+                                            {elementoP.desVal}
+                                          </option>
+                                        ))}
+                                      </Form.Select>
+                                    </Form.Group>
+                                    <Form.Group className="mb-3" controlId="name">
+                                      <Form.Control
+                                        placeholder="Valor"
+                                        value={desVal}
+                                        disabled={true}
+                                        required
+                                        />
+                                    </Form.Group>
+                                      <div className="mb-3">
+                                        <Button type="submit"
+                                          // ref={input22Ref}
+                                          disabled={desVal ? false : true}
+                                          >Continuar</Button>
+                                      </div>
+                                      </Form>
+                                  </Card.Title>
+                                </Card.Title>
+                              </Card.Body>
+                            </Col>
+                            </Modal.Body>
+                  </Modal>
+
+
 
 
               </div>
@@ -1259,6 +1400,7 @@ function App() {
                     <th>#</th>
                     <th>Descripción</th>
                     <th className="text-end">Cantidad</th>
+                    <th className="text-end">Unidad</th>
                     <th className="text-end">Precio</th>
                     <th className="text-end">Subtotal</th>
                     <th className="text-end">IVA (%)</th>
@@ -1271,6 +1413,7 @@ function App() {
                       <td>{index + 1}</td>
                       <td>{item.title}</td>
                       <td className="text-end">{item.quantity}</td>
+                      <td>{item.medPro}</td>
                       <td className="text-end">${item.price}</td>
                       <td className="text-end">${(item.quantity * item.price).toFixed(2)}</td>
                       <td className="text-end">%{item.porIva}</td>
@@ -1296,6 +1439,7 @@ function App() {
                     <th>#</th>
                     <th>Descripción</th>
                     <th className="text-end">Cantidad</th>
+                    <th className="text-end">Unidad</th>
                     <th className="text-end">Precio</th>
                     <th className="text-end">IVA (%)</th>
                     <th className="text-end">Imp. IVA</th>
@@ -1308,6 +1452,7 @@ function App() {
                       <td>{index + 1}</td>
                       <td>{item.title}</td>
                       <td className="text-end">{item.quantity}</td>
+                      <td>{item.medPro}</td>
                       <td className="text-end">${item.price.toFixed(2)}</td>
                       <td className="text-end">%{item.porIva}</td>
                       <td className="text-end">${(item.price*(item.porIva/100)).toFixed(2)}</td>
@@ -1332,6 +1477,7 @@ function App() {
                     <th>Descripción</th>
                     <th className="text-end">Cantidad</th>
                     <th className="text-end">Precio</th>
+                    <th className="text-end">Unidad</th>
                     <th className="text-end">IVA (%)</th>
                     <th className="text-end">Subtotal</th>
                   </tr>
@@ -1342,6 +1488,7 @@ function App() {
                       <td>{index + 1}</td>
                       <td>{item.title}</td>
                       <td className="text-end">{item.quantity}</td>
+                      <td>{item.medPro}</td>
                       <td className="text-end">${(item.price*(1+(item.porIva/100))).toFixed(2)}</td>
                       <td className="text-end">$0.00</td>
                       

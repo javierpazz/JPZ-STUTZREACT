@@ -279,7 +279,7 @@ const noDelInvoice = async () => {
                 <th className="text-center">FECHA</th>
                 <th className="text-center">REMITO</th>
                 <th className="text-center">PEDIDO</th>
-                <th className="text-center">RECIBO</th>
+                <th className="text-center">ORDEN P.</th>
                 <th className="text-center">PROVEEDOR</th>
                 <th className="text-center">PAGOS</th>
                 <th className="text-center">FORMA PAGO</th>

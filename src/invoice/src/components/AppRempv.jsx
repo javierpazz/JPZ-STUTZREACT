@@ -890,6 +890,7 @@ function AppRempv() {
                     <th>#</th>
                     <th>Descripción</th>
                     <th className="text-end">Cantidad</th>
+                    <th className="text-end">Unidad</th>
                     <th className="text-end">Precio</th>
                     <th className="text-end">Subtotal</th>
                     <th className="text-end">IVA (%)</th>
@@ -902,6 +903,7 @@ function AppRempv() {
                       <td>{index + 1}</td>
                       <td>{item.title}</td>
                       <td className="text-end">{item.quantity}</td>
+                      <td>{item.medPro}</td>
                       <td className="text-end">${item.price}</td>
                       <td className="text-end">${(item.quantity * item.price).toFixed(2)}</td>
                       <td className="text-end">%{item.porIva}</td>

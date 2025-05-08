@@ -96,6 +96,10 @@ export default function EncargadoListScreen() {
     }
   }, [page, userInfo, successDelete]);
 
+  const listado = async () => {
+    navigate('/admin/encargadoList?redirect=/admin/encargados');
+  };
+
   const createHandler = async () => {
     if (window.confirm('Are you sure to create?')) {
       try {
@@ -141,6 +145,16 @@ export default function EncargadoListScreen() {
       <Row>
         <Col>
           <h1>Encargado</h1>
+        </Col>
+        <Col className="col text-end">
+          <div>
+            <Button type="button"
+                    variant="primary"
+                    onClick={listado}
+                  >
+              Listar
+            </Button>
+            </div>
         </Col>
         <Col className="col text-end">
           <div>

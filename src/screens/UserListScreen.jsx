@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useReducer } from 'react';
 import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -109,6 +110,10 @@ export default function UserListScreen() {
     }
   };
 
+  const listado = async () => {
+    navigate('/admin/usuarioList?redirect=/admin/usuarios');
+  };
+
   const createHandler = async () => {
     if (window.confirm('Are you sure to create?')) {
       try {
@@ -142,9 +147,20 @@ export default function UserListScreen() {
 
   return (
     <div>
+      <Row>
       <Col>
         <h1>Users</h1>
       </Col>
+      <Col className="col text-end">
+          <div>
+            <Button type="button"
+                    variant="primary"
+                    onClick={listado}
+                  >
+              Listar
+            </Button>
+            </div>
+        </Col>
       <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
@@ -152,6 +168,7 @@ export default function UserListScreen() {
             </Button>
           </div>
         </Col>
+        </Row>
  
       {loadingDelete && <LoadingBox></LoadingBox>}
       {loading ? (

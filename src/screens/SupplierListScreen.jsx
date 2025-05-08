@@ -96,6 +96,10 @@ export default function SupplierListScreen() {
     }
   }, [page, userInfo, successDelete]);
 
+  const listado = async () => {
+    navigate('/admin/supplierList?redirect=/admin/suppliers');
+  };
+
   const createHandler = async () => {
         navigate(`/admin/supplier/0`);
   };
@@ -122,6 +126,16 @@ export default function SupplierListScreen() {
       <Row>
         <Col>
           <h1>Proveedores</h1>
+        </Col>
+        <Col className="col text-end">
+          <div>
+            <Button type="button"
+                    variant="primary"
+                    onClick={listado}
+                  >
+              Listar
+            </Button>
+            </div>
         </Col>
         <Col className="col text-end">
           <div>

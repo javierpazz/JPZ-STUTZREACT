@@ -99,6 +99,11 @@ export default function ConfigurationListScreen() {
     }
   }, [page, userInfo, successDelete]);
 
+  const listado = async () => {
+    navigate('/admin/configuracionList?redirect=/admin/configuracions');
+  };
+
+
   const createHandler = async () => {
       try {
         dispatch({ type: 'CREATE_REQUEST' });
@@ -142,6 +147,16 @@ export default function ConfigurationListScreen() {
       <Row>
         <Col>
           <h1>Puntos de Venta</h1>
+        </Col>
+        <Col className="col text-end">
+          <div>
+            <Button type="button"
+                    variant="primary"
+                    onClick={listado}
+                  >
+              Listar
+            </Button>
+            </div>
         </Col>
         <Col className="col text-end">
           <div>

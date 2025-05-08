@@ -85,6 +85,7 @@ export default function ProductEditScreen() {
   const [codPro, setCodPro] = useState('');
   const [codigoPro, setCodigoPro] = useState('');
   const [title, setTitle] = useState('');
+  const [medPro, setMedPro] = useState('');
   const [slug, setSlug] = useState('');
   const [price, setPrice] = useState('');
   const [priceBuy, setPriceBuy] = useState('');
@@ -174,6 +175,7 @@ useEffect(() => {
         setCodPro(data.codPro);
         setCodigoPro(data.codigoPro);
         setTitle(data.title);
+        setMedPro(data.medPro);
         setSlug(data.slug);
         setPrice(data.price);
         setPriceBuy(data.priceBuy);
@@ -185,9 +187,9 @@ useEffect(() => {
         setPorIva(data.porIva);
         setBrand(data.brand);
         setDescription(data.description);
-        setCodSup(data.supplier._id);
-        setCodSupp(data.supplier.codSup);
-        setNameSup(data.supplier.name);
+        setCodSup(data?.supplier._id || "");
+        setCodSupp(data?.supplier.codSup || "");
+        setNameSup(data?.supplier.name || "");
         dispatch({ type: 'FETCH_SUCCESS' });
       } catch (err) {
         dispatch({
@@ -258,6 +260,7 @@ useEffect(() => {
             codigoPro,
             codPro,
             title,
+            medPro,
             slug,
             price,
             priceBuy,
@@ -298,6 +301,7 @@ useEffect(() => {
             codigoPro,
             codPro,
             title,
+            medPro,
             slug,
             price,
             priceBuy,
@@ -361,10 +365,6 @@ useEffect(() => {
     toast.success('Image removed successfully. click Update to apply it');
   };
 
-  const positivo = (e) => {
-    const number = Math.abs(Number(e.target.value));
-    setValue(number);
-  };
 
   return (
     <Container>
@@ -456,6 +456,14 @@ useEffect(() => {
               required
               />
           </Form.Group>
+          <Form.Group className="mb-3" controlId="name">
+            <Form.Label>Unidad</Form.Label>
+            <Form.Control
+              value={medPro}
+              onChange={(e) => setMedPro(e.target.value)}
+              required
+              />
+          </Form.Group>
           <Form.Group className="mb-3" controlId="description">
             <Form.Label>Description</Form.Label>
             <Form.Control
@@ -480,9 +488,7 @@ useEffect(() => {
               inputMode="decimal"
               min="0"
               defaultValue="0"
-              // onChange={(e) => setPrice(e.target.value)}
-              onChange={(e) => setPrice(positivo)}
-              // onChange={positivo}
+              onChange={(e) => setPrice(e.target.value)}
               required
               />
           </Form.Group>

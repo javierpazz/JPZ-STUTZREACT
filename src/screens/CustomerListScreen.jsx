@@ -96,6 +96,10 @@ export default function CustomerListScreen() {
     }
   }, [page, userInfo, successDelete]);
 
+  const listado = async () => {
+    navigate('/admin/customerList?redirect=/admin/customers');
+  };
+
   const createHandler = async () => {
         navigate(`/admin/customer/0`);
   };
@@ -122,6 +126,16 @@ export default function CustomerListScreen() {
       <Row>
         <Col>
           <h1>Clientes</h1>
+        </Col>
+        <Col className="col text-end">
+          <div>
+            <Button type="button"
+                    variant="primary"
+                    onClick={listado}
+                  >
+              Listar
+            </Button>
+            </div>
         </Col>
         <Col className="col text-end">
           <div>

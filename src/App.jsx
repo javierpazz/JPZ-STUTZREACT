@@ -32,6 +32,13 @@ import DashboardScreen from './screens/DashboardScreen';
 import AdminRoute from './components/AdminRoute';
 import ProductListScreen from './screens/ProductListScreen';
 import ProductListPrint from './screens/ProductListPrint';
+import CustomerListPrint from './screens/CustomerListPrint';
+import SupplierListPrint from './screens/SupplierListPrint';
+import ValueeListPrint from './screens/ValueeListPrint';
+import ConfiguracionListPrint from './screens/ConfiguracionListPrint';
+import EncargadoListPrint from './screens/EncargadoListPrint';
+import UsuarioListPrint from './screens/UsuarioListPrint';
+import ComprobanteListPrint from './screens/ComprobanteListPrint';
 import ProductEditScreen from './screens/ProductEditScreen';
 
 import AccountUserScreen from './screens/AccountUserScreen';
@@ -751,6 +758,62 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ProductListPrint />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/customerList"
+                element={
+                  <ProtectedRoute>
+                    <CustomerListPrint />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/supplierList"
+                element={
+                  <ProtectedRoute>
+                    <SupplierListPrint />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/valueeList"
+                element={
+                  <ProtectedRoute>
+                    <ValueeListPrint />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/comprobanteList"
+                element={
+                  <ProtectedRoute>
+                    <ComprobanteListPrint />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/configuracionList"
+                element={
+                  <ProtectedRoute>
+                    <ConfiguracionListPrint />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/encargadoList"
+                element={
+                  <ProtectedRoute>
+                    <EncargadoListPrint />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/usuarioList"
+                element={
+                  <ProtectedRoute>
+                    <UsuarioListPrint />
                   </ProtectedRoute>
                 }
               ></Route>

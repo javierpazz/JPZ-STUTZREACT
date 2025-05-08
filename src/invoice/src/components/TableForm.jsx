@@ -91,6 +91,7 @@ export default function TableForm({
   const [miStock, setMiStock] = useState(0);
   const [showPro, setShowPro] = useState(false);
   const [codProd, setCodProd] = useState('');
+  const [medPro, setMedPro] = useState('');
 
   useEffect(() => {
     input8Ref.current.focus()
@@ -161,6 +162,7 @@ export default function TableForm({
     setCodPro(productRow._id);
     setCodProd(productRow.codPro);
     setDesPro(productRow.title);
+    setMedPro(productRow.medPro);
     setQuantity(1);
     setPrice(productRow.price);
     setPorIva(productRow.porIva);
@@ -186,6 +188,7 @@ export default function TableForm({
         setCodPro('');
         setCodProd('');
         setDesPro('Elija un Producto');
+        setMedPro('');
         setQuantity(0);
         setPrice(0);
         setPorIva(0);
@@ -198,6 +201,7 @@ export default function TableForm({
         setCodPro(productRow._id);
         setCodProd(productRow.codProd);
         setDesPro(productRow.title);
+        setMedPro(productRow.medPro);
         setQuantity(1);
         setPrice(productRow.price);
         setPorIva(productRow.porIva);
@@ -241,7 +245,7 @@ export default function TableForm({
       <div className="bordeTable">
         <form>
           <Row>
-            <Col md={2}>
+            <Col md={1}>
               <Card.Body>
                 <Card.Title>
                   <Form.Group className="input" controlId="name">
@@ -254,7 +258,7 @@ export default function TableForm({
                       onChange={(e) => setCodProd(e.target.value)}
                       // onKeyDown={(e) => e.key === "Enter" && buscarPorCodPro(codProd)}
                       onKeyDown={(e) => ayudaPro(e)}
-                      disabled={isPaying}
+                      // disabled={isPaying}
                       required
                     />
                   </Form.Group>
@@ -296,13 +300,23 @@ export default function TableForm({
                       value={quantity}
                       onChange={(e) => stockControl(e)}
                       onKeyDown={(e) => e.key === "Enter" && input10Ref.current.focus()}
-                      disabled={isPaying}
+                      // disabled={isPaying}
                       required
                     />
                   </Form.Group>
                 </Card.Title>
               </Card.Body>
             </Col>
+            <Col md={1}>
+                    <Card.Body>
+                      <Card.Title>
+                        <Form.Group className="input">
+                          <Form.Label>Medida</Form.Label>
+                          <h3>{medPro}</h3>
+                        </Form.Group>
+                      </Card.Title>
+                    </Card.Body>
+                  </Col>
 
             <Col md={1}>
               <Card.Body>
@@ -317,7 +331,7 @@ export default function TableForm({
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && input11Ref.current.focus()}
-                      disabled={isPaying}
+                      // disabled={isPaying}
                       required
                     />
                   </Form.Group>
@@ -343,7 +357,7 @@ export default function TableForm({
                       ref={input11Ref}
                       onClick={() => addToCartHandler(productR)}
                       className="mt-3 mb-1 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
-                      disabled={isPaying}
+                      // disabled={isPaying}
                     >
                       {isEditing ? 'Editing Row Item' : 'Agrega'}
                     </Button>
@@ -422,6 +436,7 @@ export default function TableForm({
             <td className="font-bold">Codigo Producto </td>
             <td className="font-bold">Descripcion Producto </td>
             <td className="font-bold">Candidad</td>
+            <td className="font-bold">Unidad</td>
             <td className="font-bold">Precio</td>
             <td className="font-bold">Total</td>
             <td className="font-bold">Options</td>
@@ -434,13 +449,14 @@ export default function TableForm({
                 <td>{itemInv._id}</td>
                 <td>{itemInv.title}</td>
                 <td>{itemInv.quantity}</td>
+                <td>{itemInv.medPro}</td>
                 <td>{itemInv.price}</td>
                 <td className="amount">{(itemInv.quantity * itemInv.price).toFixed(2)}</td>
                 <td>
                   <Button
                     className="mt-0 mb-0 bg-yellow-300 text-black py-1 px-1 rounded shadow border-2 border-yellow-300 hover:bg-transparent hover:text-blue-500 transition-all duration-300"
                     onClick={() => removeItemHandler(itemInv)}
-                    disabled={isPaying}
+                    // disabled={isPaying}
                   >
                     <AiOutlineDelete className="text-red-500 font-bold text-xl" />
                   </Button>
