@@ -185,7 +185,7 @@ export default function EncargadoListScreen() {
             <tbody>
               {encargados.map((encargado) => (
                 <tr key={encargado._id}>
-                  <td>{encargado.codEnc}</td>
+                  <td className='text-end'>{encargado.codEnc}</td>
                   <td>{encargado.name}</td>
                   <td>{encargado.email}</td>
                   <td>

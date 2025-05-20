@@ -182,19 +182,20 @@ try {
   const noDelInvoice = async () => {
     if (
       window.confirm(
-        'This Invoice have a Receipt, You Must delete the receipt Before'
+        'Este Remito tiene un Recibo aplicado, debe eliminar el Recibo para Hacerlo'
       )
     ) {
     }
   };
-  
 
 
   const deleteHandler = async (invoice) => {
+    if (window.confirm('Esta seguro de Borrar?')) {
     if (invoice.recNum) {
       noDelInvoice();
     } else {
-      if (!invoice.ordYes) {
+      // if (!invoice.ordYes) {
+      if (!invoice.invNum) {
         //do
         controlStockHandler(invoice);
         try {
@@ -202,7 +203,7 @@ try {
           await axios.delete(`${API}/api/orders/${invoice._id}`, {
             headers: { Authorization: `Bearer ${userInfo.token}` },
           });
-          toast.success('order deleted successfully');
+          toast.success('Remito Borrado');
           dispatch({ type: 'DELETE_SUCCESS' });
         } catch (err) {
           toast.error(getError(error));
@@ -214,29 +215,29 @@ try {
         //do
       }
       else {
-            if (window.confirm('Are you sure to delete?')) {
               try {
                 dispatch({ type: 'UPDATE_REQUEST' });
                 await axios.put(
-                  `${API}/api/invoices/${invoice._id}/deleteinvoice`,
+                  `${API}/api/invoices/${invoice._id}/deleteremit`,
                   {
                     remNum: null,
-                    invNum: null,
+                    // invNum: null,
                   },
                   {
                     headers: { Authorization: `Bearer ${userInfo.token}` },
                   }
                 );
                 dispatch({ type: 'UPDATE_SUCCESS' });
-                toast.success('Invoice deleted successfully');
+                toast.success('Remito Borrado');
               } catch (err) {
                 toast.error(getError(error));
                 dispatch({
                   type: 'UPDATE_FAIL',
                 });
               }
-            }
+            
           }
+        }
     }
   };
 
@@ -299,7 +300,7 @@ try {
               <tr>
                 <th className="text-center">FECHA</th>
                 <th className="text-center">REMITO</th>
-                <th className="text-center">PEDIDO</th>
+                <th className="text-center">COMPROBANTE</th>
                 <th className="text-center">RECIBO</th>
                 <th className="text-center">CLIENTE</th>
                 <th className="text-center">PAGOS</th>
@@ -313,10 +314,11 @@ try {
                 <tr key={invoice._id}>
                   <td className="text-center">{invoice.remDat.substring(0, 10)}</td>
                   <td className="text-end">{invoice.remNum}</td>
-                      {invoice.ordYes === 'Y' ? <td className="text-end">{invoice._id}</td> : <td></td>}
+                  <td className="text-end">{invoice.invNum}</td>
+                      {/* {invoice.ordYes === 'Y' ? <td className="text-end">{invoice._id}</td> : <td></td>} */}
                   <td className="text-end">{invoice.recNum}</td>
                   <td>{invoice.id_client ? invoice.id_client.nameCus : 'DELETED USER'}</td>
-                  <td className="text-end">{invoice.recNum ? invoice.recDat : 'No'}</td>
+                  <td className="text-end">{invoice.recNum ? invoice.recDat.substring(0, 10) : 'No'}</td>
                   <td>{invoice.desVal}</td>
                   <td className="text-end">{invoice.total.toFixed(2)}</td>
 

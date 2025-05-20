@@ -182,8 +182,8 @@ export default function UserListScreen() {
               <tr>
                 <th>ID</th>
                 <th>NAME</th>
-                <th>EMAIL</th>
-                <th>ADMINISTRADOR</th>
+                <th className='text-center'>EMAIL</th>
+                <th className='text-center'>TIPO USUARIO</th>
                 <th>ACTIVO</th>
                 <th>ACTIONS</th>
               </tr>
@@ -194,7 +194,10 @@ export default function UserListScreen() {
                   <td>{user._id}</td>
                   <td>{user.name}</td>
                   <td>{user.email}</td>
-                  <td>{user.role == "admin" ? 'YES' : 'NO'}</td>
+                  { (user.role == "admin") ? <td className="text-center">{'ADMINISTRADOR'}</td> : ""}
+                  { (user.role == "client") ? <td className="text-center">{'CLIENTE'}</td> : ""}
+                  { (user.role == "user") ? <td className="text-center">{'USUARIO'}</td> : ""}
+                  {/* <td>{user.role == "admin" ? 'YES' : 'NO'}</td> */}
                   <td>{user.isActive == true ? 'Activo' : 'No Activo'}</td>
                   <td>
                     <Button

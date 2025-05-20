@@ -170,7 +170,7 @@ export default function CustomerListScreen() {
             <tbody>
               {customers.map((customer) => (
                 <tr key={customer._id}>
-                  <td>{customer.codCus}</td>
+                  <td className='text-end'>{customer.codCus}</td>
                   <td>{customer.nameCus}</td>
                   <td>{customer.domcomer}</td>
                   <td>{customer.cuit}</td>

@@ -29,8 +29,8 @@ export default function SigninScreen() {
       });
       ctxDispatch({ type: 'USER_SIGNIN', payload: data });
       localStorage.setItem('userInfo', JSON.stringify(data));
-      // navigate(redirect || '/');
-      navigate('/salepoint');
+      navigate(redirect || '/');
+      // navigate('/salepoint');
     } catch (err) {
       toast.error(getError(err));
     }
@@ -68,13 +68,13 @@ export default function SigninScreen() {
         <div className="mb-3">
           <Button type="submit">Sign In</Button>
         </div>
-        {/* <div className="mb-3">
+        <div className="mb-3">
           New customer?{' '}
           <Link to={`/signup?redirect=${redirect}`}>Create your account</Link>
         </div>
         <div className="mb-3">
           Forget Password? <Link to={`/forget-password`}>Reset Password</Link>
-        </div> */}
+        </div>
       </Form>
     </Container>
   );

@@ -7,11 +7,18 @@ import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import {API} from '../utils';
+import { Store } from '../Store';
 
 // import data from '../data';
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case 'CONF_FETCH_REQUEST':
+      return { ...state, loading: true };
+    case 'CONF_FETCH_SUCCESS':
+      return { ...state, loading: false };
+    case 'CONF_FETCH_FAIL':
+      return { ...state, loading: false, error: action.payload };
     case 'FETCH_REQUEST':
       return { ...state, loading: true };
     case 'FETCH_SUCCESS':
@@ -29,25 +36,38 @@ function HomeScreen() {
     loading: true,
     error: '',
   });
+  const [configura, setConfigura] = useState([]);
+  const [id_config, setId_config] = useState("");
+
+
+
 {/* /////////////////  borrar ecomerce  ////////////////////// */}
   // const [products, setProducts] = useState([]);
 {/* /////////////////  borrar ecomerce  ////////////////////// */}
 
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     dispatch({ type: 'FETCH_REQUEST' });
-  //     try {
-  //       const result = await axios.get(`${API}/api/products`);
-  //       dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
-  //     } catch (err) {
-  //       dispatch({ type: 'FETCH_FAIL', payload: err.message });
-  //     }
 
-  //     // setProducts(result.data);
-  //   };
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      dispatch({ type: 'FETCH_REQUEST' });
+      try {
+      const { data } = await axios.get(`${API}/api/configurations/`);
+      console.log(data[0]._id);
+      setConfigura(data);
+      setId_config(data[0]._id);
+      console.log(configura);
+
+
+
+        const result = await axios.get(`${API}/api/products?id_config=${id_config}`);
+        // const result = await axios.get(`${API}/api/products`);
+        dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
+      } catch (err) {
+        dispatch({ type: 'FETCH_FAIL', payload: err.message });
+      }
+    };
+    fetchData();
+  }, []);
 
 
   return (
@@ -56,7 +76,7 @@ function HomeScreen() {
         <title>Invoicer</title>
       </Helmet>
 {/* /////////////////  borrar ecomerce  ////////////////////// */}
-      {/* <h1>Featured Products</h1>
+      <h1>Featured Products</h1>
       <div className="products">
         {loading ? (
           <LoadingBox />
@@ -78,7 +98,7 @@ function HomeScreen() {
             ))}
           </Row>
         )}
-      </div> */}
+      </div>
 {/* /////////////////  borrar ecomerce  ////////////////////// */}
 </div>
   );

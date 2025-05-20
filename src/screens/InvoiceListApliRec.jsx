@@ -46,7 +46,7 @@ const reducer = (state, action) => {
 export default function InvoiceListApliRec({
   recNum,
   recDat,
-  userId,
+  id_client,
   show,
   setShow,
 }) {
@@ -73,7 +73,7 @@ export default function InvoiceListApliRec({
     const fetchData = async () => {
       try {
         dispatch({ type: 'TOTAL_FETCH_REQUEST' });
-        const { data } = await axios.get(`${API}/api/invoices/StoAply/${userId} `, {
+        const { data } = await axios.get(`${API}/api/invoices/StoAply/${id_client} `, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'TOTAL_FETCH_SUCCESS', payload: data });
@@ -98,7 +98,7 @@ export default function InvoiceListApliRec({
   };
 
   const applyHandler = () => {
-    if (window.confirm('Are you sure to Apply?')) {
+    if (window.confirm('Esta seguro de Grabar?')) {
       applyReceipt(invId);
       setShow(false);
 
@@ -120,7 +120,7 @@ export default function InvoiceListApliRec({
         }
       );
       //          dispatch({type: 'UPDATE_SUCCESS' });
-      toast.success('Receipt Applied successfully');
+      toast.success('Recibo Aplicado');
       //          navigate('/admin/products');
     } catch (err) {
       toast.error(getError(err));
@@ -131,14 +131,14 @@ export default function InvoiceListApliRec({
   return (
     <div>
       <Helmet>
-        <title>Sale Invoices</title>
+        <title>Comprobantes de Venta</title>
       </Helmet>
       <Row>
         <Col md={1}>
           <Card.Body>
             <Card.Title>
               <Form.Group className="input">
-                <Form.Label>Factura N°</Form.Label>
+                <Form.Label>Comp. N°</Form.Label>
                 <p>{invNum}</p>
               </Form.Group>
             </Card.Title>
@@ -148,7 +148,7 @@ export default function InvoiceListApliRec({
           <Card.Body>
             <Card.Title>
               <Form.Group className="input">
-                <Form.Label>Fecha Factura</Form.Label>
+                <Form.Label>Fecha Comp.</Form.Label>
                 <p>{invDat}</p>
               </Form.Group>
             </Card.Title>
@@ -168,7 +168,7 @@ export default function InvoiceListApliRec({
           <Card.Body>
             <Card.Title>
               <Form.Group className="input">
-                <Form.Label>Order</Form.Label>
+                <Form.Label>Orden</Form.Label>
                 <p>{ordNum}</p>
               </Form.Group>
             </Card.Title>
@@ -178,7 +178,7 @@ export default function InvoiceListApliRec({
           <Card.Body>
             <Card.Title>
               <Form.Group className="input">
-                <Form.Label>Client</Form.Label>
+                <Form.Label>Cliente</Form.Label>
                 <p>{name}</p>
               </Form.Group>
             </Card.Title>
@@ -210,7 +210,7 @@ export default function InvoiceListApliRec({
               onClick={applyHandler}
               disabled={!total || !invNum}
             >
-              Apply
+              Aplicar
             </Button>
           </div>
         </Col>
@@ -226,7 +226,7 @@ export default function InvoiceListApliRec({
           <table className="table">
             <thead>
               <tr>
-                <th>FACTURA</th>
+                <th>COMPROBANTE</th>
                 <th>FECHA</th>
                 <th>REMITO</th>
                 <th>PEDIDO</th>

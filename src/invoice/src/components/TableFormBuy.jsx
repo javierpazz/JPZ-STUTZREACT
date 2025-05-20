@@ -13,6 +13,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { Store } from '../../../Store';
 import { getError, API } from '../../../utils';
+import ProductSelector from '../../../screens/ProductSelector';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -147,12 +148,12 @@ export default function TableFormBuy({
     ctxDispatch({ type: 'INVOICE_REMOVE_ITEM', payload: itemInv });
   };
 
-  // Edit function
-  const submitHandlerPro = async (e) => {
-    e.preventDefault();
-    setShowPro(false)
-    input8Ref.current.focus()
-  };
+  // // Edit function
+  // const submitHandlerPro = async (e) => {
+  //   e.preventDefault();
+  //   setShowPro(false)
+  //   input8Ref.current.focus()
+  // };
 
   const searchProduct = (codPro) => {
     const productRow = productss.find((row) => row._id === codPro);
@@ -179,7 +180,7 @@ export default function TableFormBuy({
     if (codProd==='') {
       input0Ref.current.focus();
     } else {
-    const productRow = productss.find((row) => row.codPro === codProd);
+    const productRow = productss.find((row) => (row.codPro === codProd  || row.codigoPro === codProd));
 
     if (!productRow) {
         setCodPro('');
@@ -220,13 +221,84 @@ export default function TableFormBuy({
 //     }
 //   };
 
+
   const handleChange = (e) => {
     searchProduct(e.target.value);
   };
+
+  // const handleShowPro = () => {
+  //   setShowPro(true);
+  //   input22Ref.current.focus();
+  // };
+
   const handleShowPro = () => {
-    setShowPro(true);
+    // setShowSup(true);
+    setModalOpen(true)
     input22Ref.current.focus();
   };
+
+  const submitHandlerPro = async (e) => {
+    e.preventDefault();
+    setShowPro(false)
+    input8Ref.current.focus()
+  };
+
+  const handleChangePro = (e) => {
+    searchPro(e.target.value);
+  };
+
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const modalRef = useRef(null);
+
+  const handleSelect = (product) => {
+    setSelectedProduct(product);
+
+    setCodPro(product._id);
+    setCodProd(product.codigoPro);
+    setDesPro(product.title);
+    input8Ref.current.focus()
+
+    setModalOpen(false);
+  };
+
+  // Cerrar con Escape
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setModalOpen(false);
+      }
+    };
+
+    if (modalOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [modalOpen]);
+
+  // Cerrar al hacer clic fuera del modal
+  const handleClickOutside = (e) => {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
+      setModalOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (modalOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [modalOpen]);
+
+
 
   return (
     <>
@@ -358,64 +430,32 @@ export default function TableFormBuy({
             </Col>
           </Row>
         </form>
-        <Modal
-            // input22Ref={input22Ref}
-            size="md"
-            show={showPro}
-            onHide={() => setShowPro(false)}
-            aria-labelledby="example-modal-sizes-title-lg"
+      {modalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0, left: 0, right: 0, bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex', justifyContent: 'center', alignItems: 'center',
+            zIndex: 1000
+          }}
+        >
+          <div
+            ref={modalRef}
+            style={{
+              backgroundColor: '#fff',
+              width: '400px',
+              borderRadius: '8px',
+              boxShadow: '0 0 10px rgba(0,0,0,0.3)'
+            }}
           >
-            <Modal.Header closeButton>
-              <Modal.Title id="example-modal-sizes-title-lg">
-              Elija un Producto
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-            <Col md={12}>
-              <Card.Body>
-                <Card.Title>
-                  <Card.Title>
-                      <Form onSubmit={submitHandlerPro}>
-                        <Form.Group className="mb-3" controlId="name">
-                        {/* <Form.Group className="input" controlId="name"> */}
-                        <Form.Label>Productos</Form.Label>
-
-
-                      <Form.Select
-                        className="input"
-                        onClick={(e) => handleChange(e)}
-                        disabled={isPaying}
-                      >
-                        {productss.map((elementoP) => (
-                          <option key={elementoP._id} value={elementoP._id}>
-                            {elementoP.title}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="name">
-                              <Form.Control
-                                placeholder="Producto"
-                                value={desPro}
-                                disabled={true}
-                                required
-                                />
-                            </Form.Group>
-                              <div className="mb-3">
-                                <Button type="submit"
-                                  // ref={input22Ref}
-                                  disabled={desPro ? false : true}
-                                  >Continuar</Button>
-                              </div>
-                              </Form>
-
-
-                  </Card.Title>
-                </Card.Title>
-              </Card.Body>
-            </Col>
-            </Modal.Body>
-          </Modal>
+            <div style={{ padding: '10px', borderBottom: '1px solid #ccc', textAlign: 'right' }}>
+              <button onClick={() => setModalOpen(false)} style={{ fontWeight: 'bold' }}>X</button>
+            </div>
+            <ProductSelector  onSelect={handleSelect} productss={productss}  />
+          </div>
+        </div>
+      )}
       </div>
       {/* Table items */}
 

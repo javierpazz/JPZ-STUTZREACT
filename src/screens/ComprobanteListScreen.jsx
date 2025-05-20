@@ -170,11 +170,11 @@ export default function ComprobanteListScreen() {
             <tbody>
               {comprobantes.map((comprobante) => (
                 <tr key={comprobante._id}>
-                  <td>{comprobante.codCom}</td>
+                  <td className='text-end'>{comprobante.codCom}</td>
                   <td>{comprobante.nameCom}</td>
                   <td>{comprobante.isHaber == true ? 'HABER' : 'DEBE'}</td>
                   <td>{comprobante.interno == false ? 'REMOTO' : 'INTERNO'}</td>
-                  <td>{comprobante.numInt}</td>
+                  <td className='text-end'>{comprobante.numInt}</td>
                   <td>
                     <Button
                       type="button"

@@ -248,7 +248,7 @@ const [
   
 
   const buscarPorCodPro1 = (codProd1) => {
-    const productRow = productss.find((row) => row.codPro === codProd1);
+    const productRow = productss.find((row) => row.codigoPro === codProd1);
 
     if (!productRow) {
         setCodPro1('');
@@ -258,12 +258,12 @@ const [
       }else{
         setProductR(productRow);
         setCodPro1(productRow._id);
-        setCodProd1(productRow.codPro);
+        setCodProd1(productRow.codigoPro);
         setDesPro1(productRow.title);
     };
   };
   const buscarPorCodPro2 = (codProd2) => {
-    const productRow = productss.find((row) => row.codPro === codProd2);
+    const productRow = productss.find((row) => row.codigoPro === codProd2);
 
     if (!productRow) {
         setCodPro2('');
@@ -273,7 +273,7 @@ const [
       }else{
         setProductR(productRow);
         setCodPro2(productRow._id);
-        setCodProd2(productRow.codPro);
+        setCodProd2(productRow.codigoPro);
         setDesPro2(productRow.title);
     };
   };
@@ -335,7 +335,7 @@ if (window.confirm('El porcentaje tiene que ser mayor a Cero')) {
     if (porcen <= 0) {unloadpayment();} else {
     if (window.confirm('Confirma los Datos?')) {
             try {
-            const { data } = await axios.put(`${API}/api/products/dispre/?configuracion=${id_config}&codProd1=${codProd1}&codProd2=${codProd2}&porcen=${porcen}`, {
+            const { data } = await axios.put(`${API}/api/products/dispre/?configuracion=${id_config}&supplier=${codSup}&category=${category}&codProd1=${codProd1}&codProd2=${codProd2}&porcen=${porcen}`, {
               headers: { Authorization: `Bearer ${userInfo.token}` },
                   });
               // setCuentas(data.resultado);
@@ -355,7 +355,7 @@ if (window.confirm('El porcentaje tiene que ser mayor a Cero')) {
     if (porcen <= 0) {unloadpayment();} else {
       if (window.confirm('Confirma los Datos?')) {
       try {
-      const { data } = await axios.put(`${API}/api/products/aumpre/?configuracion=${id_config}&category=${category}&codSup=${codSup}&codProd1=${codProd1}&codProd2=${codProd2}&porcen=${porcen}`, {
+      const { data } = await axios.put(`${API}/api/products/aumpre/?configuracion=${id_config}&category=${category}&supplier=${codSup}&codProd1=${codProd1}&codProd2=${codProd2}&porcen=${porcen}`, {
         headers: { Authorization: `Bearer ${userInfo.token}` },
             });
         // setCuentas(data.resultado);

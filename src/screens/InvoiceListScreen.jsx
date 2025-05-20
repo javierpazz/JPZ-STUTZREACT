@@ -179,6 +179,7 @@ try {
 
 
   const deleteHandler = async (invoice) => {
+    if (window.confirm('Esta seguro de Borrar?')) {
     if (invoice.recNum) {
       noDelInvoice();
     } else {
@@ -202,7 +203,6 @@ try {
         //do
       }
       else {
-            if (window.confirm('Are you sure to delete?')) {
               try {
                 dispatch({ type: 'UPDATE_REQUEST' });
                 await axios.put(
@@ -216,16 +216,17 @@ try {
                   }
                 );
                 dispatch({ type: 'UPDATE_SUCCESS' });
-                toast.success('Invoice deleted successfully');
+                toast.success('Factura Borrada');
               } catch (err) {
                 toast.error(getError(error));
                 dispatch({
                   type: 'UPDATE_FAIL',
                 });
               }
-            }
+            
           }
     }
+  }
   };
 
   const calculatotal = () => {
@@ -302,7 +303,6 @@ try {
                 <th className="text-center">RECIBO</th>
                 <th className="text-center">CLIENTE</th>
                 <th className="text-center">PAGOS</th>
-                <th className="text-center">FORMA PAGO</th>
                 <th className="text-end">TOTAL</th>
                 <th className="text-end">ACCIONES</th>
               </tr>
@@ -318,7 +318,6 @@ try {
                   <td className="text-end">{invoice.recNum}</td>
                   <td>{invoice.id_client ? invoice.id_client.nameCus : 'CLIENTE BORRADO'}</td>
                   <td className="text-center">{invoice.recDat ? invoice.recDat.substring(0, 10) : 'No'}</td>
-                  <td>{invoice.desVal}</td>
                   <td className="text-end">{invoice.total.toFixed(2)}</td>
 
                   <td className="text-end">
@@ -349,14 +348,15 @@ try {
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                     </Button>
-                    {/* &nbsp;
+                    &nbsp;
                     <Button
                       type="button"
-                      title="Add or Change Invoice or Remit Number"
+                      title="Agrega o Cambia Numero de Remito y/o Comprobante"
                       onClick={() => handleShow(invoice)}
+                      disabled={!(invoice.codCom.interno)}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
-                    </Button> */}
+                    </Button>
                     &nbsp;
                     <Button
                       type="button"
@@ -390,7 +390,7 @@ try {
           >
             <Modal.Header closeButton>
               <Modal.Title id="example-modal-sizes-title-lg">
-                Change Remit Invoice Number of {invoice._id}
+                Cambia Numero de Remito y/o Comprobante {invoice.invNum}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>

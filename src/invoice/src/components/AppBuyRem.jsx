@@ -357,10 +357,10 @@ function AppBuyRem() {
         invoice.codConNum = codConNum;
         invoice.remNum = remNum;
         invoice.remDat = remDat;
-        invoice.invNum = invNum;
-        invoice.invDat = invDat;
-        invoice.recNum = recNum;
-        invoice.recDat = recDat;
+        invoice.invNum = 0;
+        invoice.invDat = null;
+        invoice.recNum = 0;
+        invoice.recDat = null;
         invoice.desVal = desVal;
         invoice.notes = notes;
 

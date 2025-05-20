@@ -89,7 +89,7 @@ export default function InvoiceListApliRec({
 
   const selectHandle = (invoice) => {
     setInvId(invoice._id);
-    setTotal(invoice.total);
+    setTotal(invoice.totalBuy);
     setName(invoice.supplier.name);
     setRemNum(invoice.remNum);
     setOrdNum(invoice.ordNum);
@@ -98,7 +98,7 @@ export default function InvoiceListApliRec({
   };
 
   const applyHandler = () => {
-    if (window.confirm('Are you sure to Apply?')) {
+    if (window.confirm('Esta segurod e Grabar?')) {
       applyReceipt(invId);
       setShow(false);
 
@@ -120,7 +120,7 @@ export default function InvoiceListApliRec({
         }
       );
       //          dispatch({type: 'UPDATE_SUCCESS' });
-      toast.success('Receipt Applied successfully');
+      toast.success('Orden de Pago Aplicada');
       //          navigate('/admin/products');
     } catch (err) {
       toast.error(getError(err));
@@ -131,14 +131,14 @@ export default function InvoiceListApliRec({
   return (
     <div>
       <Helmet>
-        <title>Sale Invoices</title>
+        <title>Comprobantes de Compra</title>
       </Helmet>
       <Row>
         <Col md={1}>
           <Card.Body>
             <Card.Title>
               <Form.Group className="input">
-                <Form.Label>Factura N°</Form.Label>
+                <Form.Label>Comp. N°</Form.Label>
                 <p>{invNum}</p>
               </Form.Group>
             </Card.Title>
@@ -148,7 +148,7 @@ export default function InvoiceListApliRec({
           <Card.Body>
             <Card.Title>
               <Form.Group className="input">
-                <Form.Label>Fecha Factura</Form.Label>
+                <Form.Label>Fecha Comp.</Form.Label>
                 <p>{invDat}</p>
               </Form.Group>
             </Card.Title>
@@ -168,7 +168,7 @@ export default function InvoiceListApliRec({
           <Card.Body>
             <Card.Title>
               <Form.Group className="input">
-                <Form.Label>Order</Form.Label>
+                <Form.Label>Orden</Form.Label>
                 <p>{ordNum}</p>
               </Form.Group>
             </Card.Title>
@@ -178,7 +178,7 @@ export default function InvoiceListApliRec({
           <Card.Body>
             <Card.Title>
               <Form.Group className="input">
-                <Form.Label>Client</Form.Label>
+                <Form.Label>Proveedor</Form.Label>
                 <p>{name}</p>
               </Form.Group>
             </Card.Title>
@@ -209,7 +209,7 @@ export default function InvoiceListApliRec({
               onClick={applyHandler}
               disabled={!total || !invNum}
             >
-              Apply
+              Applicar
             </Button>
           </div>
         </Col>
@@ -225,7 +225,7 @@ export default function InvoiceListApliRec({
           <table className="table">
             <thead>
               <tr>
-                <th>FACTURA</th>
+                <th>COMPROBANTE</th>
                 <th>FECHA</th>
                 <th>REMITO</th>
                 <th>PEDIDO</th>
@@ -254,7 +254,7 @@ export default function InvoiceListApliRec({
                     {invoice.isPaid ? invoice.paidAt.substring(0, 10) : 'No'}
                   </td>
                   <td>{invoice.desVal}</td>
-                  <td>{invoice.total.toFixed(2)}</td>
+                  <td>{invoice.totalBuy.toFixed(2)}</td>
 
                   <td>
                     <Col md={2}>

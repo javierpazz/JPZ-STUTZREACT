@@ -43,12 +43,12 @@ const reducer = (state, action) => {
       return state;
   }
 };
-export default function InvoiceListChaNum({ invoice, show, setShow }) {
+export default function InvoiceListChaNumBuy({ invoice, show, setShow }) {
   const { state } = useContext(Store);
   const { userInfo } = state;
   const [total, setTotal] = useState(invoice.total);
   const [invId, setInvId] = useState(invoice._id);
-  const [name, setName] = useState(invoice.id_client.nameCus);
+  const [name, setName] = useState(invoice.supplier.name);
   const [remNum, setRemNum] = useState(invoice.remNum);
   const [invNum, setInvNum] = useState(invoice.invNum);
   const [remNumAux, setRemNumAux] = useState(invoice.remNum);
@@ -59,7 +59,7 @@ export default function InvoiceListChaNum({ invoice, show, setShow }) {
   const LoadInvoice = (invoice) => {
     setInvId(invoice._id);
     setTotal(invoice.total);
-    setName(invoice.id_client.nameCus);
+    setName(invoice.supplier.name);
     setRemNumAux(invoice.remNum);
     setInvNumAux(invoice.invNum);
     setRemNum(invoice.remNum);
@@ -159,7 +159,7 @@ export default function InvoiceListChaNum({ invoice, show, setShow }) {
             <Card.Body>
               <Card.Title>
                 <Form.Group className="input">
-                  <Form.Label>Cliente</Form.Label>
+                  <Form.Label>Proveedor</Form.Label>
                   <p>{name}</p>
                 </Form.Group>
               </Card.Title>

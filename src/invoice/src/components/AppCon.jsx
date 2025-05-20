@@ -123,7 +123,6 @@ function AppCon() {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'ORDER_FETCH_SUCCESS', payload: data });
-        console.log(data)
         // setCodUse(data.user);
         // setInvNum(invoice.invNum);
       } catch (err) {
@@ -155,6 +154,28 @@ function AppCon() {
     navigate(redirect);
     };
 
+  const generaremito = async(invoiceId) => {
+    if (window.confirm('Esta seguro de Grabar?')) {
+
+    try {
+        const { data } = await axios.put(`${API}/api/invoices/generaremito/${invoiceId}`,
+            {id_config: invoice.id_config },
+          {headers: { authorization: `Bearer ${userInfo.token}` },});
+    } catch (err) {
+      toast.error(getError(err));
+    }
+
+    ctxDispatch({ type: 'INVOICE_CLEAR' });
+    dispatch({ type: 'CREATE_SUCCESS' });
+    localStorage.removeItem('orderItems');
+    localStorage.removeItem('receiptItems');
+    setShowInvoice(false);
+    navigate(redirect);
+  }
+  };
+
+
+
   return (
     <>
       <Helmet>
@@ -172,25 +193,6 @@ function AppCon() {
         {!showInvoice ? (
 
               <div>
-              <div className="bordeTable">
-                    <Col md={4} sm={3} xs={12}>
-                      <div className="d-grid">
-                        <Button
-                          type="button"
-                          onClick={placeInvoiceHandler}
-                          // disabled={
-                          //   orderItems.length === 0 ||
-                          //   !invDat ||
-                          //   !codCus
-                          // }
-                          >
-                          IMPRIME
-                        </Button>
-                      </div>
-                      {loading && <LoadingBox></LoadingBox>}
-                    </Col>
-
-              </div>   
               </div>   
 
         ) : (
@@ -199,6 +201,10 @@ function AppCon() {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
+            <Button
+             onClick={() => generaremito(invoice._id)}
+             disabled={(invoice.codCom.interno || (invoice.remNum > 0))}
+            >GENERA REMITO</Button>
             <Button onClick={() => clearitems()}>CANCELA</Button>
 
             {/* Invoice Preview */}

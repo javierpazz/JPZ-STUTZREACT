@@ -158,6 +158,14 @@ function AppRemCon() {
     navigate(redirect);
   };
 
+  const generacomprob = async(invoiceId) => {
+    navigate(`/admin/invoicerGenInv/${invoiceId}?id_config=${invoice.id_config}&redirect=/admin/remits`);
+
+
+  };
+
+
+
   return (
     <>
       <Helmet>
@@ -176,147 +184,7 @@ function AppRemCon() {
           <>
             {/* name, address, email, phone, bank name, bank account number, website client name, client address, invoice number, Fecha Factura, Fecha Vencimiento, notes */}
             <div>
-              <div className="bordeTable">
-            </div>
 
-              <div className="bordeTable">
-                <div className="bordeTableinput">
-                  <Row>
-                    <Col md={4} sm={3} xs={12}>
-                      <div className="d-grid">
-                        <Button
-                          type="button"
-                          onClick={placeCancelInvoiceHandler}
-                        //   disabled={
-                        //     orderItems.length === 0 ||
-                        //     !remDat ||
-                        //     !codCus
-                        //   }
-                        >
-                          CANCELA
-                        </Button>
-                      </div>
-                      {loading && <LoadingBox></LoadingBox>}
-                    </Col>
-
-                    <Col md={4} sm={3} xs={12}>
-                      <div className="d-grid">
-                        <Button
-                          type="button"
-                          ref={input0Ref}
-                          onClick={placeInvoiceHandler}
-                        //   disabled={
-                        //     orderItems.length === 0 ||
-                        //     !remDat ||
-                        //     !codCus
-                        //   }
-                        >
-                          IMPRIME
-                        </Button>
-                      </div>
-                      {loading && <LoadingBox></LoadingBox>}
-                    </Col>
-
-                    <Col md={4} sm={3} xs={12}>
-                      <Card.Body>
-                        <Card.Title>
-                          <ListGroup.Item>
-                            <h3>
-                            {(+invoice.total).toFixed(2)}
-                            </h3>
-                          </ListGroup.Item>
-                        </Card.Title>
-                      </Card.Body>
-                    </Col>
-                  </Row>
-                </div>
-
-                {/* This is our table form */}
-                <article>
-                  <TableFormCon
-                    input0Ref={input0Ref}
-                    input8Ref={input8Ref}
-                    codPro={codPro}
-                    setCodPro={setCodPro}
-                    desPro={desPro}
-                    setDesPro={setDesPro}
-                    quantity={quantity}
-                    setQuantity={setQuantity}
-                    price={price}
-                    setPrice={setPrice}
-                    porIva={porIva}
-                    setPorIva={setPorIva}
-                    amount={amount}
-                    setAmount={setAmount}
-                    list={list}
-                    setList={setList}
-                    total={total}
-                    setTotal={setTotal}
-                    valueeR={valueeR}
-                    desval={desval}
-                    numval={numval}
-                    isPaying={isPaying}
-                    orderItems={invoice.orderItems}
-                    //                    totInvwithTax={totInvwithTax}
-                    //                    setTotInvwithTax={setTotInvwithTax}
-                  />
-                </article>
-
-
-                <Modal
-                  // input21Ref={input21Ref}
-                  size="md"
-                  show={showCus}
-                  onHide={() => setShowCus(false)}
-                  aria-labelledby="example-modal-sizes-title-lg"
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title id="example-modal-sizes-title-lg">
-                    Elija un Cliente
-                    </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                  <Col md={12}>
-                    <Card.Body>
-                      <Card.Title>
-                      <Form onSubmit={submitHandlerCus}>
-                            <Form.Group className="mb-3" controlId="name">
-                            {/* <Form.Group className="input" controlId="name"> */}
-                          <Form.Label>Clientes</Form.Label>
-                          <Form.Select
-                            className="input"
-                            onClick={(e) => handleChange(e)}
-                          >
-                            {customers.map((elemento) => (
-                              <option key={elemento._id} value={elemento._id}>
-                                {elemento.nameCus}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="name">
-                              <Form.Control
-                                placeholder="Cliente"
-                                value={name}
-                                disabled={true}
-                                required
-                                />
-                            </Form.Group>
-                              <div className="mb-3">
-                                <Button type="submit"
-                                  // ref={input21Ref}
-                                  disabled={name ? false : true}
-                                  >Continuar</Button>
-                              </div>
-                              </Form>
-
-                      </Card.Title>
-                    </Card.Body>
-                  </Col>
-                  </Modal.Body>
-                </Modal>
-
-              </div>
             </div>
           </>
         ) : (
@@ -325,6 +193,10 @@ function AppRemCon() {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
+            <Button
+             onClick={() => generacomprob(invoice._id)}
+             disabled={(invoice.invNum > 0)}
+            >GENERA COMPROBANTE</Button>
             <Button onClick={() => clearitems()}>CANCELA</Button>
 
             {/* Invoice Preview */}

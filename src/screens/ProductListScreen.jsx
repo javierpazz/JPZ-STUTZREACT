@@ -170,7 +170,7 @@ export default function ProductListScreen() {
           <table className="table">
             <thead>
               <tr>
-                <th>CODIGO BARRA</th>
+                <th className='text-center'>CODIGO</th>
                 <th>NOMBRE</th>
                 <th>PRECIO</th>
                 <th>CATEGORIA</th>
@@ -184,15 +184,15 @@ export default function ProductListScreen() {
             <tbody>
               {products.map((product) => (
                 <tr key={product._id}>
-                  <td>{product.codPro}</td>
+                  <td className='text-end'>{product.codigoPro}</td>
                   <td>{product.title}</td>
-                  <td>{product.price}</td>
+                  <td className='text-end'>{product.price}</td>
                   <td>{product.category}</td>
                   <td>{product.brand}</td>
-                  <td>{product.inStock}</td>
-                  <td>{product.minStock}</td>
-                  <td>{product.porIva}</td>
-                  <td>
+                  <td className='text-end'>{product.inStock}</td>
+                  <td className='text-end'>{product.minStock}</td>
+                  <td className='text-end'>{product.porIva}</td>
+                  <td >
 
                     <Button
                       type="button"

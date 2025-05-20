@@ -13,6 +13,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Store } from './Store';
 import CartScreen from './screens/CartScreen';
 import SigninScreen from './screens/SigninScreen';
+import SigninAdminScreen from './screens/SigninAdminScreen';
 import SalePointScreen from './screens/SalePointScreen';
 import ShippingAddressScreen from './screens/ShippingAddressScreen';
 import SignupScreen from './screens/SignupScreen';
@@ -82,6 +83,8 @@ import ComprobanteListScreen from './screens/ComprobanteListScreen';
 import ComprobanteEditScreen from './screens/ComprobanteEditScreen';
 import InvoicesOrd from './invoice/src/InvoicesOrd';
 import InvoicesCon from './invoice/src/InvoicesCon';
+import InvoicesGenInv from './invoice/src/InvoicesGenInv';
+import InvoicesGenInvBuy from './invoice/src/InvoicesGenInvBuy';
 import InvoicesBuyCon from './invoice/src/InvoicesBuyCon';
 import InvoicesRemCon from './invoice/src/InvoicesRemCon';
 import InvoicesRempvCon from './invoice/src/InvoicesRempvCon';
@@ -120,8 +123,15 @@ function App() {
     localStorage.removeItem('userInfo');
     localStorage.removeItem('shippingAddress');
     localStorage.removeItem('paymentMethod');
-    window.location.href = '/signin';
+    // window.location.href = '/signin';
+    window.location.href = '/';
   };
+
+/////////////////////version////////////////
+// const [ver, setVer] = useState('1');  // version app ver=1 sin/ecommerce
+const [ver, setVer] = useState('1');     // version app ver=2 con/ecommerce
+/////////////////////version////////////////
+
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const [categories, setCategories] = useState([]);
 
@@ -155,24 +165,26 @@ function App() {
           <Navbar bg="dark" variant="dark" expand="lg">
             <Container>
 {/* /////////////////  borrar ecomerce  ////////////////////// */}
-              {/* <Button
+              {(ver ==='2') && (
+              <Button
                 variant="dark"
                 onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
               >
                 <i className="fas fa-bars"></i>
-              </Button> */}
+              </Button>
+              )}
 {/* /////////////////  borrar ecomerce  ////////////////////// */}
-              {(userInfo && userInfo.nameCon) && (
+              {(userInfo && userInfo.nameCon && userInfo.role !== "client") && (
                 <LinkContainer to="/salepoint">
                 <Navbar.Brand>Punto.: {userInfo && userInfo.salePoint || ""}</Navbar.Brand>
               </LinkContainer>
               )}
-              {(userInfo && userInfo.nameCon) && (
+              {(userInfo && userInfo.nameCon && userInfo.role !== "client") && (
                 <LinkContainer to="/salepoint">
                 <Navbar.Brand>{userInfo && userInfo.nameCon || ""}</Navbar.Brand>
               </LinkContainer>
               )}
-              {userInfo && (
+              {(userInfo && userInfo.role !== "client") && (
                 <LinkContainer  className="nav-link" to="/">
                 <Navbar.Brand >User.:  {userInfo && userInfo.name || ""}</Navbar.Brand>
               </LinkContainer>
@@ -180,11 +192,14 @@ function App() {
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
 {/* /////////////////  borrar ecomerce  ////////////////////// */}
-                {/* <SearchBox /> */}
+              {(ver ==='2') && (
+                <SearchBox />
+              )}
 {/* /////////////////  borrar ecomerce  ////////////////////// */}
                 <Nav className="me-auto  w-100  justify-content-end">
 {/* /////////////////  borrar ecomerce  ////////////////////// */}
-                  {/* <Link to="/cart" className="nav-link">
+                {(ver ==='2') && (
+                  <Link to="/cart" className="nav-link">
                     Cart
                     {cart.cartItems.length > 0 && (
                       <Badge pill bg="danger">
@@ -192,7 +207,9 @@ function App() {
                       </Badge>
                     )}
                   </Link>
-                  {userInfo ? (
+                  )}
+
+                  {(userInfo  && userInfo.role=="client") && (
                     <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
                       <LinkContainer to="/profile">
                         <NavDropdown.Item>User Profile</NavDropdown.Item>
@@ -212,14 +229,14 @@ function App() {
                         Sign Out
                       </Link>
                     </NavDropdown>
-                  ) : (
-                    <Link className="nav-link" to="/signin">
-                      Sign In
-                    </Link>
-                  )} */}
+                  // ) : (
+                  //   <Link className="nav-link" to="/signin">
+                  //     Sign In
+                  //   </Link>
+                  )}
 {/* /////////////////  borrar ecomerce  ////////////////////// */}
                   {/* {userInfo && userInfo.role=="admin" && ( */}
-                  {userInfo && (
+                  {(userInfo  && (userInfo.role=="admin" || userInfo.role=="user")) && (
                     <NavDropdown title="Ventas" id="sales-nav-dropdown">
                       <LinkContainer to="/admin/invoicer">
                         <NavDropdown.Item>Comprobantes de Venta</NavDropdown.Item>
@@ -244,7 +261,7 @@ function App() {
                         )}
                     </NavDropdown>
                   )}
-                  {userInfo && (
+                  {(userInfo  && (userInfo.role=="admin" || userInfo.role=="user")) && (
                     <NavDropdown title="Compras" id="buys-nav-dropdown">
                       <LinkContainer to="/admin/invoicerBuy">
                         <NavDropdown.Item>Comprobantes de Compra</NavDropdown.Item>
@@ -262,8 +279,7 @@ function App() {
                         )}
                     </NavDropdown>
                   )}
-
-                  {userInfo && (
+                  {(userInfo  && (userInfo.role=="admin" || userInfo.role=="user")) && (
                     <NavDropdown title="Caja" id="buys-nav-dropdown">
                       {/* <LinkContainer to="/admin/invoicesCajIng"> */}
                       <LinkContainer to="/admin/invoicerCajIng">
@@ -284,7 +300,7 @@ function App() {
                     </NavDropdown>
                   )}
 
-                  {userInfo && (
+                  {(userInfo  && (userInfo.role=="admin" || userInfo.role=="user")) && (
                     <NavDropdown title="Stocks Ptos Venta" id="buys-nav-dropdown">
                       <LinkContainer to="/admin/remiterpv">
                         <NavDropdown.Item>Entregas a Punto Venta</NavDropdown.Item>
@@ -300,8 +316,7 @@ function App() {
                     </NavDropdown>
                   )}
 
-                  {/* {userInfo && userInfo.role=="admin" && ( */}
-                  {userInfo && (
+                  {(userInfo  && (userInfo.role=="admin" || userInfo.role=="user")) && (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
                       <LinkContainer to="/admin/dashboard">
                         <NavDropdown.Item>Dashboard</NavDropdown.Item>
@@ -336,14 +351,15 @@ function App() {
                       <LinkContainer to="/admin/remitsBuypv">
                         <NavDropdown.Item>Recepcion desde Pto Vta</NavDropdown.Item>
                       </LinkContainer>
-                      {/* <LinkContainer to="/admin/support">
+                      <LinkContainer to="/admin/support">
                         <NavDropdown.Item>Chat Support</NavDropdown.Item>
-                      </LinkContainer> */}
+                      </LinkContainer>
 
 
                     </NavDropdown>
                   )}
-                  {userInfo && userInfo.role=="admin" && (
+                  {/* {userInfo && userInfo.role=="admin" && ( */}
+                  {(userInfo  &&  userInfo.role=="admin") && (
                     <NavDropdown title="Configuracion" id="admin-nav-dropdown">
                       <LinkContainer to="/admin/filtros">
                         <NavDropdown.Item>Informes y Filtros</NavDropdown.Item>
@@ -375,14 +391,13 @@ function App() {
                       <LinkContainer to="/profile">
                         <NavDropdown.Item>User Profile</NavDropdown.Item>
                       </LinkContainer>
-                      {/* <LinkContainer to="/admin/support">
+                      <LinkContainer to="/admin/support">
                         <NavDropdown.Item>Chat Support</NavDropdown.Item>
-                      </LinkContainer> */}
-
-
+                      </LinkContainer>
                     </NavDropdown>
                   )}
-                  {(userInfo && !userInfo.isAdmin) && (
+                  {/* {(userInfo && !userInfo.isAdmin) && ( */}
+                  {(userInfo  && userInfo.role=="user") && (
                     <NavDropdown title="Configuracion" id="basic-nav-dropdown">
                       <LinkContainer to="/admin/customers">
                         <NavDropdown.Item>Clientes</NavDropdown.Item>
@@ -399,18 +414,33 @@ function App() {
                     </NavDropdown>
                   )}
 
-                  {userInfo ? (
+                  {(userInfo && userInfo.role === "client") && (
                       <Link
                         className="nav-link"
                         to="#signout"
                         onClick={signoutHandler}
                       >
-                        Salir
+                        Log Out
                       </Link>
-                  ) : (
+                  )}
+                  {(!userInfo && ver === "2") && (
                     <Link className="nav-link" to="/signin">
-                      Entrar
+                      Log In
                     </Link>
+                  )}
+                  {(!userInfo) && (
+                    <Link className="nav-link" to="/signinadmin">
+                      Admin
+                    </Link>
+                  )}
+                  {(userInfo  && userInfo.role !== "client") && (
+                      <Link
+                        className="nav-link"
+                        to="#signout"
+                        onClick={signoutHandler}
+                      >
+                        Log Out
+                      </Link>
                   )}
                 </Nav>
               </Navbar.Collapse>
@@ -424,12 +454,13 @@ function App() {
               : 'side-navbar d-flex justify-content-between flex-wrap flex-column'
           }
         >
+{/* /////////////////  borrar ecomerce  ////////////////////// */}
+          {(ver==="2") && (
           <Nav className="flex-column text-white w-100 p-2">
             <Nav.Item>
               <strong>Categories</strong>
             </Nav.Item>
-{/* /////////////////  borrar ecomerce  ////////////////////// */}
-            {/* {categories.map((type) => (
+            {categories.map((type) => (
               <Nav.Item key={type}>
                 <LinkContainer
                   to={`/search?category=${type}`}
@@ -438,9 +469,10 @@ function App() {
                   <Nav.Link>{type}</Nav.Link>
                 </LinkContainer>
               </Nav.Item>
-            ))} */}
+            ))}
+          </Nav>
+          )}
 {/* /////////////////  borrar ecomerce  ////////////////////// */}
-</Nav>
         </div>
         <main>
           <Container className="mt-3">
@@ -449,7 +481,8 @@ function App() {
               <Route path="/cart" element={<CartScreen />} />
               <Route path="/search" element={<SearchScreen />} />
               <Route path="/signin" element={<SigninScreen />} />
-              {/* <Route path="/signup" element={<SignupScreen />} /> */}
+              <Route path="/signinadmin" element={<SigninAdminScreen />} />
+              <Route path="/signup" element={<SignupScreen />} />
               <Route
                 path="/forget-password"
                 element={<ForgetPasswordScreen />}
@@ -906,6 +939,22 @@ function App() {
                 }
               ></Route>
               <Route
+                path="/admin/invoicerGenInv/:id"
+                element={
+                  <AdminRoute>
+                    <InvoicesGenInv />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/invoicerGenInvBuy/:id"
+                element={
+                  <AdminRoute>
+                    <InvoicesGenInvBuy />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
                 path="/admin/invoicerBuyCon/:id"
                 element={
                   <AdminRoute>
@@ -1105,13 +1154,18 @@ function App() {
                   </AdminRoute>
                 }
               ></Route>
-
-              <Route path="/" element={<HomeScreen />} />
+              {/* // version app con/ecommerce con 2 */}
+              {(ver ==='2') && (    
+                <Route path="/" element={<HomeScreen />} />
+              )}
+              {/* // version app con/ecommerce con 2 */}
             </Routes>
           </Container>
         </main>
         <footer>
-        {/* {userInfo && !(userInfo.role==='admin') && <ChatBox userInfo={userInfo} />} */}
+{/* /////////////////  borrar ecomerce  ////////////////////// */}
+        {userInfo && (userInfo.role==='client') && <ChatBox userInfo={userInfo} />}
+{/* /////////////////  borrar ecomerce  ////////////////////// */}
           <div className="text-center">All rights reserved</div>
         </footer>
       </div>

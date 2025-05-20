@@ -240,10 +240,10 @@ export default function SearchScreen() {
                       navigate(getFilterUrl({ order: e.target.value }));
                     }}
                   >
-                    <option value="newest">Newest Arrivals</option>
-                    <option value="lowest">Precio: Low to High</option>
-                    <option value="highest">Precio: High to Low</option>
-                    <option value="toprated">Avg. Customer Reviews</option>
+                    <option value="newest">Novedades</option>
+                    <option value="lowest">Precio: Menor a Mayor</option>
+                    <option value="highest">Precio: MAyor a Menor</option>
+                    <option value="toprated">Promedio Calificaciones</option>
                   </select>
                 </Col>
               </Row>

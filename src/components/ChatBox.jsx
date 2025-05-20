@@ -26,7 +26,7 @@ const { userInfo } = state;
 
   const [userName, setUserName] = useState(userInfo.name);
   const [messages, setMessages] = useState([
-    { from: "System", body: "Hello there, Please ask your question." },
+    { from: "System", body: "Hola. que desea Saber?." },
   ]);
 
   const [socket, setSocket] = useState(null);
@@ -52,7 +52,7 @@ const { userInfo } = state;
   const supportHandler = () => {
     setIsOpen(true);
     if (!userName) {
-      setUserName(prompt("Please enter your name"));
+      setUserName(prompt("Ingrese su Nombre"));
     }
     const sk = socketIOClient(ENDPOINT);
     setSocket(sk);
@@ -85,14 +85,14 @@ const { userInfo } = state;
     <div className="chatbox">
       {!isOpen ? (
         <Button onClick={supportHandler} variant="primary">
-          Chat with us
+          Chatee con Nosotros
         </Button>
       ) : (
         <Card>
           <Card.Body>
             <Row>
               <Col>
-                <strong>Support</strong>
+                <strong>Ayuda en Linea</strong>
               </Col>
               <Col className="text-end">
                 <Button
@@ -118,7 +118,7 @@ const { userInfo } = state;
                   value={messageBody}
                   onChange={(e) => setMessageBody(e.target.value)}
                   type="text"
-                  placeholder="type message"
+                  placeholder="escriba un mensaje"
                 ></FormControl>
                 <Button type="submit" variant="primary">
                   Send

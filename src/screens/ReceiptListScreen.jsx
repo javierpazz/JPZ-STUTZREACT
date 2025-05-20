@@ -78,7 +78,7 @@ export default function ReceiptListScreen() {
   const [show, setShow] = useState(false);
   const [recNum, setRecNum] = useState('');
   const [recDat, setRecDat] = useState('');
-  const [userId, setUserId] = useState('');
+  const [id_client, setId_client] = useState('');
 
   
   
@@ -124,7 +124,7 @@ export default function ReceiptListScreen() {
   const handleShow = (receipt) => {
     setRecNum(receipt.recNum);
     setRecDat(receipt.recDat);
-    setUserId(receipt.user._id);
+    setId_client(receipt.id_client);
     setShow(true);
   };
 
@@ -161,7 +161,7 @@ const unapplyReceipt = async (receipt) => {
 //dr
 
 const prodeleteReceipt = (receipt) => {
-  if (window.confirm('Are you sure to delete?')) {
+  if (window.confirm('Esta seguro de Borrar')) {
       deleteReceipt(receipt);
       //dr
       unapplyReceipt(receipt);
@@ -178,7 +178,7 @@ const prodeleteReceipt = (receipt) => {
         await axios.delete(`${API}/api/receipts/${receipt._id}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        toast.success('receipt deleted successfully');
+        toast.success('Recibo Borrado');
         dispatch({ type: 'DELETE_SUCCESS' });
       } catch (err) {
         toast.error(getError(error));
@@ -284,13 +284,13 @@ const prodeleteReceipt = (receipt) => {
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                     </Button>
-                    {/* <Button
+                    <Button
                       type="button"
-                      title="Apply Receipt to Invoice"
+                      title="Aplica Recibos a Comprobantes de Venta"
                       onClick={() => handleShow(receipt)}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
-                    </Button> */}
+                    </Button>
                     &nbsp;
                     <Button
                       type="button"
@@ -323,14 +323,14 @@ const prodeleteReceipt = (receipt) => {
           >
             <Modal.Header closeButton>
               <Modal.Title id="example-modal-sizes-title-lg">
-                Invoices To Apply Recibo N° {recNum}
+                Comprobante a aplicar Recibo N° {recNum}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <InvoiceListApliRec
                 recNum={recNum}
                 recDat={recDat}
-                userId={userId}
+                id_client={id_client._id}
                 show={show}
                 setShow={setShow}
               />

@@ -328,15 +328,15 @@ function AppRem() {
           invoice.codSup = '0';
           invoice.remNum = remNum;
           invoice.remDat = remDat;
-          invoice.invNum = 0 ;
-          invoice.invDat = invDat;
-          invoice.recNum = recNum;
-          invoice.recDat = recDat;
+          invoice.invNum = 0;
+          invoice.invDat = null;
+          invoice.recNum = 0;
+          invoice.recDat = null;
           invoice.desVal = desVal;
           invoice.notes = notes;
 
-          if (recNum && recDat && desVal) {
-            receipt.subTotal = invoice.subTotal;
+          if (0 && recDat && desVal) {
+            null.subTotal = invoice.subTotal;
             receipt.total = invoice.total;
             receipt.totalBuy = invoice.totalBuy;
             receipt.codCus = invoice.codCus;

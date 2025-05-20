@@ -166,6 +166,14 @@ const clearitems = () => {
     setShowInvoice(false);
     navigate(redirect);
   };
+  
+  const generacomprob = async(invoiceId) => {
+    navigate(`/admin/invoicerGenInvBuy/${invoiceId}?id_config=${invoice.id_config}&redirect=/admin/remits`);
+
+
+  };
+
+
 
   return (
     <>
@@ -195,6 +203,10 @@ const clearitems = () => {
               trigger={() => <Button type="button">Print / Download</Button>}
               content={() => componentRef.current}
             />
+            <Button
+             onClick={() => generacomprob(invoice._id)}
+             disabled={(invoice.invNum > 0)}
+            >GENERA COMPROBANTE</Button>
             <Button onClick={() => clearitems()}>CANCELA</Button>
 
             {/* Invoice Preview */}

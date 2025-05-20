@@ -158,7 +158,7 @@ export default function ValueeListScreen() {
           <table className="table">
             <thead>
               <tr>
-                <th>CODIGO</th>
+                <th className='text-center'>CODIGO</th>
                 <th>VALOR</th>
                 <th>ACTIONS</th>
               </tr>
@@ -166,7 +166,7 @@ export default function ValueeListScreen() {
             <tbody>
               {valuees.map((valuee) => (
                 <tr key={valuee._id}>
-                  <td>{valuee.codVal}</td>
+                  <td className='text-end'>{valuee.codVal}</td>
                   <td>{valuee.desVal}</td>
                   <td>
                     <Button

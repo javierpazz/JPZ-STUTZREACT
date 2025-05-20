@@ -165,7 +165,7 @@ function ProductScreen() {
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
-              Description:
+              Descripcion:
               <p>{product.description}</p>
             </ListGroup.Item>
           </ListGroup>
@@ -185,9 +185,9 @@ function ProductScreen() {
                     <Col>Status:</Col>
                     <Col>
                       {product.inStock > 0 ? (
-                        <Badge bg="success">In Stock</Badge>
+                        <Badge bg="success">Con Stock</Badge>
                       ) : (
-                        <Badge bg="danger">Unavailable</Badge>
+                        <Badge bg="danger">Agotado</Badge>
                       )}
                     </Col>
                   </Row>
@@ -197,7 +197,7 @@ function ProductScreen() {
                   <ListGroup.Item>
                     <div className="d-grid">
                       <Button onClick={addToCartHandler} variant="primary">
-                        Add to Cart
+                        Agregue al Carrito
                       </Button>
                     </div>
                   </ListGroup.Item>
@@ -208,10 +208,10 @@ function ProductScreen() {
         </Col>
       </Row>
       <div className="my-3">
-        <h2 ref={reviewsRef}>Reviews</h2>
+        <h2 ref={reviewsRef}>Calificaciones</h2>
         <div className="mb-3">
           {product.reviews.length === 0 && (
-            <MessageBox>There is no review</MessageBox>
+            <MessageBox>No hay Calificacion</MessageBox>
           )}
         </div>
         <ListGroup>
@@ -227,7 +227,7 @@ function ProductScreen() {
         <div className="my-3">
           {userInfo ? (
             <form onSubmit={submitHandler}>
-              <h2>Write a customer review</h2>
+              <h2>Escriba una Calificacion</h2>
               <Form.Group className="mb-3" controlId="rating">
                 <Form.Label>Rating</Form.Label>
                 <Form.Select
@@ -236,16 +236,16 @@ function ProductScreen() {
                   onChange={(e) => setRating(e.target.value)}
                 >
                   <option value="">Select...</option>
-                  <option value="1">1- Poor</option>
-                  <option value="2">2- Fair</option>
-                  <option value="3">3- Good</option>
-                  <option value="4">4- Very good</option>
-                  <option value="5">5- Excelent</option>
+                  <option value="1">1- Pobre</option>
+                  <option value="2">2- Mas o Menos</option>
+                  <option value="3">3- Bueno</option>
+                  <option value="4">4- Muy bueno</option>
+                  <option value="5">5- Excelente</option>
                 </Form.Select>
               </Form.Group>
               <FloatingLabel
                 controlId="floatingTextarea"
-                label="Comments"
+                label="Comentario"
                 className="mb-3"
               >
                 <Form.Control
@@ -258,7 +258,7 @@ function ProductScreen() {
 
               <div className="mb-3">
                 <Button disabled={loadingCreateReview} type="submit">
-                  Submit
+                  Envie
                 </Button>
                 {loadingCreateReview && <LoadingBox></LoadingBox>}
               </div>
@@ -267,9 +267,9 @@ function ProductScreen() {
             <MessageBox>
               Please{' '}
               <Link to={`/signin?redirect=/product/${product.slug}`}>
-                Sign In
+                Log In
               </Link>{' '}
-              to write a review
+              Escriba una Calificacion
             </MessageBox>
           )}
         </div>

@@ -53,6 +53,7 @@ const ProductListPrint = () => {
 
   const exportToExcel = () => {
     const formattedForExcel = filteredProducts.map(p => ({
+        codigoPro: p.codigoPro,
         codPro: p.codPro,
         title: p.title,
         supplier: p.supplier,
@@ -134,20 +135,20 @@ const ProductListPrint = () => {
       <table border="1" cellPadding="5" style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr>
-            <th>codPro</th>
-            <th>Title</th>
-            <th>Supplier</th>
-            <th className="text-end">Price</th>
-            <th className="text-end">Price Buy</th>
-            <th className="text-end">In Stock</th>
-            <th className="text-end">Min Stock</th>
+            <th  className="text-center">Codigo</th>
+            <th>Producto</th>
+            <th>Proovedor</th>
+            <th className="text-end">Precio</th>
+            <th className="text-end">Precio Compra</th>
+            <th className="text-end">Stock</th>
+            <th className="text-end">Stock Minimo</th>
             <th className="text-end">IVA (%)</th>
           </tr>
         </thead>
         <tbody>
           {sortedItems.map((p, idx) => (
             <tr key={idx}>
-              <td>{p.codPro}</td>
+              <td  className="text-end">{p.codigoPro}</td>
               <td>{p.title}</td>
               <td>{p.supplier}</td>
               <td className="text-end">${p.price}</td>

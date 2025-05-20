@@ -162,7 +162,7 @@ const unapplyReceipt = async (receipt) => {
     // buscar todas loock at the invoices that have a receipt and modify de numRec by nul
 //dr
 const prodeleteReceipt = (receipt) => {
-  if (window.confirm('Are you sure to delete?')) {
+  if (window.confirm('Esta seguro de Borrar')) {
       deleteReceipt(receipt);
       //dr
       unapplyReceipt(receipt);
@@ -180,7 +180,7 @@ const prodeleteReceipt = (receipt) => {
         await axios.delete(`${API}/api/receipts/${receipt._id}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        toast.success('receipt deleted successfully');
+        toast.success('Recibo Borrado');
         dispatch({ type: 'DELETE_SUCCESS' });
       } catch (err) {
         toast.error(getError(error));
@@ -284,13 +284,13 @@ const prodeleteReceipt = (receipt) => {
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                     </Button>
-                    {/* <Button
+                    <Button
                       type="button"
-                      title="Apply Receipt to Invoice"
+                      title="Aplicar Orden de Pago a Comprobante de Compra"
                       onClick={() => handleShow(receipt)}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
-                    </Button> */}
+                    </Button>
                     &nbsp;
                     <Button
                       type="button"
@@ -323,7 +323,7 @@ const prodeleteReceipt = (receipt) => {
           >
             <Modal.Header closeButton>
               <Modal.Title id="example-modal-sizes-title-lg">
-                Invoices To Apply Recibo N° {recNum}
+                Comprobante a Aplicar la Orden de Pago N° {recNum}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>

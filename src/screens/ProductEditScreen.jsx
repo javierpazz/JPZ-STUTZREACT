@@ -16,7 +16,7 @@ import Modal from 'react-bootstrap/Modal';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import Button from 'react-bootstrap/Button';
-import ProductSelector from './ProductSelector';
+import SupplierSelector from './SupplierSelector';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -624,7 +624,7 @@ useEffect(() => {
             <div style={{ padding: '10px', borderBottom: '1px solid #ccc', textAlign: 'right' }}>
               <button onClick={() => setModalOpen(false)} style={{ fontWeight: 'bold' }}>X</button>
             </div>
-            <ProductSelector  onSelect={handleSelect} suppliers={suppliers}  />
+            <SupplierSelector  onSelect={handleSelect} suppliers={suppliers}  />
           </div>
         </div>
       )}

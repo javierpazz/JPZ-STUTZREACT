@@ -19,7 +19,7 @@ import { Store } from '../Store';
 import { getError, API } from '../utils';
 import SearchBox from '../components/SearchBox';
 import Modal from 'react-bootstrap/Modal';
-import InvoiceListChaNum from './InvoiceListChaNum';
+import InvoiceListChaNumBuy from './../screens/InvoiceListChaNumBuy';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -180,6 +180,7 @@ const stockHandlerM = async (item) => {
     dispatch({ type: 'CREATE_FAIL' });
     toast.error(getError(err));
   }
+  
   };
   
 //do
@@ -194,7 +195,7 @@ const noDelInvoice = async () => {
 };
 
   const deleteHandler = async (invoice) => {
-    if (window.confirm('Are you sure to delete?')) {
+    if (window.confirm('Esta seguro de Borrar?')) {
       if (invoice.recNum) {
         noDelInvoice();
       } else {
@@ -204,7 +205,7 @@ const noDelInvoice = async () => {
         await axios.delete(`${API}/api/invoices/${invoice._id}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        toast.success('invoice deleted successfully');
+        toast.success('Factura Borrada');
         dispatch({ type: 'DELETE_SUCCESS' });
       } catch (err) {
         toast.error(getError(error));
@@ -214,7 +215,6 @@ const noDelInvoice = async () => {
       }
 
       }
-
     }
   };
 
@@ -282,7 +282,6 @@ const noDelInvoice = async () => {
                 <th className="text-center">ORDEN P.</th>
                 <th className="text-center">PROVEEDOR</th>
                 <th className="text-center">PAGOS</th>
-                <th className="text-center">FORMA PAGO</th>
                 <th className="text-end">TOTAL</th>
                 <th className="text-end">ACCIONES</th>
               </tr>
@@ -302,7 +301,6 @@ const noDelInvoice = async () => {
                       : 'DELETED SUPPLIER'}
                   </td>
                   <td className="text-center">{invoice.recDat ? invoice.recDat.substring(0, 10) : 'No'}</td>
-                  <td>{invoice.desVal}</td>
                   <td className="text-end">{invoice.totalBuy.toFixed(2)}</td>
 
                   <td className="text-end">
@@ -333,14 +331,14 @@ const noDelInvoice = async () => {
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                     </Button>
-                    {/* &nbsp;
+                    &nbsp;
                     <Button
                       type="button"
-                      title="Add or Change Invoice or Remit Number"
-                      onClick={() => handleShow(invoice._id)}
+                      title="Agrega o Cambia Numero de Remito y/o Comprobante"
+                      onClick={() => handleShow(invoice)}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
-                    </Button> */}
+                    </Button>
                     &nbsp;
                     <Button
                       type="button"
@@ -374,11 +372,11 @@ const noDelInvoice = async () => {
           >
             <Modal.Header closeButton>
               <Modal.Title id="example-modal-sizes-title-lg">
-                Change REmit Invoice Number of {invoice}
+                Cambia Numero de Remito y/o Comprobante {invoice.invNum}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <InvoiceListChaNum
+              <InvoiceListChaNumBuy
                 invoice={invoice}
                 show={show}
                 setShow={setShow}

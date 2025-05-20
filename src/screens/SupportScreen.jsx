@@ -92,7 +92,7 @@ export default function SupportScreen() {
   const submitHandler = (e) => {
     e.preventDefault();
     if (!messageBody.trim()) {
-      alert("Error. Please type message.");
+      alert("Error. Por Favor Escriba un mensaje.");
     } else {
       setMessages([
         ...messages,
@@ -113,7 +113,7 @@ export default function SupportScreen() {
     <Row>
       <Col sm={3}>
         {users.filter((x) => x.name !== "Admin").length === 0 && (
-          <Alert variant="info">No User Found</Alert>
+          <Alert variant="info">Cliente no Encontrado</Alert>
         )}
         <ListGroup>
           {users
@@ -143,7 +143,7 @@ export default function SupportScreen() {
                       ? "Online"
                       : "Offline"
                     : user.unread
-                    ? "New"
+                    ? "Nuevo"
                     : user.online
                     ? "Online"
                     : "Offline"}
@@ -157,13 +157,13 @@ export default function SupportScreen() {
       <Col sm={9}>
         <div className="admin">
           {!selectedUser.name ? (
-            <Alert variant="info">Select a user to start chat</Alert>
+            <Alert variant="info">Seleccione un Cliente para Chatear</Alert>
           ) : (
             <div>
-              <h2>Chat with {selectedUser.name}</h2>
+              <h2>Chat Con {selectedUser.name}</h2>
               <ListGroup ref={uiMessagesRef}>
                 {messages.length === 0 && (
-                  <ListGroup.Item>No message</ListGroup.Item>
+                  <ListGroup.Item>No hay mensajes</ListGroup.Item>
                 )}
                 {messages.map((msg, index) => (
                   <ListGroup.Item key={index}>
@@ -178,10 +178,10 @@ export default function SupportScreen() {
                       value={messageBody}
                       onChange={(e) => setMessageBody(e.target.value)}
                       type="text"
-                      placeholder="type message"
+                      placeholder="Escriba un mensaje"
                     ></FormControl>
                     <Button type="submit" variant="primary">
-                      Send
+                      Enviar
                     </Button>
                   </InputGroup>
                 </form>

@@ -158,17 +158,30 @@ try {
 };
 
 //do
+  const noDelInvoice = async () => {
+    if (
+      window.confirm(
+        'Este Remito tiene una Orden de Pago aplicada, debe eliminar la Orden para Hacerlo'
+      )
+    ) {
+    }
+  };
 
 
   const deleteHandler = async (invoice) => {
-    if (window.confirm('Are you sure to delete?')) {
+      if (window.confirm('Esta seguro de Borrar?')) {
+    if (invoice.recNum) {
+      noDelInvoice();
+    } else {
+      if (!invoice.invNum) {
+        //do
       controlStockHandler(invoice);
       try {
         dispatch({ type: 'DELETE_REQUEST' });
         await axios.delete(`${API}/api/invoices/${invoice._id}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        toast.success('invoice deleted successfully');
+        toast.success('Remito Borrado');
         dispatch({ type: 'DELETE_SUCCESS' });
       } catch (err) {
         toast.error(getError(error));
@@ -177,6 +190,34 @@ try {
         });
       }
     }
+      else {
+              try {
+                dispatch({ type: 'UPDATE_REQUEST' });
+                await axios.put(
+                  `${API}/api/invoices/${invoice._id}/deleteremit`,
+                  {
+                    remNum: null,
+                    // invNum: null,
+                  },
+                  {
+                    headers: { Authorization: `Bearer ${userInfo.token}` },
+                  }
+                );
+                dispatch({ type: 'UPDATE_SUCCESS' });
+                toast.success('Remito Borrado');
+              } catch (err) {
+                toast.error(getError(error));
+                dispatch({
+                  type: 'UPDATE_FAIL',
+                });
+              }
+            
+          }
+
+  }
+
+  
+  }
   };
 
   const calculatotal = () => {
@@ -238,8 +279,8 @@ try {
               <tr>
                 <th className="text-center">FECHA</th>
                 <th className="text-center">REMITO</th>
-                <th className="text-center">PEDIDO</th>
-                <th className="text-center">RECIBO</th>
+                <th className="text-center">COMPROBANTE</th>
+                <th className="text-center">ORDEN</th>
                 <th className="text-center">PROVEEDOR</th>
                 <th className="text-center">PAGOS</th>
                 <th className="text-center">FORMA PAGO</th>
@@ -252,14 +293,14 @@ try {
                 <tr key={invoice._id}>
                   <td className="text-center">{invoice.remDat.substring(0, 10)}</td>
                   <td className="text-end">{invoice.remNum}</td>
-                  <td className="text-end">{invoice.ordNum}</td>
+                  <td className="text-end">{invoice.invNum}</td>
                   <td className="text-end">{invoice.recNum}</td>
                   <td>
                     {invoice.supplier
                       ? invoice.supplier.name
                       : 'DELETED SUPPLIER'}
                   </td>
-                  <td className="text-end">{invoice.recNum ? invoice.recDat : 'No'}</td>
+                  <td className="text-end">{invoice.recNum ? invoice.recDat.substring(0, 10) : 'No'}</td>
                   <td>{invoice.desVal}</td>
                   <td className="text-end">{invoice.totalBuy.toFixed(2)}</td>
 

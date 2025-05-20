@@ -518,8 +518,8 @@ function AppBuy() {
           invoice.remDat = invDat;
           invoice.invNum = invNum;
           invoice.invDat = invDat;
-          invoice.recNum = recNum;
-          invoice.recDat = recDat;
+          invoice.recNum = 0;
+          invoice.recDat = null;
           invoice.desVal = desVal;
           invoice.notes = notes;
           invoice.salbuy = 'BUY';
@@ -721,7 +721,7 @@ function AppBuy() {
 
 
   const unloadpayment = async () => {
-    if (window.confirm('Are you fill all Dates?')) {
+    if (window.confirm('Faltan Completar Datos')) {
     }
   };
 
@@ -1125,6 +1125,7 @@ function AppBuy() {
                             orderItems.length === 0 ||
                             !invNum ||
                             !invDat ||
+                            !codCom ||
                             !codSup
                           }
                         >
@@ -1144,6 +1145,7 @@ function AppBuy() {
                             orderItems.length === 0 ||
                             !invNum ||
                             !invDat ||
+                            !codCom ||
                             !codSup
                           }
                         >

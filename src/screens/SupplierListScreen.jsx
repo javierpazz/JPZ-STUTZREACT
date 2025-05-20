@@ -169,7 +169,7 @@ export default function SupplierListScreen() {
             <tbody>
               {suppliers.map((supplier) => (
                 <tr key={supplier._id}>
-                  <td>{supplier.codSup}</td>
+                  <td className='text-end'>{supplier.codSup}</td>
                   <td>{supplier.name}</td>
                   <td>{supplier.email}</td>
                   <td>{supplier.domcomer}</td>

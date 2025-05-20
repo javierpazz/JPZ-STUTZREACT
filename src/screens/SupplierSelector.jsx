@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 
-const ProductSelector = ( {onSelect,productss} ) => {
+const ProductSelector = ( {onSelect,suppliers} ) => {
 
 // function ProductSelector({ onSelect }) {
   const [search, setSearch] = useState('');
-  const [filtered, setFiltered] = useState(productss);
+  const [filtered, setFiltered] = useState(suppliers);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const inputRef = useRef(null);
   const listRef = useRef(null);
@@ -17,8 +17,8 @@ const ProductSelector = ( {onSelect,productss} ) => {
   const handleChange = (e) => {
     const value = e.target.value.toUpperCase();
     setSearch(value);
-    const result = productss.filter(p =>
-      p.codPro.includes(value) || p.title.toLowerCase().includes(value.toLowerCase())
+    const result = suppliers.filter(p =>
+      p.codSup.includes(value) || p.name.toLowerCase().includes(value.toLowerCase())
     );
     setFiltered(result);
     setHighlightedIndex(0); // Reset al buscar
@@ -74,7 +74,7 @@ const ProductSelector = ( {onSelect,productss} ) => {
         >
           {filtered.map((p, index) => (
             <li
-              key={p.codigoPro}
+              key={p.codSup}
               onClick={() => onSelect(p)}
               style={{
                 padding: '6px',
@@ -83,7 +83,7 @@ const ProductSelector = ( {onSelect,productss} ) => {
                 backgroundColor: index === highlightedIndex ? '#cce5ff' : '#fff'
               }}
             >
-              <strong>{p.codPro}</strong> - {p.title} - {p.medPro} - ${p.price} - Stock {p.inStock}
+              <strong>{p.codSup}</strong> - {p.name}
             </li>
           ))}
         </ul>
