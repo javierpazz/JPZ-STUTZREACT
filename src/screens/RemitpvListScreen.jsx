@@ -250,7 +250,7 @@ try {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Entrega
+              Crea Entrega
             </Button>
           </div>
         </Col>

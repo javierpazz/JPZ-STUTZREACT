@@ -161,7 +161,7 @@ export default function ConfigurationListScreen() {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Punto Venta
+              Crea Punto Venta
             </Button>
           </div>
         </Col>

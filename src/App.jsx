@@ -83,6 +83,7 @@ import ComprobanteListScreen from './screens/ComprobanteListScreen';
 import ComprobanteEditScreen from './screens/ComprobanteEditScreen';
 import InvoicesOrd from './invoice/src/InvoicesOrd';
 import InvoicesCon from './invoice/src/InvoicesCon';
+import InvoicesGenInvWeb from './invoice/src/InvoicesGenInvWeb';
 import InvoicesGenInv from './invoice/src/InvoicesGenInv';
 import InvoicesGenInvBuy from './invoice/src/InvoicesGenInvBuy';
 import InvoicesBuyCon from './invoice/src/InvoicesBuyCon';
@@ -127,9 +128,21 @@ function App() {
     window.location.href = '/';
   };
 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await axios.get(`${API}/api/configurations/`);
+      localStorage.setItem('punto', data[0]._id);
+      localStorage.setItem('puntonum', data[0].codCon);
+
+    }
+    fetchData();
+  }, []);
+
+
 /////////////////////version////////////////
 // const [ver, setVer] = useState('1');  // version app ver=1 sin/ecommerce
-const [ver, setVer] = useState('1');     // version app ver=2 con/ecommerce
+const [ver, setVer] = useState('2');     // version app ver=2 con/ecommerce
 /////////////////////version////////////////
 
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
@@ -212,13 +225,13 @@ const [ver, setVer] = useState('1');     // version app ver=2 con/ecommerce
                   {(userInfo  && userInfo.role=="client") && (
                     <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
                       <LinkContainer to="/profile">
-                        <NavDropdown.Item>User Profile</NavDropdown.Item>
+                        <NavDropdown.Item>Perfil Usuario</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/invoicehistory">
-                        <NavDropdown.Item>Inoice History</NavDropdown.Item>
+                        <NavDropdown.Item>Mis Comprobantes</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/orderhistory">
-                        <NavDropdown.Item>Order History</NavDropdown.Item>
+                        <NavDropdown.Item>Mis Ordenes</NavDropdown.Item>
                       </LinkContainer>
                       <NavDropdown.Divider />
                       <Link
@@ -226,7 +239,7 @@ const [ver, setVer] = useState('1');     // version app ver=2 con/ecommerce
                         to="#signout"
                         onClick={signoutHandler}
                       >
-                        Sign Out
+                        Log Out
                       </Link>
                     </NavDropdown>
                   // ) : (
@@ -248,12 +261,6 @@ const [ver, setVer] = useState('1');     // version app ver=2 con/ecommerce
                       <LinkContainer to="/admin/remiter">
                         <NavDropdown.Item>Remitos de Ventas</NavDropdown.Item>
                       </LinkContainer>
-                      {/* <LinkContainer to="/admin/orders">
-                        <NavDropdown.Item>Ordenes de Comprars</NavDropdown.Item>
-                      </LinkContainer> */}
-                      {/* <LinkContainer to="/admin/stateOrds">
-                        <NavDropdown.Item>States Order</NavDropdown.Item>
-                      </LinkContainer> */}
                       {userInfo && userInfo.role=="admin" && (
                         <LinkContainer to="/admin/infocust">
                           <NavDropdown.Item>Informes</NavDropdown.Item>
@@ -351,6 +358,9 @@ const [ver, setVer] = useState('1');     // version app ver=2 con/ecommerce
                       <LinkContainer to="/admin/remitsBuypv">
                         <NavDropdown.Item>Recepcion desde Pto Vta</NavDropdown.Item>
                       </LinkContainer>
+                      <LinkContainer to="/admin/orders">
+                        <NavDropdown.Item>Ordenes E-commerce</NavDropdown.Item>
+                      </LinkContainer>
                       <LinkContainer to="/admin/support">
                         <NavDropdown.Item>Chat Support</NavDropdown.Item>
                       </LinkContainer>
@@ -389,7 +399,10 @@ const [ver, setVer] = useState('1');     // version app ver=2 con/ecommerce
                         <NavDropdown.Item>Usuarios</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/profile">
-                        <NavDropdown.Item>User Profile</NavDropdown.Item>
+                        <NavDropdown.Item>Perfil Usuario</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/stateOrds">
+                        <NavDropdown.Item>Estados de Ordenes</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/support">
                         <NavDropdown.Item>Chat Support</NavDropdown.Item>
@@ -935,6 +948,14 @@ const [ver, setVer] = useState('1');     // version app ver=2 con/ecommerce
                 element={
                   <AdminRoute>
                     <InvoicesCon />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/invoicerGenInvWeb/:id"
+                element={
+                  <AdminRoute>
+                    <InvoicesGenInvWeb />
                   </AdminRoute>
                 }
               ></Route>

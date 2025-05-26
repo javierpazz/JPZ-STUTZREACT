@@ -282,7 +282,7 @@ try {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Remito de Venta
+              Crea Remito de Venta
             </Button>
           </div>
         </Col>

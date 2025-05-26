@@ -164,7 +164,7 @@ export default function UserListScreen() {
       <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create User
+              Crea User
             </Button>
           </div>
         </Col>

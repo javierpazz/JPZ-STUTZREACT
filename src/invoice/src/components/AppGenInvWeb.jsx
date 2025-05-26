@@ -65,7 +65,7 @@ const reducer = (state, action) => {
   }
 };
 
-function AppGenInv() {
+function AppGenInvWeb() {
   const [
     { loading, error, invoice, values, pages, loadingDelete, successDelete },
     dispatch,
@@ -382,7 +382,7 @@ const getTodayInGMT3 = () => {
         unloadpayment();
       } else {
         // if (invDat && codCom) {
-        if (codCom) {
+        if (true) {
           invoice.codCom = codCom;
           invoice.isHaber = isHaber;
           invoice.invDat = invDat;
@@ -529,7 +529,7 @@ const getTodayInGMT3 = () => {
                         <Card.Title>
                           <ListGroup.Item>
                             <h3>
-                              GENERA COMPROBANTE VENTA DE REMITO Nro.: {invoice.codConNum +'-'+invoice.remNum}
+                              GENERA COMPROBANTE VENTA DE REMITO Nro.: {invoice.codConNum +'-'+invoice._id}
                             </h3>
                           </ListGroup.Item>
                         </Card.Title>
@@ -1050,4 +1050,4 @@ const getTodayInGMT3 = () => {
   );
 }
 
-export default AppGenInv;
+export default AppGenInvWeb;

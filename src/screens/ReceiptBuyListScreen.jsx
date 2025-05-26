@@ -224,7 +224,7 @@ const prodeleteReceipt = (receipt) => {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Orden de Pago
+              Crea Orden de Pago
             </Button>
           </div>
         </Col>

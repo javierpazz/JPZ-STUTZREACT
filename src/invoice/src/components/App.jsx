@@ -769,14 +769,19 @@ function App() {
                         </Card.Title>
                       </Card.Body>
                     </Col>
-                    <Col md={1} className="mt-4 text-black py-1 px-1 rounded ">
-                    <Form.Check
-                          type="checkbox"
-                          id="geRem"
-                          label="Genera Remito"
-                          checked={geRem}
-                          onChange={(e) => setGeRem(e.target.checked)}
-                          />
+                    <Col md={2} className="mt-4 text-black py-1 px-1 rounded ">
+                        <Card.Body>
+                          <Card.Title>
+                            <Form.Check
+                                  className="mb-3"
+                                  type="checkbox"
+                                  id="geRem"
+                                  label="Genera Remito"
+                                  checked={geRem}
+                                  onChange={(e) => setGeRem(e.target.checked)}
+                                  />
+                          </Card.Title>
+                        </Card.Body>
                      </Col>
                 </Row>
 

@@ -130,10 +130,10 @@ function AppGenInvBuy() {
   const [remNum, setRemNum] = useState('');
   const [invNum, setInvNum] = useState('');
   const [invNumImp, setInvNumImp] = useState('');
-  const today = new Date().toISOString().split("T")[0];
-  const [invDat, setInvDat] = useState(today);
+  // const today = new Date().toISOString().split("T")[0];
+  const [invDat, setInvDat] = useState(getTodayInGMT3());
   const [recNum, setRecNum] = useState('');
-  const [recDat, setRecDat] = useState(today);
+  const [recDat, setRecDat] = useState(getTodayInGMT3());
   const [showVal, setShowVal] = useState(false);
   const [codValo, setCodValo] = useState('');
   const [codVal, setCodVal] = useState('');
@@ -155,7 +155,7 @@ function AppGenInvBuy() {
   const [website, setWebsite] = useState('');
   const [clientName, setClientName] = useState('');
   const [clientAddress, setClientAddress] = useState('');
-  const [dueDat, setDueDat] = useState(today);
+  const [dueDat, setDueDat] = useState(getTodayInGMT3());
   const [notes, setNotes] = useState('');
   const [desPro, setDesPro] = useState('');
   const [quantity, setQuantity] = useState(0);

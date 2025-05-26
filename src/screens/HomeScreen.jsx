@@ -46,20 +46,17 @@ function HomeScreen() {
 {/* /////////////////  borrar ecomerce  ////////////////////// */}
 
 
-
-  useEffect(() => {
+useEffect(() => {
+    // setId_config(JSON.parse(localStorage.getItem('punto')));
+    // console.log(id_config)
+    // console.log((localStorage.getItem('punto')))
+    // setId_config((localStorage.getItem('punto')));
+    
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-      const { data } = await axios.get(`${API}/api/configurations/`);
-      console.log(data[0]._id);
-      setConfigura(data);
-      setId_config(data[0]._id);
-      console.log(configura);
 
-
-
-        const result = await axios.get(`${API}/api/products?id_config=${id_config}`);
+        const result = await axios.get(`${API}/api/products?id_config=${(localStorage.getItem('punto'))}`);
         // const result = await axios.get(`${API}/api/products`);
         dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
       } catch (err) {

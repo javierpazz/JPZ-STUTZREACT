@@ -140,7 +140,7 @@ export default function CustomerListScreen() {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Cliente
+              Crea Cliente
             </Button>
           </div>
         </Col>

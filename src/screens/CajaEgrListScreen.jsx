@@ -198,7 +198,7 @@ const prodeleteReceipt = (receipt) => {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Retiro de Caja
+              Crea Retiro de Caja
             </Button>
           </div>
         </Col>

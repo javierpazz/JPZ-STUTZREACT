@@ -105,9 +105,11 @@ export default function ProductEditScreen() {
   return (
     <Container className="small-container">
       <Helmet>
-        <title>Edit State Order ${stateOrdId}</title>
+        <title>
+        Estado Orden </title>
       </Helmet>
-      <h1>Edit State Order {stateOrdId}</h1>
+      <h1>
+      Estado Orden </h1>
 
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -116,7 +118,7 @@ export default function ProductEditScreen() {
       ) : (
         <Form onSubmit={submitHandler}>
           <Form.Group className="mb-3" controlId="name">
-            <Form.Label>Name</Form.Label>
+            <Form.Label>Estado</Form.Label>
             <Form.Control
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -124,7 +126,7 @@ export default function ProductEditScreen() {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="name">
-            <Form.Label>Note</Form.Label>
+            <Form.Label>Detalle</Form.Label>
             <Form.Control
               value={note}
               onChange={(e) => setNote(e.target.value)}
@@ -133,7 +135,7 @@ export default function ProductEditScreen() {
           </Form.Group>
           <div className="mb-3">
             <Button disabled={loadingUpdate} type="submit">
-              Update
+              Graba
             </Button>
             {loadingUpdate && <LoadingBox></LoadingBox>}
           </div>

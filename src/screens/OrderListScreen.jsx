@@ -89,7 +89,7 @@ export default function OrderListScreen() {
   }, [page, userInfo, successDelete, show]);
 
   const noDelOrder = async () => {
-    if (window.confirm('This Order Have an Invoice Or Remit, You Must delete this Before')) {
+    if (window.confirm('Esta Orden tiene un Comprobante o Remito, Debe primero eliminarlo para continuar')) {
     }
   };
 
@@ -127,14 +127,14 @@ try {
     if (order.remNum || order.invNum) {
       noDelOrder();
     } else {
-      if (window.confirm('Are you sure to delete?')) {
+      if (window.confirm('Esta Seguro de Eliminar?')) {
         controlStockHandler(order);
         try {
           dispatch({ type: 'DELETE_REQUEST' });
           await axios.delete(`${API}/api/orders/${order._id}`, {
             headers: { Authorization: `Bearer ${userInfo.token}` },
           });
-          toast.success('order deleted successfully');
+          toast.success('Orden Eliminada');
           dispatch({ type: 'DELETE_SUCCESS' });
         } catch (err) {
           toast.error(getError(error));
@@ -151,15 +151,17 @@ try {
     setShow(true);
   };
 
-  const handleShow = (orderId) => {
-    navigate(`/admin/invoicerOrd/${orderId}`);
-  };
+  
+  const handleShow = (order) => {
+    // navigate(`/admin/invoicerOrd/${orderId}`);
+      navigate(`/admin/invoicerGenInvWeb/${order._id}?id_config=${order.id_config}&redirect=/admin/orders`);
+};
   return (
     <div>
       <Helmet>
-        <title>Orders</title>
+        <title>Ordenes e-commerce</title>
       </Helmet>
-      <h1>Orders</h1>
+      <h1>Ordenes e-commerce</h1>
       {loadingDelete && <LoadingBox></LoadingBox>}
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -171,11 +173,11 @@ try {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>USER</th>
-                <th>DATE</th>
+                <th>USUARIO</th>
+                <th>FECHA</th>
                 <th>TOTAL</th>
-                <th>INVOICE</th>
-                <th>STATE</th>
+                <th>COMPROBANTE</th>
+                <th>ESTADO</th>
                 <th>ACTIONS</th>
               </tr>
             </thead>
@@ -192,16 +194,14 @@ try {
                   <td>
                     <Button
                       type="button"
-                      variant="light"
+                      title="Consulta Orden"
                       onClick={() => {
                         navigate(`/order/${order._id}`);
                       }}
                     >
-                      Details
+                      <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
                     </Button>
-                  </td>
-                  <td>
-                    <Button
+                    {/* <Button
                       type="button"
                       title="Imprimir"
                       onClick={() => {
@@ -220,11 +220,12 @@ try {
                     >
                       <AiOutlineMail className="text-black-500 font-bold text-xl" />
                     </Button>
+                    &nbsp; */}
                     &nbsp;
                     <Button
                       type="button"
-                      title="Invoice Order"
-                      onClick={() => handleShow(order._id)}
+                      title="Genera Comprobante de Orden"
+                      onClick={() => handleShow(order)}
                       disabled={order.invNum}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />
@@ -232,7 +233,7 @@ try {
                     &nbsp;
                     <Button
                       type="button"
-                      title="Order State"
+                      title="Estado Orden"
                       onClick={() => handleState(order)}
                     >
                       <AiOutlineEdit className="text-blue-500 font-bold text-xl" />

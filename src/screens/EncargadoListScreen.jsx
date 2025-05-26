@@ -159,7 +159,7 @@ export default function EncargadoListScreen() {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Encargado
+              Crea Encargado
             </Button>
           </div>
         </Col>

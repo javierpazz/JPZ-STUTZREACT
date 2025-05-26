@@ -223,7 +223,7 @@ try {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Recepcion
+              Crea Recepcion
             </Button>
           </div>
         </Col>

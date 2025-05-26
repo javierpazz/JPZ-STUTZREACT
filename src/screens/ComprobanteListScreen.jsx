@@ -142,7 +142,7 @@ export default function ComprobanteListScreen() {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Comprobante
+              Crea Comprobante
             </Button>
           </div>
         </Col>

@@ -26,6 +26,7 @@ export default function ShippingAddressScreen() {
     }
   }, [userInfo, navigate]);
   const [country, setCountry] = useState(shippingAddress.country || '');
+  const [cuit, setCuit] = useState(shippingAddress.cuit || '');
   const submitHandler = (e) => {
     e.preventDefault();
     ctxDispatch({
@@ -36,6 +37,7 @@ export default function ShippingAddressScreen() {
         city,
         postalCode,
         country,
+        cuit,
         location: shippingAddress.location,
       },
     });
@@ -47,6 +49,7 @@ export default function ShippingAddressScreen() {
         city,
         postalCode,
         country,
+        cuit,
         location: shippingAddress.location,
       })
     );
@@ -60,15 +63,15 @@ export default function ShippingAddressScreen() {
   return (
     <div>
       <Helmet>
-        <title>Shipping Address</title>
+        <title>Direccion de Envio</title>
       </Helmet>
 
       <CheckoutSteps step1 step2></CheckoutSteps>
       <div className="container small-container">
-        <h1 className="my-3">Shipping Address</h1>
+        <h1 className="my-3">Direccion de Envio</h1>
         <Form onSubmit={submitHandler}>
           <Form.Group className="mb-3" controlId="fullName">
-            <Form.Label>Full Name</Form.Label>
+            <Form.Label>Nombre Completo</Form.Label>
             <Form.Control
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
@@ -76,7 +79,7 @@ export default function ShippingAddressScreen() {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="address">
-            <Form.Label>Address</Form.Label>
+            <Form.Label>Direccion</Form.Label>
             <Form.Control
               value={address}
               onChange={(e) => setAddress(e.target.value)}
@@ -84,7 +87,7 @@ export default function ShippingAddressScreen() {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="city">
-            <Form.Label>City</Form.Label>
+            <Form.Label>ciudad</Form.Label>
             <Form.Control
               value={city}
               onChange={(e) => setCity(e.target.value)}
@@ -92,7 +95,7 @@ export default function ShippingAddressScreen() {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="postalCode">
-            <Form.Label>Postal Code</Form.Label>
+            <Form.Label>Codigo Postal</Form.Label>
             <Form.Control
               value={postalCode}
               onChange={(e) => setPostalCode(e.target.value)}
@@ -100,10 +103,18 @@ export default function ShippingAddressScreen() {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="country">
-            <Form.Label>Country</Form.Label>
+            <Form.Label>Pais</Form.Label>
             <Form.Control
               value={country}
               onChange={(e) => setCountry(e.target.value)}
+              required
+              />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="country">
+            <Form.Label>Cuit</Form.Label>
+            <Form.Control
+              value={cuit}
+              onChange={(e) => setCuit(e.target.value)}
               required
             />
           </Form.Group>
@@ -114,7 +125,7 @@ export default function ShippingAddressScreen() {
               variant="light"
               onClick={() => navigate('/map')}
             >
-              Choose Location On Map
+              Elija Localizacion en Mapa
             </Button>
             {shippingAddress.location && shippingAddress.location.lat ? (
               <div>

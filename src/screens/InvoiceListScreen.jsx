@@ -168,11 +168,8 @@ try {
 
 
   const noDelInvoice = async () => {
-    if (
-      window.confirm(
-        'This Invoice have a Receipt, You Must delete the receipt Before'
-      )
-    ) {
+    if (window.confirm('Este Comprobante tiene un Recibo, Debe primero eliminarlo para continuar'))
+    {
     }
   };
   
@@ -278,7 +275,7 @@ try {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Comprobante Venta
+              Crea Comprobante Venta
             </Button>
           </div>
         </Col>

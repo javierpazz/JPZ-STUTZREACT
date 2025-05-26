@@ -140,12 +140,12 @@ export default function StateOrdListScreen() {
     <div>
       <Row>
         <Col>
-          <h1>State Order</h1>
+          <h1>Estados de Ordenes</h1>
         </Col>
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create State Order
+              Crea Estado de Orden
             </Button>
           </div>
         </Col>
@@ -164,14 +164,15 @@ export default function StateOrdListScreen() {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>NAME</th>
-                <th>NOTE</th>
+                <th>ESTADO</th>
+                <th>DETALLE</th>
                 <th>ACTIONS</th>
               </tr>
             </thead>
             <tbody>
               {stateOrds.map((stateOrd) => (
                 <tr key={stateOrd._id}>
+                  <td>{stateOrd._id}</td>
                   <td>{stateOrd.name}</td>
                   <td>{stateOrd.note}</td>
                   <td>

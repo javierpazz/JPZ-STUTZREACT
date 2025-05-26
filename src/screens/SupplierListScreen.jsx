@@ -140,7 +140,7 @@ export default function SupplierListScreen() {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Proveedor
+              Crea Proveedor
             </Button>
           </div>
         </Col>

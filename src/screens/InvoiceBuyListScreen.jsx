@@ -258,7 +258,7 @@ const noDelInvoice = async () => {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Comprobante Compra
+              Crea Comprobante Compra
             </Button>
           </div>
         </Col>

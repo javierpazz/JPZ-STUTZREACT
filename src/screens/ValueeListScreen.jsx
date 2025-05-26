@@ -141,7 +141,7 @@ export default function ValueeListScreen() {
         <Col className="col text-end">
           <div>
             <Button type="button" onClick={createHandler}>
-              Create Valor
+              Crea Valor
             </Button>
           </div>
         </Col>
