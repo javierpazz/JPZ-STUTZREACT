@@ -336,7 +336,7 @@ function AppRem() {
           invoice.notes = notes;
 
           if (0 && recDat && desVal) {
-            null.subTotal = invoice.subTotal;
+            receipt.subTotal = invoice.subTotal;
             receipt.total = invoice.total;
             receipt.totalBuy = invoice.totalBuy;
             receipt.codCus = invoice.codCus;

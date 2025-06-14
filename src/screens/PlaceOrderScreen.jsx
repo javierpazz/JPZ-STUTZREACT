@@ -40,8 +40,11 @@ export default function PlaceOrderScreen() {
   cart.subTotal = round2(
     cart.cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
   );
-  cart.shippingPrice = cart.subTotal > 100 ? round2(0) : round2(10);
-  cart.tax = round2(0.15 * cart.subTotal);
+  cart.shippingPrice = cart.subTotal > 100 ? round2(0) : round2(100);
+  // cart.tax = round2(0.15 * cart.subTotal);
+  cart.tax = round2(
+    cart.cartItems.reduce((a, c) => a + c.quantity * c.price * (c.porIva/100), 0)
+  );
   cart.total = cart.subTotal + cart.shippingPrice + cart.tax;
   cart.totaldeItems= cart.cartItems.reduce((a, c) => a + c.quantity, 0);
 
